@@ -1,8 +1,10 @@
 {
   "name": "ipl-auction-workspace",
   "private": true,
+  "workspaces": [
+    "ipl-auction-game"
+  ],
   "scripts": {
-    "postinstall": "npm --prefix ipl-auction-game install",
     "dev": "npm --prefix ipl-auction-game run dev",
     "build": "npm --prefix ipl-auction-game run build",
     "start": "node server.cjs",
