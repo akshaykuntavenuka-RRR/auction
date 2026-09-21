@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IPL MINI AUCTION - Setup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-panel {
+            background: rgba(54, 52, 55, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gold-glow {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #ffe16d 0%, #e9c400 100%);
+        }
+        .inner-glow-gold {
+            box-shadow: inset 0 0 4px rgba(255, 225, 109, 0.5);
+        }
+        input[type='range']::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #ffe16d;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#323033",
+                        "surface-dim": "#141315",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#e9c400",
+                        "on-primary-container": "#807099",
+                        "surface-variant": "#363437",
+                        "surface": "#141315",
+                        "inverse-primary": "#66577e",
+                        "surface-container-highest": "#363437",
+                        "on-error": "#690005",
+                        "secondary-container": "#ffdb3c",
+                        "secondary-fixed": "#ffe16d",
+                        "tertiary": "#cfbdfe",
+                        "surface-container-lowest": "#0f0e10",
+                        "on-primary-fixed-variant": "#4e4065",
+                        "on-tertiary-container": "#7f6eaa",
+                        "surface-container-low": "#1d1b1e",
+                        "secondary": "#fff9ef",
+                        "on-secondary-container": "#725f00",
+                        "primary-fixed": "#ecdcff",
+                        "outline-variant": "#49454d",
+                        "on-tertiary": "#36275d",
+                        "surface-container-high": "#2b292c",
+                        "on-primary-fixed": "#211437",
+                        "on-secondary-fixed-variant": "#544600",
+                        "primary-container": "#0a0020",
+                        "surface-container": "#211f22",
+                        "on-secondary": "#3a3000",
+                        "on-tertiary-fixed-variant": "#4d3d75",
+                        "background": "#141315",
+                        "tertiary-container": "#080022",
+                        "on-secondary-fixed": "#221b00",
+                        "error-container": "#93000a",
+                        "on-background": "#e6e1e5",
+                        "primary": "#d1bfeb",
+                        "surface-bright": "#3b383b",
+                        "primary-fixed-dim": "#d1bfeb",
+                        "on-primary": "#372a4d",
+                        "outline": "#948f98",
+                        "on-surface": "#e6e1e5",
+                        "on-tertiary-fixed": "#201047",
+                        "tertiary-fixed": "#e9ddff",
+                        "inverse-surface": "#e6e1e5",
+                        "surface-tint": "#d1bfeb",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#cbc4ce",
+                        "tertiary-fixed-dim": "#cfbdfe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-margin": "24px",
+                        "base": "8px",
+                        "card-padding": "20px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["bebasNeue"],
+                        "label-caps": ["manrope"],
+                        "body-md": ["manrope"],
+                        "body-lg": ["manrope"],
+                        "headline-lg": ["bebasNeue"],
+                        "display-lg": ["bebasNeue"],
+                        "stats-numeric": ["bebasNeue"],
+                        "headline-lg-mobile": ["bebasNeue"]
+                    },
+                    "fontSize": {
+                        "display-md": ["48px", {"lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "400"}],
+                        "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "stats-numeric": ["24px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-md overflow-x-hidden">
+<!-- Top Navigation Shell -->
+<nav class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50 border-b border-white/20 shadow-lg shadow-secondary-container/10 flex justify-between items-center px-container-margin py-base w-full max-w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-fixed text-3xl">sports_cricket</span>
+<span class="font-display-md text-display-md text-secondary-fixed dark:text-secondary-fixed-dim tracking-widest">IPL MINI AUCTION</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-white/10 transition-colors duration-300 rounded-full">notifications</button>
+<div class="w-10 h-10 rounded-full border-2 border-secondary-fixed overflow-hidden">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A highly detailed close-up portrait of a professional sports auctioneer wearing a sharp navy blue blazer and a golden tie. The background is a blurred stadium lighting setup with deep purples and gold hues. The lighting is cinematic, casting a spotlight on the professional demeanor of the subject, matching the high-stakes elite sports environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFokBvdLqauk8N5MVwUfW2FeVpJ7w-_iVXFgXfFSKxV2YJT45YS0xRenumRLZ2YY_1MwjUeVR0iLL6JG3ovGPtwPabn5tikgDNfZg3rHp9tLyfO_hwqMR3owt3smyZMJDTSRY6K6UQt-E3-asDQsrI2orgSMqBjUswU9_RaNBwfLnwpoZw0-yK6dpEr7eFwjwvrtyFeJYSA2uBQfgbsai5WXCIRhAX3PMoX8sm4hbFILhcsrq8DfrWe3Y8LcihuAjEcVTAB0Z1WQgJ"/>
+</div>
+</div>
+</nav>
+<main class="max-w-4xl mx-auto px-container-margin py-10 pb-32">
+<!-- Header Content -->
+<header class="text-center mb-12">
+<div class="inline-flex items-center justify-center mb-4">
+<span class="text-5xl animate-bounce">🏏</span>
+</div>
+<h1 class="font-display-lg text-[56px] md:text-display-lg text-secondary-fixed leading-none mb-2 drop-shadow-2xl">IPL MINI AUCTION</h1>
+<p class="font-body-lg text-on-surface-variant tracking-wide">Build your dream squad · Bid smart · Win big</p>
+</header>
+<!-- Configuration Section -->
+<section class="space-y-12">
+<!-- Number of Teams Selector -->
+<div class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed">groups</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-wider">Number of Teams</h2>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 py-4 rounded-xl border border-white/10 font-display-md text-display-md text-on-surface-variant/60 hover:bg-white/5 transition-all">4</button>
+<button class="flex-1 py-4 rounded-xl gold-gradient text-inverse-on-surface font-display-md text-display-md gold-glow inner-glow-gold transition-all transform hover:scale-105 active:scale-95">6</button>
+<button class="flex-1 py-4 rounded-xl border border-white/10 font-display-md text-display-md text-on-surface-variant/60 hover:bg-white/5 transition-all">8</button>
+</div>
+</div>
+<!-- Budget Slider -->
+<div class="space-y-6">
+<div class="flex justify-between items-end">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed">payments</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-wider">Budget per Team</h2>
+</div>
+<div class="font-stats-numeric text-4xl text-secondary-fixed">
+                        ₹<span id="budgetValue">100</span> Cr
+                    </div>
+</div>
+<div class="relative pt-4">
+<input class="w-full h-2 bg-surface-container-highest rounded-full appearance-none cursor-pointer" max="200" min="50" oninput="document.getElementById('budgetValue').innerText = this.value" step="10" type="range" value="100"/>
+<div class="flex justify-between mt-4 text-on-surface-variant font-label-caps opacity-50">
+<span>₹50 CR</span>
+<span>₹200 CR</span>
+</div>
+</div>
+</div>
+<!-- Team Names Grid -->
+<div class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed">edit_square</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-wider">Define Team Names</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Team 1 -->
+<div class="glass-panel p-card-padding rounded-xl flex items-center gap-4 group hover:border-secondary-fixed/50 transition-colors">
+<div class="w-4 h-4 rounded-full bg-pink-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]"></div>
+<div class="flex-1">
+<label class="block text-[10px] text-on-surface-variant font-label-caps mb-1 opacity-60">TEAM 01</label>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-display-md text-2xl text-on-surface selection:bg-secondary-fixed/30" type="text" value="Mumbai Mavericks"/>
+</div>
+</div>
+<!-- Team 2 -->
+<div class="glass-panel p-card-padding rounded-xl flex items-center gap-4 group border-secondary-fixed/50 gold-glow">
+<div class="w-4 h-4 rounded-full bg-[#e9c400] shadow-[0_0_10px_rgba(233,196,0,0.5)]"></div>
+<div class="flex-1">
+<label class="block text-[10px] text-secondary-fixed font-label-caps mb-1 opacity-80">TEAM 02 (YOU)</label>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-display-md text-2xl text-secondary-fixed selection:bg-secondary-fixed/30" type="text" value="Chennai Champions"/>
+</div>
+</div>
+<!-- Team 3 -->
+<div class="glass-panel p-card-padding rounded-xl flex items-center gap-4 group hover:border-secondary-fixed/50 transition-colors">
+<div class="w-4 h-4 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]"></div>
+<div class="flex-1">
+<label class="block text-[10px] text-on-surface-variant font-label-caps mb-1 opacity-60">TEAM 03</label>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-display-md text-2xl text-on-surface selection:bg-secondary-fixed/30" type="text" value="Delhi Dynamos"/>
+</div>
+</div>
+<!-- Team 4 -->
+<div class="glass-panel p-card-padding rounded-xl flex items-center gap-4 group hover:border-secondary-fixed/50 transition-colors">
+<div class="w-4 h-4 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
+<div class="flex-1">
+<label class="block text-[10px] text-on-surface-variant font-label-caps mb-1 opacity-60">TEAM 04</label>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-display-md text-2xl text-on-surface selection:bg-secondary-fixed/30" type="text" value="Kolkata Knights"/>
+</div>
+</div>
+<!-- Team 5 -->
+<div class="glass-panel p-card-padding rounded-xl flex items-center gap-4 group hover:border-secondary-fixed/50 transition-colors">
+<div class="w-4 h-4 rounded-full bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]"></div>
+<div class="flex-1">
+<label class="block text-[10px] text-on-surface-variant font-label-caps mb-1 opacity-60">TEAM 05</label>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-display-md text-2xl text-on-surface selection:bg-secondary-fixed/30" type="text" value="Bangalore Bolts"/>
+</div>
+</div>
+<!-- Team 6 -->
+<div class="glass-panel p-card-padding rounded-xl flex items-center gap-4 group hover:border-secondary-fixed/50 transition-colors">
+<div class="w-4 h-4 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+<div class="flex-1">
+<label class="block text-[10px] text-on-surface-variant font-label-caps mb-1 opacity-60">TEAM 06</label>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-display-md text-2xl text-on-surface selection:bg-secondary-fixed/30" type="text" value="Gujarat Gladiators"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom CTA Bar -->
+<footer class="fixed bottom-0 left-0 w-full p-container-margin z-[60]">
+<div class="max-w-4xl mx-auto">
+<button class="w-full py-6 rounded-2xl gold-gradient text-inverse-on-surface font-display-md text-[32px] tracking-widest gold-glow inner-glow-gold transform hover:scale-[1.02] active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-4 group">
+<span class="animate-pulse">🚀</span>
+                START AUCTION
+                <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</button>
+</div>
+</footer>
+<!-- Background Decoration -->
+<div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+<div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-secondary-fixed/10 blur-[120px] rounded-full"></div>
+<div class="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-primary/5 blur-[120px] rounded-full"></div>
+<!-- Diagonal Slashes -->
+<div class="absolute top-0 right-0 w-full h-full opacity-5">
+<div class="absolute top-0 right-[20%] w-[1px] h-full bg-white rotate-12"></div>
+<div class="absolute top-0 right-[25%] w-[1px] h-full bg-white rotate-12"></div>
+<div class="absolute top-0 right-[40%] w-[4px] h-full bg-secondary-fixed rotate-12"></div>
+</div>
+</div>
+<script>
+        // Micro-interaction for slider feedback
+        const slider = document.querySelector('input[type="range"]');
+        slider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            const min = e.target.min ? e.target.min : 0;
+            const max = e.target.max ? e.target.max : 100;
+            const newVal = Number(((val - min) * 100) / (max - min));
+            
+            // Pulsate value on change
+            const valDisplay = document.getElementById('budgetValue');
+            valDisplay.classList.add('scale-110');
+            setTimeout(() => valDisplay.classList.remove('scale-110'), 100);
+        });
+
+        // Toggle logic for team buttons
+        const teamBtns = document.querySelectorAll('button.flex-1');
+        teamBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                teamBtns.forEach(b => {
+                    b.classList.remove('gold-gradient', 'text-inverse-on-surface', 'gold-glow', 'inner-glow-gold', 'transform', 'scale-105');
+                    b.classList.add('border', 'border-white/10', 'text-on-surface-variant/60');
+                });
+                btn.classList.add('gold-gradient', 'text-inverse-on-surface', 'gold-glow', 'inner-glow-gold', 'transform', 'scale-105');
+                btn.classList.remove('border', 'border-white/10', 'text-on-surface-variant/60');
+            });
+        });
+    </script>
+</body></html>

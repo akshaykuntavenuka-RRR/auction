@@ -1,0 +1,14 @@
+{
+  "rewrites": [],
+  "headers": [],
+  "routes": [
+    {
+      "src": "/cricinfo-img/(.*)",
+      "dest": "https://img1.hscicdn.com/$1",
+      "headers": {
+        "Referer": "https://www.espncricinfo.com/",
+        "Origin": "https://www.espncricinfo.com"
+      }
+    }
+  ]
+}

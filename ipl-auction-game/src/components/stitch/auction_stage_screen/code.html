@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Auction Stage | IPL MINI AUCTION</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Manrope:wght@400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#323033",
+                        "surface-dim": "#141315",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#e9c400",
+                        "on-primary-container": "#807099",
+                        "surface-variant": "#363437",
+                        "surface": "#141315",
+                        "inverse-primary": "#66577e",
+                        "surface-container-highest": "#363437",
+                        "on-error": "#690005",
+                        "secondary-container": "#ffdb3c",
+                        "secondary-fixed": "#ffe16d",
+                        "tertiary": "#cfbdfe",
+                        "surface-container-lowest": "#0f0e10",
+                        "on-primary-fixed-variant": "#4e4065",
+                        "on-tertiary-container": "#7f6eaa",
+                        "surface-container-low": "#1d1b1e",
+                        "secondary": "#fff9ef",
+                        "on-secondary-container": "#725f00",
+                        "primary-fixed": "#ecdcff",
+                        "outline-variant": "#49454d",
+                        "on-tertiary": "#36275d",
+                        "surface-container-high": "#2b292c",
+                        "on-primary-fixed": "#211437",
+                        "on-secondary-fixed-variant": "#544600",
+                        "primary-container": "#0a0020",
+                        "surface-container": "#211f22",
+                        "on-secondary": "#3a3000",
+                        "on-tertiary-fixed-variant": "#4d3d75",
+                        "background": "#141315",
+                        "tertiary-container": "#080022",
+                        "on-secondary-fixed": "#221b00",
+                        "error-container": "#93000a",
+                        "on-background": "#e6e1e5",
+                        "primary": "#d1bfeb",
+                        "surface-bright": "#3b383b",
+                        "primary-fixed-dim": "#d1bfeb",
+                        "on-primary": "#372a4d",
+                        "outline": "#948f98",
+                        "on-surface": "#e6e1e5",
+                        "on-tertiary-fixed": "#201047",
+                        "tertiary-fixed": "#e9ddff",
+                        "inverse-surface": "#e6e1e5",
+                        "surface-tint": "#d1bfeb",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#cbc4ce",
+                        "tertiary-fixed-dim": "#cfbdfe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-margin": "24px",
+                        "base": "8px",
+                        "card-padding": "20px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["Bebas Neue"],
+                        "label-caps": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Bebas Neue"],
+                        "display-lg": ["Bebas Neue"],
+                        "stats-numeric": ["Bebas Neue"],
+                        "headline-lg-mobile": ["Bebas Neue"]
+                    },
+                    "fontSize": {
+                        "display-md": ["48px", { "lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "display-lg": ["72px", { "lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "stats-numeric": ["24px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(54, 52, 55, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(255, 225, 109, 0.2), inset 0 0 1px 0.5px rgba(255, 225, 109, 0.5);
+        }
+        .auction-gradient {
+            background: radial-gradient(circle at center, #211437 0%, #141315 100%);
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+        .animate-bid-pulse {
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background auction-gradient min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50 border-b border-white/20 bg-surface/40 shadow-lg shadow-secondary-container/10 flex justify-between items-center px-container-margin py-base w-full max-w-full">
+<div class="flex items-center gap-4">
+<span class="font-display-md text-display-md text-secondary-fixed dark:text-secondary-fixed-dim tracking-widest uppercase">IPL MINI AUCTION</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-secondary-fixed font-bold border-b-2 border-secondary-fixed py-2" href="#">Auction</a>
+<a class="text-on-surface-variant font-medium hover:bg-white/10 transition-colors duration-300 px-4 py-2 rounded" href="#">Teams</a>
+<a class="text-on-surface-variant font-medium hover:bg-white/10 transition-colors duration-300 px-4 py-2 rounded" href="#">Players</a>
+<a class="text-on-surface-variant font-medium hover:bg-white/10 transition-colors duration-300 px-4 py-2 rounded" href="#">History</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined text-secondary-fixed">sports_cricket</span>
+</button>
+<button class="p-2 hover:bg-white/10 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined text-secondary-fixed">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full border border-secondary-fixed/30 overflow-hidden">
+<img alt="User Profile Avatar" data-alt="A professional studio portrait of a high-end auctioneer with sharp features, wearing a dark navy tailored suit. The lighting is dramatic, high-contrast cinematic style typical of professional sports broadcasts. The background is a soft-focus bokeh of stadium lights in deep purples and electric golds, maintaining a premium and serious athletic atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpaghgIBwgquczbYN84AW7ovXziqfXzLKZUakWfTdYIRS3PSvjBdmXLMfYD73Ido28yqRlDeXuYE-BWAoqsEuxd1DZgpRaAK9jGwikFBRbjn2khSZT-nrk5FeH30V97ei1vxMxvYe8NmIwrI5lcj3SBQsIAdb5RMZve3eIEgzFFA_Q8H-k7GjfWFMQBTB6ulEHIM9sLVFJTTg3dUMCBHmz-8AbPnFXttA_PTdVYBT5pc9Aiak3po3i5JsU2RFC3KfV5v9YDSrffce0"/>
+</div>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center p-container-margin gap-8 max-w-7xl mx-auto w-full">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter w-full items-start">
+<!-- Left Side: Player Spotlight Card -->
+<div class="lg:col-span-8 flex flex-col gap-base">
+<div class="glass-card rounded-xl overflow-hidden relative group border-secondary-fixed/20">
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent z-10"></div>
+<!-- Role Badge -->
+<div class="absolute top-card-padding left-card-padding z-20">
+<span class="bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full font-label-caps text-label-caps shadow-lg">BAT</span>
+</div>
+<!-- Progress Bar -->
+<div class="absolute bottom-0 left-0 w-full h-1 bg-surface-container z-20">
+<div class="h-full bg-secondary-fixed-dim" style="width: 45%;"></div>
+</div>
+<div class="flex flex-col md:flex-row items-end md:items-stretch">
+<div class="w-full md:w-1/2 relative min-h-[400px]">
+<img alt="Virat Kohli" class="w-full h-full object-cover" data-alt="A heroic, cinematic action shot of a world-class cricket player in a vibrant red and black team jersey, mid-stroke under intense stadium floodlights. The scene captures an atmosphere of peak athletic performance and high-stakes competition. The lighting features a deep purple and gold color palette, with sharp highlights reflecting off the jersey's metallic accents, creating a legendary sports broadcast feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTYx2FF8xpsupSi8jcblJZHhiu8-CbPdkytCkn6na9UVkgFFTBSDzmEgVL1Gi0amd2wYLr59TvH-UqRJhG9C20oGianbNg8f5fVgHpCE7xCttMEhjdiRhcXrmRUhP_4oA_rcXNOD-L2YHkO1Ga2o5KWYmm-1tcKTtJpAQXYEPJfzgXPo2rYvnTUfZufXg4VpXwKm299b-dz8QlORyoptr3z7dQRoeOQVRYhWaOnyAeR6dfACfsHYBvAUGnzzTeuWQljmrahDiG3cF3"/>
+</div>
+<div class="w-full md:w-1/2 p-card-padding relative z-20 flex flex-col justify-end bg-surface/40 backdrop-blur-md">
+<span class="text-on-secondary-fixed-variant font-label-caps text-label-caps tracking-[0.2em] mb-2">ROYAL CHALLENGERS BANGALORE</span>
+<h1 class="font-display-lg text-display-lg text-secondary-fixed leading-tight mb-4 uppercase">VIRAT KOHLI</h1>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-caps text-label-caps">MATCHES</span>
+<span class="font-stats-numeric text-stats-numeric text-secondary-fixed">237</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-caps text-label-caps">RUNS</span>
+<span class="font-stats-numeric text-stats-numeric text-secondary-fixed">7263</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-caps text-label-caps">AVG</span>
+<span class="font-stats-numeric text-stats-numeric text-secondary-fixed">37.2</span>
+</div>
+<div class="flex flex-col">
+<span class="text-on-surface-variant font-label-caps text-label-caps">S/R</span>
+<span class="font-stats-numeric text-stats-numeric text-secondary-fixed">130.0</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-on-surface-variant font-label-caps text-label-caps">BASE PRICE:</span>
+<span class="font-stats-numeric text-stats-numeric text-on-surface">₹2.00 Cr</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Bid Panel -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="glass-card rounded-xl p-card-padding border-secondary-fixed/40 gold-glow animate-bid-pulse">
+<div class="flex flex-col items-center text-center">
+<span class="text-on-surface-variant font-label-caps text-label-caps mb-2">CURRENT BID</span>
+<div class="font-display-md text-display-md text-[#00C853] mb-1">₹15.25 Cr</div>
+<div class="flex items-center gap-2 px-4 py-1 bg-secondary-container/10 border border-secondary-container/20 rounded-full">
+<div class="w-2 h-2 rounded-full bg-blue-500"></div>
+<span class="text-on-secondary-container font-medium text-body-md uppercase">MUMBAI INDIANS</span>
+</div>
+</div>
+</div>
+<div class="glass-card rounded-xl p-card-padding flex flex-col gap-base">
+<label class="font-label-caps text-label-caps text-on-surface-variant">PLACE YOUR BID</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-xl p-4 font-stats-numeric text-stats-numeric text-secondary-fixed focus:border-secondary-fixed focus:ring-1 focus:ring-secondary-fixed outline-none transition-all placeholder:opacity-30" placeholder="₹15.50 Cr" type="text"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-caps text-label-caps">+ ₹25L</div>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container py-4 rounded-xl font-display-md text-display-md active:scale-95 transition-transform flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(255,219,60,0.3)]">
+<span class="material-symbols-outlined">gavel</span>
+                        BID ₹
+                    </button>
+</div>
+<div class="flex gap-base">
+<button class="flex-1 bg-[#00C853]/20 border border-[#00C853]/40 text-[#00C853] py-4 rounded-xl font-label-caps text-label-caps flex flex-col items-center justify-center hover:bg-[#00C853]/30 transition-colors">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        SOLD
+                    </button>
+<button class="flex-1 bg-surface-container-highest border border-outline-variant text-on-surface-variant py-4 rounded-xl font-label-caps text-label-caps flex flex-col items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined mb-1">cancel</span>
+                        UNSOLD
+                    </button>
+</div>
+</div>
+</div>
+<!-- Team Status Bar -->
+<div class="w-full overflow-hidden relative">
+<div class="flex overflow-x-auto pb-4 gap-base scrollbar-hide no-scrollbar -mx-4 px-4">
+<!-- Team Card: MI (Active) -->
+<div class="flex-shrink-0 glass-card p-4 rounded-xl border-secondary-fixed/50 gold-glow min-w-[200px] flex items-center gap-4">
+<div class="w-3 h-3 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.8)]"></div>
+<div>
+<div class="font-label-caps text-[10px] text-on-surface-variant">MUMBAI INDIANS</div>
+<div class="font-stats-numeric text-stats-numeric text-secondary-fixed leading-none">₹28.4 Cr</div>
+</div>
+</div>
+<!-- Team Card: CSK -->
+<div class="flex-shrink-0 glass-card p-4 rounded-xl border-white/10 min-w-[200px] flex items-center gap-4">
+<div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+<div>
+<div class="font-label-caps text-[10px] text-on-surface-variant">CSK</div>
+<div class="font-stats-numeric text-stats-numeric text-secondary-fixed leading-none">₹12.1 Cr</div>
+</div>
+</div>
+<!-- Team Card: KKR -->
+<div class="flex-shrink-0 glass-card p-4 rounded-xl border-white/10 min-w-[200px] flex items-center gap-4">
+<div class="w-3 h-3 rounded-full bg-purple-700"></div>
+<div>
+<div class="font-label-caps text-[10px] text-on-surface-variant">KKR</div>
+<div class="font-stats-numeric text-stats-numeric text-secondary-fixed leading-none">₹34.8 Cr</div>
+</div>
+</div>
+<!-- Team Card: GT -->
+<div class="flex-shrink-0 glass-card p-4 rounded-xl border-white/10 min-w-[200px] flex items-center gap-4">
+<div class="w-3 h-3 rounded-full bg-slate-800"></div>
+<div>
+<div class="font-label-caps text-[10px] text-on-surface-variant">GUJARAT TITANS</div>
+<div class="font-stats-numeric text-stats-numeric text-secondary-fixed leading-none">₹42.0 Cr</div>
+</div>
+</div>
+<!-- Team Card: DC -->
+<div class="flex-shrink-0 glass-card p-4 rounded-xl border-white/10 min-w-[200px] flex items-center gap-4">
+<div class="w-3 h-3 rounded-full bg-blue-400"></div>
+<div>
+<div class="font-label-caps text-[10px] text-on-surface-variant">DELHI CAPITALS</div>
+<div class="font-stats-numeric text-stats-numeric text-secondary-fixed leading-none">₹18.9 Cr</div>
+</div>
+</div>
+<!-- Team Card: SRH -->
+<div class="flex-shrink-0 glass-card p-4 rounded-xl border-white/10 min-w-[200px] flex items-center gap-4">
+<div class="w-3 h-3 rounded-full bg-orange-500"></div>
+<div>
+<div class="font-label-caps text-[10px] text-on-surface-variant">SRH</div>
+<div class="font-stats-numeric text-stats-numeric text-secondary-fixed leading-none">₹22.5 Cr</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-surface-container-highest/80 backdrop-blur-2xl fixed bottom-0 w-full z-50 rounded-t-xl border-t border-white/10 shadow-[0_-8px_24px_rgba(0,0,0,0.5)] flex justify-around items-center px-4 pb-6 pt-2">
+<a class="flex flex-col items-center justify-center text-secondary-fixed bg-secondary-container/20 rounded-xl px-4 py-2 ring-1 ring-secondary-fixed/50 shadow-[0_0_15px_rgba(255,215,0,0.3)]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span class="font-label-caps text-label-caps mt-1">Auction</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-2 hover:text-on-surface transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-caps text-label-caps mt-1">Teams</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-2 hover:text-on-surface transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">person_search</span>
+<span class="font-label-caps text-label-caps mt-1">Players</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 px-4 py-2 hover:text-on-surface transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps mt-1">History</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for the Bid button
+        const bidButton = document.querySelector('button.bg-secondary-container');
+        if(bidButton) {
+            bidButton.addEventListener('click', function() {
+                this.classList.add('scale-95');
+                setTimeout(() => this.classList.remove('scale-95'), 100);
+                
+                // Trigger a flash effect on the current bid
+                const bidPanel = document.querySelector('.gold-glow');
+                bidPanel.style.backgroundColor = 'rgba(255, 219, 60, 0.2)';
+                setTimeout(() => {
+                    bidPanel.style.backgroundColor = 'rgba(54, 52, 55, 0.4)';
+                }, 300);
+            });
+        }
+
+        // Horizontal scrolling for team status
+        const scrollContainer = document.querySelector('.overflow-x-auto');
+        if(scrollContainer) {
+            scrollContainer.addEventListener('wheel', (evt) => {
+                evt.preventDefault();
+                scrollContainer.scrollLeft += evt.deltaY;
+            });
+        }
+    </script>
+</body></html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign In | IPL MINI AUCTION</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(54, 52, 55, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+        .stadium-glow {
+            background: radial-gradient(circle at center, rgba(209, 191, 235, 0.15) 0%, rgba(20, 19, 21, 0) 70%);
+        }
+        .geometric-lines {
+            background-image: 
+                linear-gradient(30deg, transparent 45%, rgba(233, 196, 0, 0.05) 48%, rgba(233, 196, 0, 0.1) 50%, rgba(233, 196, 0, 0.05) 52%, transparent 55%),
+                linear-gradient(150deg, transparent 45%, rgba(233, 196, 0, 0.05) 48%, rgba(233, 196, 0, 0.1) 50%, rgba(233, 196, 0, 0.05) 52%, transparent 55%);
+            background-size: 120px 120px;
+        }
+        .gold-glow-hover:hover {
+            box-shadow: 0 0 20px rgba(233, 196, 0, 0.4);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "inverse-on-surface": "#323033",
+                      "surface-dim": "#141315",
+                      "error": "#ffb4ab",
+                      "secondary-fixed-dim": "#e9c400",
+                      "on-primary-container": "#807099",
+                      "surface-variant": "#363437",
+                      "surface": "#141315",
+                      "inverse-primary": "#66577e",
+                      "surface-container-highest": "#363437",
+                      "on-error": "#690005",
+                      "secondary-container": "#ffdb3c",
+                      "secondary-fixed": "#ffe16d",
+                      "tertiary": "#cfbdfe",
+                      "surface-container-lowest": "#0f0e10",
+                      "on-primary-fixed-variant": "#4e4065",
+                      "on-tertiary-container": "#7f6eaa",
+                      "surface-container-low": "#1d1b1e",
+                      "secondary": "#fff9ef",
+                      "on-secondary-container": "#725f00",
+                      "primary-fixed": "#ecdcff",
+                      "outline-variant": "#49454d",
+                      "on-tertiary": "#36275d",
+                      "surface-container-high": "#2b292c",
+                      "on-primary-fixed": "#211437",
+                      "on-secondary-fixed-variant": "#544600",
+                      "primary-container": "#0a0020",
+                      "surface-container": "#211f22",
+                      "on-secondary": "#3a3000",
+                      "on-tertiary-fixed-variant": "#4d3d75",
+                      "background": "#141315",
+                      "tertiary-container": "#080022",
+                      "on-secondary-fixed": "#221b00",
+                      "error-container": "#93000a",
+                      "on-background": "#e6e1e5",
+                      "primary": "#d1bfeb",
+                      "surface-bright": "#3b383b",
+                      "primary-fixed-dim": "#d1bfeb",
+                      "on-primary": "#372a4d",
+                      "outline": "#948f98",
+                      "on-surface": "#e6e1e5",
+                      "on-tertiary-fixed": "#201047",
+                      "tertiary-fixed": "#e9ddff",
+                      "inverse-surface": "#e6e1e5",
+                      "surface-tint": "#d1bfeb",
+                      "on-error-container": "#ffdad6",
+                      "on-surface-variant": "#cbc4ce",
+                      "tertiary-fixed-dim": "#cfbdfe"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-margin": "24px",
+                      "base": "8px",
+                      "card-padding": "20px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "display-md": ["Bebas Neue"],
+                      "label-caps": ["Manrope"],
+                      "body-md": ["Manrope"],
+                      "body-lg": ["Manrope"],
+                      "headline-lg": ["Bebas Neue"],
+                      "display-lg": ["Bebas Neue"],
+                      "stats-numeric": ["Bebas Neue"],
+                      "headline-lg-mobile": ["Bebas Neue"]
+              },
+              "fontSize": {
+                      "display-md": ["48px", {"lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "400"}],
+                      "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "stats-numeric": ["24px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden h-screen w-full relative">
+<!-- Background Layers -->
+<div class="absolute inset-0 z-0 stadium-glow"></div>
+<div class="absolute inset-0 z-10 geometric-lines opacity-40"></div>
+<!-- Animated Stadium Lights Micro-interaction -->
+<div class="absolute w-96 h-96 bg-secondary-fixed/5 rounded-full blur-[100px] pointer-events-none z-20 transition-all duration-500 ease-out" id="glow-follow"></div>
+<main class="relative z-30 h-full flex flex-col items-center justify-center px-container-margin">
+<!-- Transactional Content: Suppression of Global Nav as per "The Destination Rule" -->
+<div class="w-full max-w-[420px] glass-panel rounded-xl p-8 flex flex-col items-center transform transition-all duration-700 hover:scale-[1.01] border-white/10">
+<!-- App Logo Section -->
+<div class="mb-10 relative">
+<div class="absolute -inset-4 bg-secondary-fixed/10 blur-xl rounded-full animate-pulse"></div>
+<img alt="IPL MINI AUCTION Logo" class="w-32 h-32 object-contain relative z-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS2rpJnbQDjbe6PvAmw19AkrrUP8uSixmpQ0fkSGjavyORB5KuBqAiB4SrlpSzC_rF31JEkKjYsB1ABQ9RarUEM_8gNCvUBJrgmgB740X0NOedQtaunL-WjWc2hGudq5MTeVA6FbRr2D2z2rKIuxRKReFNYUEDid-U5QqCpAmggbrgxb12W1ww6fN1LNyf-ROtfNbcptPWAXuWoTMgrivmHkKyoTeT5jIPZnC5Yovil22DPituZBzlLoJFZZ-1qG3f91aAeeQZnEmo"/>
+</div>
+<!-- Title Section -->
+<div class="text-center mb-8">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-secondary-fixed uppercase tracking-wider">
+                    Welcome Back
+                </h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-2 tracking-widest">
+                    The Hammer Awaits Your Strategy
+                </p>
+</div>
+<!-- Action Buttons Stack -->
+<div class="w-full space-y-4">
+<!-- Google Sign In Button -->
+<button class="w-full h-14 bg-white hover:bg-white/90 text-surface font-label-caps text-label-caps flex items-center justify-center gap-4 transition-all duration-200 active:scale-95 group relative overflow-hidden rounded-lg">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+<svg class="w-6 h-6" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+                    Continue with Google
+                </button>
+<!-- Divider -->
+<div class="flex items-center gap-4 py-2">
+<div class="h-[1px] flex-1 bg-outline-variant"></div>
+<span class="text-[10px] font-label-caps text-outline uppercase">or</span>
+<div class="h-[1px] flex-1 bg-outline-variant"></div>
+</div>
+<!-- Guest Button -->
+<button class="w-full h-12 border border-on-primary-fixed-variant text-primary font-label-caps text-label-caps hover:bg-primary-container transition-all duration-300 active:scale-95 rounded-lg flex items-center justify-center">
+                    Continue as Guest
+                </button>
+</div>
+<!-- Form Fields (Contextualized as secondary to main Google CTA) -->
+<div class="w-full mt-6 space-y-4">
+<div class="group">
+<label class="font-label-caps text-[10px] text-on-surface-variant ml-1 mb-1 block uppercase">Email Address</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:border-secondary-fixed focus:ring-1 focus:ring-secondary-fixed transition-all placeholder:text-on-surface-variant/30 font-body-md text-body-md" placeholder="name@example.com" type="email"/>
+</div>
+<button class="w-full font-label-caps text-label-caps text-on-primary-container hover:text-primary transition-colors py-2">
+                    Forgot Password?
+                </button>
+</div>
+<!-- Footer Compliance -->
+<div class="mt-10 text-center">
+<p class="text-[10px] text-on-surface-variant leading-relaxed max-w-[280px] mx-auto opacity-60">
+                    By signing in you agree to our <a class="text-secondary-fixed hover:underline" href="#">Terms of Service</a> and <a class="text-secondary-fixed hover:underline" href="#">Privacy Policy</a>.
+                </p>
+</div>
+</div>
+<!-- Atmospheric Elements -->
+<div class="mt-12 flex items-center gap-8 opacity-40">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-secondary-fixed text-4xl mb-2" data-icon="sports_cricket">sports_cricket</span>
+<span class="font-stats-numeric text-stats-numeric text-secondary-fixed">8+ Teams</span>
+</div>
+<div class="w-[1px] h-8 bg-outline-variant"></div>
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-secondary-fixed text-4xl mb-2" data-icon="gavel">gavel</span>
+<span class="font-stats-numeric text-stats-numeric text-secondary-fixed">Live Action</span>
+</div>
+<div class="w-[1px] h-8 bg-outline-variant"></div>
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-secondary-fixed text-4xl mb-2" data-icon="groups">groups</span>
+<span class="font-stats-numeric text-stats-numeric text-secondary-fixed">500+ Players</span>
+</div>
+</div>
+</main>
+<script>
+        // Atmospheric Mouse Follower
+        const glow = document.getElementById('glow-follow');
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            // Smoothed movement
+            requestAnimationFrame(() => {
+                glow.style.transform = `translate(${x - 192}px, ${y - 192}px)`;
+            });
+        });
+
+        // Simple button interaction
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                glow.style.backgroundColor = 'rgba(233, 196, 0, 0.1)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                glow.style.backgroundColor = 'rgba(209, 191, 235, 0.05)';
+            });
+        });
+    </script>
+</body></html>

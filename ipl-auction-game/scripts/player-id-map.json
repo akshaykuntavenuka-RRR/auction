@@ -1,0 +1,1217 @@
+{
+  "rohit-sharma": {
+    "name": "Rohit Sharma",
+    "slug": "rohit-sharma",
+    "id": 6
+  },
+  "surya-kumar-yadav": {
+    "name": "Surya Kumar Yadav",
+    "slug": "surya-kumar-yadav",
+    "id": 174
+  },
+  "robin-minz": {
+    "name": "Robin Minz",
+    "slug": "robin-minz",
+    "id": 3103
+  },
+  "sherfane-rutherford": {
+    "name": "Sherfane Rutherford",
+    "slug": "sherfane-rutherford",
+    "id": 122
+  },
+  "ryan-rickelton": {
+    "name": "Ryan Rickelton",
+    "slug": "ryan-rickelton",
+    "id": 743
+  },
+  "quinton-de-kock": {
+    "name": "Quinton de Kock",
+    "slug": "quinton-de-kock",
+    "id": 170
+  },
+  "danish-malewar": {
+    "name": "Danish Malewar",
+    "slug": "danish-malewar",
+    "id": 4546
+  },
+  "n-tilak-varma": {
+    "name": "N. Tilak Varma",
+    "slug": "n-tilak-varma",
+    "id": 993
+  },
+  "hardik-pandya": {
+    "name": "Hardik Pandya",
+    "slug": "hardik-pandya",
+    "id": 54
+  },
+  "naman-dhir": {
+    "name": "Naman Dhir",
+    "slug": "naman-dhir",
+    "id": 3107
+  },
+  "raj-angad-bawa": {
+    "name": "Raj Angad Bawa",
+    "slug": "raj-angad-bawa",
+    "id": 781
+  },
+  "mayank-rawat": {
+    "name": "Mayank Rawat",
+    "slug": "mayank-rawat",
+    "id": 1228
+  },
+  "krish-bhagat": {
+    "name": "Krish Bhagat",
+    "slug": "krish-bhagat",
+    "id": 5034
+  },
+  "corbin-bosch": {
+    "name": "Corbin Bosch",
+    "slug": "corbin-bosch",
+    "id": 1041
+  },
+  "will-jacks": {
+    "name": "Will Jacks",
+    "slug": "will-jacks",
+    "id": 1941
+  },
+  "shardul-thakur": {
+    "name": "Shardul Thakur",
+    "slug": "shardul-thakur",
+    "id": 105
+  },
+  "trent-boult": {
+    "name": "Trent Boult",
+    "slug": "trent-boult",
+    "id": 66
+  },
+  "mayank-markande": {
+    "name": "Mayank Markande",
+    "slug": "mayank-markande",
+    "id": 87
+  },
+  "deepak-chahar": {
+    "name": "Deepak Chahar",
+    "slug": "deepak-chahar",
+    "id": 91
+  },
+  "ashwani-kumar": {
+    "name": "Ashwani Kumar",
+    "slug": "ashwani-kumar",
+    "id": 3569
+  },
+  "raghu-sharma": {
+    "name": "Raghu Sharma",
+    "slug": "raghu-sharma",
+    "id": 3869
+  },
+  "mohammad-izhar": {
+    "name": "Mohammad Izhar",
+    "slug": "mohammad-izhar",
+    "id": 4545
+  },
+  "keshav-maharaj": {
+    "name": "Keshav Maharaj",
+    "slug": "keshav-maharaj",
+    "id": 347
+  },
+  "allah-ghazanfar": {
+    "name": "Allah Ghazanfar",
+    "slug": "allah-ghazanfar",
+    "id": 2761
+  },
+  "jasprit-bumrah": {
+    "name": "Jasprit Bumrah",
+    "slug": "jasprit-bumrah",
+    "id": 9
+  },
+  "ruturaj-gaikwad": {
+    "name": "Ruturaj Gaikwad",
+    "slug": "ruturaj-gaikwad",
+    "id": 102
+  },
+  "ms-dhoni": {
+    "name": "MS Dhoni",
+    "slug": "ms-dhoni",
+    "id": 57
+  },
+  "sanju-samson": {
+    "name": "Sanju Samson",
+    "slug": "sanju-samson",
+    "id": 190
+  },
+  "dewald-brevis": {
+    "name": "Dewald Brevis",
+    "slug": "dewald-brevis",
+    "id": 797
+  },
+  "kartik-sharma": {
+    "name": "Kartik Sharma",
+    "slug": "kartik-sharma",
+    "id": 4540
+  },
+  "sarfaraz-khan": {
+    "name": "Sarfaraz Khan",
+    "slug": "sarfaraz-khan",
+    "id": 139
+  },
+  "urvil-patel": {
+    "name": "Urvil Patel",
+    "slug": "urvil-patel",
+    "id": 1486
+  },
+  "prashant-veer": {
+    "name": "Prashant Veer",
+    "slug": "prashant-veer",
+    "id": 4541
+  },
+  "matthew-william-short": {
+    "name": "Matthew William Short",
+    "slug": "matthew-william-short",
+    "id": 2032
+  },
+  "aman-khan": {
+    "name": "Aman Khan",
+    "slug": "aman-khan",
+    "id": 979
+  },
+  "zak-foulkes": {
+    "name": "Zak Foulkes",
+    "slug": "zak-foulkes",
+    "id": 3493
+  },
+  "shivam-dube": {
+    "name": "Shivam Dube",
+    "slug": "shivam-dube",
+    "id": 211
+  },
+  "noor-ahmad": {
+    "name": "Noor Ahmad",
+    "slug": "noor-ahmad",
+    "id": 975
+  },
+  "anshul-kamboj": {
+    "name": "Anshul Kamboj",
+    "slug": "anshul-kamboj",
+    "id": 3106
+  },
+  "mukesh-choudhary": {
+    "name": "Mukesh Choudhary",
+    "slug": "mukesh-choudhary",
+    "id": 970
+  },
+  "shreyas-gopal": {
+    "name": "Shreyas Gopal",
+    "slug": "shreyas-gopal",
+    "id": 192
+  },
+  "gurjapneet-singh": {
+    "name": "Gurjapneet Singh",
+    "slug": "gurjapneet-singh",
+    "id": 2256
+  },
+  "akeal-hosein": {
+    "name": "Akeal Hosein",
+    "slug": "akeal-hosein",
+    "id": 722
+  },
+  "matt-henry": {
+    "name": "Matt Henry",
+    "slug": "matt-henry",
+    "id": 71
+  },
+  "rahul-chahar": {
+    "name": "Rahul Chahar",
+    "slug": "rahul-chahar",
+    "id": 171
+  },
+  "spencer-johnson": {
+    "name": "Spencer Johnson",
+    "slug": "spencer-johnson",
+    "id": 2518
+  },
+  "akash-madhwal": {
+    "name": "Akash Madhwal",
+    "slug": "akash-madhwal",
+    "id": 1045
+  },
+  "rajat-patidar": {
+    "name": "Rajat Patidar",
+    "slug": "rajat-patidar",
+    "id": 597
+  },
+  "devdutt-padikkal": {
+    "name": "Devdutt Padikkal",
+    "slug": "devdutt-padikkal",
+    "id": 200
+  },
+  "virat-kohli": {
+    "name": "Virat Kohli",
+    "slug": "virat-kohli",
+    "id": 2
+  },
+  "phil-salt": {
+    "name": "Phil Salt",
+    "slug": "phil-salt",
+    "id": 1220
+  },
+  "jitesh-sharma": {
+    "name": "Jitesh Sharma",
+    "slug": "jitesh-sharma",
+    "id": 1000
+  },
+  "jordan-cox": {
+    "name": "Jordan Cox",
+    "slug": "jordan-cox",
+    "id": 3372
+  },
+  "krunal-pandya": {
+    "name": "Krunal Pandya",
+    "slug": "krunal-pandya",
+    "id": 17
+  },
+  "swapnil-singh": {
+    "name": "Swapnil Singh",
+    "slug": "swapnil-singh",
+    "id": 1483
+  },
+  "tim-david": {
+    "name": "Tim David",
+    "slug": "tim-david",
+    "id": 636
+  },
+  "romario-shepherd": {
+    "name": "Romario Shepherd",
+    "slug": "romario-shepherd",
+    "id": 371
+  },
+  "jacob-bethell": {
+    "name": "Jacob Bethell",
+    "slug": "jacob-bethell",
+    "id": 869
+  },
+  "venkatesh-iyer": {
+    "name": "Venkatesh Iyer",
+    "slug": "venkatesh-iyer",
+    "id": 584
+  },
+  "satvik-deswal": {
+    "name": "Satvik Deswal",
+    "slug": "satvik-deswal",
+    "id": 4555
+  },
+  "mangesh-yadav": {
+    "name": "Mangesh Yadav",
+    "slug": "mangesh-yadav",
+    "id": 4554
+  },
+  "vicky-ostwal": {
+    "name": "Vicky Ostwal",
+    "slug": "vicky-ostwal",
+    "id": 786
+  },
+  "vihaan-malhotra": {
+    "name": "Vihaan Malhotra",
+    "slug": "vihaan-malhotra",
+    "id": 4012
+  },
+  "kanishk-chouhan": {
+    "name": "Kanishk Chouhan",
+    "slug": "kanishk-chouhan",
+    "id": 4016
+  },
+  "josh-hazlewood": {
+    "name": "Josh Hazlewood",
+    "slug": "josh-hazlewood",
+    "id": 36
+  },
+  "rasikh-dar": {
+    "name": "Rasikh Dar",
+    "slug": "rasikh-dar",
+    "id": 172
+  },
+  "suyash-sharma": {
+    "name": "Suyash Sharma",
+    "slug": "suyash-sharma",
+    "id": 1932
+  },
+  "bhuvneshwar-kumar": {
+    "name": "Bhuvneshwar Kumar",
+    "slug": "bhuvneshwar-kumar",
+    "id": 15
+  },
+  "abhinandan-singh": {
+    "name": "Abhinandan Singh",
+    "slug": "abhinandan-singh",
+    "id": 3574
+  },
+  "jacob-duffy": {
+    "name": "Jacob Duffy",
+    "slug": "jacob-duffy",
+    "id": 1701
+  },
+  "yash-dayal": {
+    "name": "Yash Dayal",
+    "slug": "yash-dayal",
+    "id": 978
+  },
+  "ajinkya-rahane": {
+    "name": "Ajinkya Rahane",
+    "slug": "ajinkya-rahane",
+    "id": 44
+  },
+  "rinku-singh": {
+    "name": "Rinku Singh",
+    "slug": "rinku-singh",
+    "id": 152
+  },
+  "angkrish-raghuvanshi": {
+    "name": "Angkrish Raghuvanshi",
+    "slug": "angkrish-raghuvanshi",
+    "id": 787
+  },
+  "manish-pandey": {
+    "name": "Manish Pandey",
+    "slug": "manish-pandey",
+    "id": 16
+  },
+  "finn-allen": {
+    "name": "Finn Allen",
+    "slug": "finn-allen",
+    "id": 595
+  },
+  "tejasvi-singh": {
+    "name": "Tejasvi Singh",
+    "slug": "tejasvi-singh",
+    "id": 4281
+  },
+  "rahul-tripathi": {
+    "name": "Rahul Tripathi",
+    "slug": "rahul-tripathi",
+    "id": 188
+  },
+  "tim-seifert": {
+    "name": "Tim Seifert",
+    "slug": "tim-seifert",
+    "id": 82
+  },
+  "rovman-powell": {
+    "name": "Rovman Powell",
+    "slug": "rovman-powell",
+    "id": 329
+  },
+  "anukul-roy": {
+    "name": "Anukul Roy",
+    "slug": "anukul-roy",
+    "id": 160
+  },
+  "cameron-green": {
+    "name": "Cameron Green",
+    "slug": "cameron-green",
+    "id": 550
+  },
+  "sarthak-ranjan": {
+    "name": "Sarthak Ranjan",
+    "slug": "sarthak-ranjan",
+    "id": 4203
+  },
+  "daksh-kamra": {
+    "name": "Daksh Kamra",
+    "slug": "daksh-kamra",
+    "id": 4548
+  },
+  "rachin-ravindra": {
+    "name": "Rachin Ravindra",
+    "slug": "rachin-ravindra",
+    "id": 724
+  },
+  "ramandeep-singh": {
+    "name": "Ramandeep Singh",
+    "slug": "ramandeep-singh",
+    "id": 991
+  },
+  "sunil-narine": {
+    "name": "Sunil Narine",
+    "slug": "sunil-narine",
+    "id": 156
+  },
+  "blessing-muzarabani": {
+    "name": "Blessing Muzarabani",
+    "slug": "blessing-muzarabani",
+    "id": 827
+  },
+  "vaibhav-arora": {
+    "name": "Vaibhav Arora",
+    "slug": "vaibhav-arora",
+    "id": 583
+  },
+  "kartik-tyagi": {
+    "name": "Kartik Tyagi",
+    "slug": "kartik-tyagi",
+    "id": 536
+  },
+  "prashant-solanki": {
+    "name": "Prashant Solanki",
+    "slug": "prashant-solanki",
+    "id": 972
+  },
+  "saurabh-dubey": {
+    "name": "Saurabh Dubey",
+    "slug": "saurabh-dubey",
+    "id": 1010
+  },
+  "navdeep-saini": {
+    "name": "Navdeep Saini",
+    "slug": "navdeep-saini",
+    "id": 207
+  },
+  "umran-malik": {
+    "name": "Umran Malik",
+    "slug": "umran-malik",
+    "id": 637
+  },
+  "varun-chakaravarthy": {
+    "name": "Varun Chakaravarthy",
+    "slug": "varun-chakaravarthy",
+    "id": 140
+  },
+  "shubham-dubey": {
+    "name": "Shubham Dubey",
+    "slug": "shubham-dubey",
+    "id": 3112
+  },
+  "vaibhav-sooryavanshi": {
+    "name": "Vaibhav Sooryavanshi",
+    "slug": "vaibhav-sooryavanshi",
+    "id": 3498
+  },
+  "donovan-ferreira": {
+    "name": "Donovan Ferreira",
+    "slug": "donovan-ferreira",
+    "id": 2033
+  },
+  "lhuan-dre-pretorious": {
+    "name": "Lhuan-dre Pretorious",
+    "slug": "lhuan-dre-pretorious",
+    "id": 2827
+  },
+  "aman-rao-perala": {
+    "name": "Aman Rao Perala",
+    "slug": "aman-rao-perala",
+    "id": 4552
+  },
+  "shimron-hetmyer": {
+    "name": "Shimron Hetmyer",
+    "slug": "shimron-hetmyer",
+    "id": 210
+  },
+  "yashasvi-jaiswal": {
+    "name": "Yashasvi Jaiswal",
+    "slug": "yashasvi-jaiswal",
+    "id": 533
+  },
+  "dhruv-jurel": {
+    "name": "Dhruv Jurel",
+    "slug": "dhruv-jurel",
+    "id": 1004
+  },
+  "riyan-parag": {
+    "name": "Riyan Parag",
+    "slug": "riyan-parag",
+    "id": 189
+  },
+  "yudhvir-singh-charak": {
+    "name": "Yudhvir Singh Charak",
+    "slug": "yudhvir-singh-charak",
+    "id": 587
+  },
+  "ravindra-jadeja": {
+    "name": "Ravindra Jadeja",
+    "slug": "ravindra-jadeja",
+    "id": 46
+  },
+  "dasun-shanaka": {
+    "name": "Dasun Shanaka",
+    "slug": "dasun-shanaka",
+    "id": 375
+  },
+  "jofra-archer": {
+    "name": "Jofra Archer",
+    "slug": "jofra-archer",
+    "id": 181
+  },
+  "tushar-deshpande": {
+    "name": "Tushar Deshpande",
+    "slug": "tushar-deshpande",
+    "id": 539
+  },
+  "kwena-maphaka": {
+    "name": "Kwena Maphaka",
+    "slug": "kwena-maphaka",
+    "id": 801
+  },
+  "ravi-bishnoi": {
+    "name": "Ravi Bishnoi",
+    "slug": "ravi-bishnoi",
+    "id": 520
+  },
+  "sushant-mishra": {
+    "name": "Sushant Mishra",
+    "slug": "sushant-mishra",
+    "id": 1016
+  },
+  "yash-raj-punja": {
+    "name": "Yash Raj Punja",
+    "slug": "yash-raj-punja",
+    "id": 4553
+  },
+  "vignesh-puthur": {
+    "name": "Vignesh Puthur",
+    "slug": "vignesh-puthur",
+    "id": 3566
+  },
+  "brijesh-sharma": {
+    "name": "Brijesh Sharma",
+    "slug": "brijesh-sharma",
+    "id": 4551
+  },
+  "adam-milne": {
+    "name": "Adam Milne",
+    "slug": "adam-milne",
+    "id": 157
+  },
+  "kuldeep-sen": {
+    "name": "Kuldeep Sen",
+    "slug": "kuldeep-sen",
+    "id": 1005
+  },
+  "sandeep-sharma": {
+    "name": "Sandeep Sharma",
+    "slug": "sandeep-sharma",
+    "id": 220
+  },
+  "nandre-burger": {
+    "name": "Nandre Burger",
+    "slug": "nandre-burger",
+    "id": 2806
+  },
+  "kl-rahul": {
+    "name": "KL Rahul",
+    "slug": "kl-rahul",
+    "id": 19
+  },
+  "karun-nair": {
+    "name": "Karun Nair",
+    "slug": "karun-nair",
+    "id": 131
+  },
+  "david-miller": {
+    "name": "David Miller",
+    "slug": "david-miller",
+    "id": 128
+  },
+  "pathum-nissanka": {
+    "name": "Pathum Nissanka",
+    "slug": "pathum-nissanka",
+    "id": 618
+  },
+  "sahil-parakh": {
+    "name": "Sahil Parakh",
+    "slug": "sahil-parakh",
+    "id": 4542
+  },
+  "prithvi-shaw": {
+    "name": "Prithvi Shaw",
+    "slug": "prithvi-shaw",
+    "id": 51
+  },
+  "abishek-porel": {
+    "name": "Abishek Porel",
+    "slug": "abishek-porel",
+    "id": 1580
+  },
+  "tristan-stubbs": {
+    "name": "Tristan Stubbs",
+    "slug": "tristan-stubbs",
+    "id": 1017
+  },
+  "axar-patel": {
+    "name": "Axar Patel",
+    "slug": "axar-patel",
+    "id": 110
+  },
+  "sameer-rizvi": {
+    "name": "Sameer Rizvi",
+    "slug": "sameer-rizvi",
+    "id": 1229
+  },
+  "ashutosh-sharma": {
+    "name": "Ashutosh Sharma",
+    "slug": "ashutosh-sharma",
+    "id": 3109
+  },
+  "vipraj-nigam": {
+    "name": "Vipraj Nigam",
+    "slug": "vipraj-nigam",
+    "id": 3560
+  },
+  "ajay-mandal": {
+    "name": "Ajay Mandal",
+    "slug": "ajay-mandal",
+    "id": 1931
+  },
+  "tripurana-vijay": {
+    "name": "Tripurana Vijay",
+    "slug": "tripurana-vijay",
+    "id": 3563
+  },
+  "madhav-tiwari": {
+    "name": "Madhav Tiwari",
+    "slug": "madhav-tiwari",
+    "id": 3561
+  },
+  "nitish-rana": {
+    "name": "Nitish Rana",
+    "slug": "nitish-rana",
+    "id": 148
+  },
+  "mitchell-starc": {
+    "name": "Mitchell Starc",
+    "slug": "mitchell-starc",
+    "id": 31
+  },
+  "t-natarajan": {
+    "name": "T. Natarajan",
+    "slug": "t-natarajan",
+    "id": 224
+  },
+  "mukesh-kumar": {
+    "name": "Mukesh Kumar",
+    "slug": "mukesh-kumar",
+    "id": 1462
+  },
+  "dushmantha-chameera": {
+    "name": "Dushmantha Chameera",
+    "slug": "dushmantha-chameera",
+    "id": 608
+  },
+  "auqib-nabi": {
+    "name": "Auqib Nabi",
+    "slug": "auqib-nabi",
+    "id": 4543
+  },
+  "lungisani-ngidi": {
+    "name": "Lungisani Ngidi",
+    "slug": "lungisani-ngidi",
+    "id": 99
+  },
+  "kyle-jamieson": {
+    "name": "Kyle Jamieson",
+    "slug": "kyle-jamieson",
+    "id": 382
+  },
+  "rehan-ahmed": {
+    "name": "Rehan Ahmed",
+    "slug": "rehan-ahmed",
+    "id": 874
+  },
+  "kuldeep-yadav": {
+    "name": "Kuldeep Yadav",
+    "slug": "kuldeep-yadav",
+    "id": 14
+  },
+  "ishan-kishan": {
+    "name": "Ishan Kishan",
+    "slug": "ishan-kishan",
+    "id": 164
+  },
+  "aniket-verma": {
+    "name": "Aniket Verma",
+    "slug": "aniket-verma",
+    "id": 3576
+  },
+  "smaran-ravichandran": {
+    "name": "Smaran Ravichandran",
+    "slug": "smaran-ravichandran",
+    "id": 3752
+  },
+  "salil-arora": {
+    "name": "Salil Arora",
+    "slug": "salil-arora",
+    "id": 4556
+  },
+  "heinrich-klaasen": {
+    "name": "Heinrich Klaasen",
+    "slug": "heinrich-klaasen",
+    "id": 202
+  },
+  "travis-head": {
+    "name": "Travis Head",
+    "slug": "travis-head",
+    "id": 37
+  },
+  "harshal-patel": {
+    "name": "Harshal Patel",
+    "slug": "harshal-patel",
+    "id": 114
+  },
+  "kamindu-mendis": {
+    "name": "Kamindu Mendis",
+    "slug": "kamindu-mendis",
+    "id": 627
+  },
+  "harsh-dubey": {
+    "name": "Harsh Dubey",
+    "slug": "harsh-dubey",
+    "id": 1494
+  },
+  "shivang-kumar": {
+    "name": "Shivang Kumar",
+    "slug": "shivang-kumar",
+    "id": 4561
+  },
+  "krains-fuletra": {
+    "name": "Krains Fuletra",
+    "slug": "krains-fuletra",
+    "id": 4557
+  },
+  "liam-livingstone": {
+    "name": "Liam Livingstone",
+    "slug": "liam-livingstone",
+    "id": 183
+  },
+  "abhishek-sharma": {
+    "name": "Abhishek Sharma",
+    "slug": "abhishek-sharma",
+    "id": 212
+  },
+  "nitish-kumar-reddy": {
+    "name": "Nitish Kumar Reddy",
+    "slug": "nitish-kumar-reddy",
+    "id": 1944
+  },
+  "pat-cummins": {
+    "name": "Pat Cummins",
+    "slug": "pat-cummins",
+    "id": 33
+  },
+  "zeeshan-ansari": {
+    "name": "Zeeshan Ansari",
+    "slug": "zeeshan-ansari",
+    "id": 3575
+  },
+  "jaydev-unadkat": {
+    "name": "Jaydev Unadkat",
+    "slug": "jaydev-unadkat",
+    "id": 180
+  },
+  "eshan-malinga": {
+    "name": "Eshan Malinga",
+    "slug": "eshan-malinga",
+    "id": 3339
+  },
+  "sakib-hussain": {
+    "name": "Sakib Hussain",
+    "slug": "sakib-hussain",
+    "id": 3104
+  },
+  "onkar-tarmale": {
+    "name": "Onkar Tarmale",
+    "slug": "onkar-tarmale",
+    "id": 4560
+  },
+  "amit-kumar": {
+    "name": "Amit Kumar",
+    "slug": "amit-kumar",
+    "id": 4559
+  },
+  "praful-hinge": {
+    "name": "Praful Hinge",
+    "slug": "praful-hinge",
+    "id": 4558
+  },
+  "dilshan-madushanka": {
+    "name": "Dilshan Madushanka",
+    "slug": "dilshan-madushanka",
+    "id": 1018
+  },
+  "gerald-coetzee": {
+    "name": "Gerald Coetzee",
+    "slug": "gerald-coetzee",
+    "id": 2535
+  },
+  "shubman-gill": {
+    "name": "Shubman Gill",
+    "slug": "shubman-gill",
+    "id": 62
+  },
+  "jos-buttler": {
+    "name": "Jos Buttler",
+    "slug": "jos-buttler",
+    "id": 182
+  },
+  "kumar-kushagra": {
+    "name": "Kumar Kushagra",
+    "slug": "kumar-kushagra",
+    "id": 3101
+  },
+  "anuj-rawat": {
+    "name": "Anuj Rawat",
+    "slug": "anuj-rawat",
+    "id": 534
+  },
+  "connor-esterhuizen": {
+    "name": "Connor Esterhuizen",
+    "slug": "connor-esterhuizen",
+    "id": 5035
+  },
+  "glenn-phillips": {
+    "name": "Glenn Phillips",
+    "slug": "glenn-phillips",
+    "id": 635
+  },
+  "sai-sudharsan": {
+    "name": "Sai Sudharsan",
+    "slug": "sai-sudharsan",
+    "id": 976
+  },
+  "nishant-sindhu": {
+    "name": "Nishant Sindhu",
+    "slug": "nishant-sindhu",
+    "id": 791
+  },
+  "washington-sundar": {
+    "name": "Washington Sundar",
+    "slug": "washington-sundar",
+    "id": 20
+  },
+  "mohd-arshad-khan": {
+    "name": "Mohd. Arshad Khan",
+    "slug": "mohd-arshad-khan",
+    "id": 988
+  },
+  "sai-kishore": {
+    "name": "Sai Kishore",
+    "slug": "sai-kishore",
+    "id": 544
+  },
+  "jayant-yadav": {
+    "name": "Jayant Yadav",
+    "slug": "jayant-yadav",
+    "id": 165
+  },
+  "jason-holder": {
+    "name": "Jason Holder",
+    "slug": "jason-holder",
+    "id": 263
+  },
+  "rahul-tewatia": {
+    "name": "Rahul Tewatia",
+    "slug": "rahul-tewatia",
+    "id": 120
+  },
+  "shahrukh-khan": {
+    "name": "Shahrukh Khan",
+    "slug": "shahrukh-khan",
+    "id": 590
+  },
+  "kagiso-rabada": {
+    "name": "Kagiso Rabada",
+    "slug": "kagiso-rabada",
+    "id": 116
+  },
+  "mohammed-siraj": {
+    "name": "Mohammed Siraj",
+    "slug": "mohammed-siraj",
+    "id": 63
+  },
+  "prasidh-krishna": {
+    "name": "Prasidh Krishna",
+    "slug": "prasidh-krishna",
+    "id": 150
+  },
+  "manav-suthar": {
+    "name": "Manav Suthar",
+    "slug": "manav-suthar",
+    "id": 2443
+  },
+  "gurnoor-singh-brar": {
+    "name": "Gurnoor Singh Brar",
+    "slug": "gurnoor-singh-brar",
+    "id": 1231
+  },
+  "ishant-sharma": {
+    "name": "Ishant Sharma",
+    "slug": "ishant-sharma",
+    "id": 50
+  },
+  "ashok-sharma": {
+    "name": "Ashok Sharma",
+    "slug": "ashok-sharma",
+    "id": 980
+  },
+  "luke-wood": {
+    "name": "Luke Wood",
+    "slug": "luke-wood",
+    "id": 3116
+  },
+  "kulwant-khejroliya": {
+    "name": "Kulwant Khejroliya",
+    "slug": "kulwant-khejroliya",
+    "id": 204
+  },
+  "rashid-khan": {
+    "name": "Rashid Khan",
+    "slug": "rashid-khan",
+    "id": 218
+  },
+  "rishabh-pant": {
+    "name": "Rishabh Pant",
+    "slug": "rishabh-pant",
+    "id": 18
+  },
+  "aiden-markram": {
+    "name": "Aiden Markram",
+    "slug": "aiden-markram",
+    "id": 287
+  },
+  "himmat-singh": {
+    "name": "Himmat Singh",
+    "slug": "himmat-singh",
+    "id": 203
+  },
+  "matthew-breetzke": {
+    "name": "Matthew Breetzke",
+    "slug": "matthew-breetzke",
+    "id": 2805
+  },
+  "mukul-choudhary": {
+    "name": "Mukul Choudhary",
+    "slug": "mukul-choudhary",
+    "id": 4549
+  },
+  "akshat-raghuwanshi": {
+    "name": "Akshat Raghuwanshi",
+    "slug": "akshat-raghuwanshi",
+    "id": 1487
+  },
+  "josh-inglis": {
+    "name": "Josh Inglis",
+    "slug": "josh-inglis",
+    "id": 647
+  },
+  "nicholas-pooran": {
+    "name": "Nicholas Pooran",
+    "slug": "nicholas-pooran",
+    "id": 136
+  },
+  "mitchell-marsh": {
+    "name": "Mitchell Marsh",
+    "slug": "mitchell-marsh",
+    "id": 40
+  },
+  "abdul-samad": {
+    "name": "Abdul Samad",
+    "slug": "abdul-samad",
+    "id": 525
+  },
+  "shahbaz-ahamad": {
+    "name": "Shahbaz Ahamad",
+    "slug": "shahbaz-ahamad",
+    "id": 523
+  },
+  "arshin-kulkarni": {
+    "name": "Arshin Kulkarni",
+    "slug": "arshin-kulkarni",
+    "id": 2788
+  },
+  "ayush-badoni": {
+    "name": "Ayush Badoni",
+    "slug": "ayush-badoni",
+    "id": 985
+  },
+  "mohammad-shami": {
+    "name": "Mohammad Shami",
+    "slug": "mohammad-shami",
+    "id": 47
+  },
+  "avesh-khan": {
+    "name": "Avesh Khan",
+    "slug": "avesh-khan",
+    "id": 109
+  },
+  "m-siddharth": {
+    "name": "M. Siddharth",
+    "slug": "m-siddharth",
+    "id": 532
+  },
+  "digvesh-singh": {
+    "name": "Digvesh Singh",
+    "slug": "digvesh-singh",
+    "id": 3565
+  },
+  "akash-singh": {
+    "name": "Akash Singh",
+    "slug": "akash-singh",
+    "id": 535
+  },
+  "prince-yadav": {
+    "name": "Prince Yadav",
+    "slug": "prince-yadav",
+    "id": 1225
+  },
+  "arjun-tendulkar": {
+    "name": "Arjun Tendulkar",
+    "slug": "arjun-tendulkar",
+    "id": 585
+  },
+  "anrich-nortje": {
+    "name": "Anrich Nortje",
+    "slug": "anrich-nortje",
+    "id": 142
+  },
+  "naman-tiwari": {
+    "name": "Naman Tiwari",
+    "slug": "naman-tiwari",
+    "id": 2801
+  },
+  "george-linde": {
+    "name": "George Linde",
+    "slug": "george-linde",
+    "id": 340
+  },
+  "mayank-yadav": {
+    "name": "Mayank Yadav",
+    "slug": "mayank-yadav",
+    "id": 987
+  },
+  "mohsin-khan": {
+    "name": "Mohsin Khan",
+    "slug": "mohsin-khan",
+    "id": 541
+  },
+  "shreyas-iyer": {
+    "name": "Shreyas Iyer",
+    "slug": "shreyas-iyer",
+    "id": 12
+  },
+  "nehal-wadhera": {
+    "name": "Nehal Wadhera",
+    "slug": "nehal-wadhera",
+    "id": 1541
+  },
+  "vishnu-vinod": {
+    "name": "Vishnu Vinod",
+    "slug": "vishnu-vinod",
+    "id": 581
+  },
+  "harnoor-pannu": {
+    "name": "Harnoor Pannu",
+    "slug": "harnoor-pannu",
+    "id": 784
+  },
+  "pyla-avinash": {
+    "name": "Pyla Avinash",
+    "slug": "pyla-avinash",
+    "id": 3573
+  },
+  "prabhsimran-singh": {
+    "name": "Prabhsimran Singh",
+    "slug": "prabhsimran-singh",
+    "id": 137
+  },
+  "shashank-singh": {
+    "name": "Shashank Singh",
+    "slug": "shashank-singh",
+    "id": 191
+  },
+  "marcus-stoinis": {
+    "name": "Marcus Stoinis",
+    "slug": "marcus-stoinis",
+    "id": 23
+  },
+  "harpreet-brar": {
+    "name": "Harpreet Brar",
+    "slug": "harpreet-brar",
+    "id": 130
+  },
+  "marco-jansen": {
+    "name": "Marco Jansen",
+    "slug": "marco-jansen",
+    "id": 586
+  },
+  "azmatullah-omarzai": {
+    "name": "Azmatullah Omarzai",
+    "slug": "azmatullah-omarzai",
+    "id": 1354
+  },
+  "priyansh-arya": {
+    "name": "Priyansh Arya",
+    "slug": "priyansh-arya",
+    "id": 3571
+  },
+  "musheer-khan": {
+    "name": "Musheer Khan",
+    "slug": "musheer-khan",
+    "id": 2813
+  },
+  "suryansh-shedge": {
+    "name": "Suryansh Shedge",
+    "slug": "suryansh-shedge",
+    "id": 2146
+  },
+  "mitch-owen": {
+    "name": "Mitch Owen",
+    "slug": "mitch-owen",
+    "id": 3870
+  },
+  "cooper-connolly": {
+    "name": "Cooper Connolly",
+    "slug": "cooper-connolly",
+    "id": 848
+  },
+  "ben-dwarshuis": {
+    "name": "Ben Dwarshuis",
+    "slug": "ben-dwarshuis",
+    "id": 632
+  },
+  "arshdeep-singh": {
+    "name": "Arshdeep Singh",
+    "slug": "arshdeep-singh",
+    "id": 125
+  },
+  "yuzvendra-chahal": {
+    "name": "Yuzvendra Chahal",
+    "slug": "yuzvendra-chahal",
+    "id": 10
+  },
+  "vyshak-vijaykumar": {
+    "name": "Vyshak Vijaykumar",
+    "slug": "vyshak-vijaykumar",
+    "id": 2034
+  },
+  "yash-thakur": {
+    "name": "Yash Thakur",
+    "slug": "yash-thakur",
+    "id": 1550
+  },
+  "xavier-bartlett": {
+    "name": "Xavier Bartlett",
+    "slug": "xavier-bartlett",
+    "id": 3572
+  },
+  "pravin-dubey": {
+    "name": "Pravin Dubey",
+    "slug": "pravin-dubey",
+    "id": 548
+  },
+  "vishal-nishad": {
+    "name": "Vishal Nishad",
+    "slug": "vishal-nishad",
+    "id": 4547
+  },
+  "lockie-ferguson": {
+    "name": "Lockie Ferguson",
+    "slug": "lockie-ferguson",
+    "id": 69
+  }
+}

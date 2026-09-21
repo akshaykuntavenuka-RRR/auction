@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IPL Mini Auction - Splash</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Manrope:wght@400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @font-face {
+            font-family: 'bebasNeue';
+            src: local('Bebas Neue');
+        }
+        @font-face {
+            font-family: 'manrope';
+            src: local('Manrope');
+        }
+        
+        body {
+            background-color: #0a0020; /* Deep Purple as per prompt */
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .glass-glow {
+            background: rgba(255, 215, 0, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .animate-pulse-gold {
+            animation: pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+            }
+        }
+
+        .stadium-lights {
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(102, 87, 126, 0.1) 0%, transparent 40%);
+        }
+
+        .letter-spacing-wide {
+            letter-spacing: 0.2em;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#323033",
+                        "surface-dim": "#141315",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#e9c400",
+                        "on-primary-container": "#807099",
+                        "surface-variant": "#363437",
+                        "surface": "#141315",
+                        "inverse-primary": "#66577e",
+                        "surface-container-highest": "#363437",
+                        "on-error": "#690005",
+                        "secondary-container": "#ffdb3c",
+                        "secondary-fixed": "#ffe16d",
+                        "tertiary": "#cfbdfe",
+                        "surface-container-lowest": "#0f0e10",
+                        "on-primary-fixed-variant": "#4e4065",
+                        "on-tertiary-container": "#7f6eaa",
+                        "surface-container-low": "#1d1b1e",
+                        "secondary": "#fff9ef",
+                        "on-secondary-container": "#725f00",
+                        "primary-fixed": "#ecdcff",
+                        "outline-variant": "#49454d",
+                        "on-tertiary": "#36275d",
+                        "surface-container-high": "#2b292c",
+                        "on-primary-fixed": "#211437",
+                        "on-secondary-fixed-variant": "#544600",
+                        "primary-container": "#0a0020",
+                        "surface-container": "#211f22",
+                        "on-secondary": "#3a3000",
+                        "on-tertiary-fixed-variant": "#4d3d75",
+                        "background": "#141315",
+                        "tertiary-container": "#080022",
+                        "on-secondary-fixed": "#221b00",
+                        "error-container": "#93000a",
+                        "on-background": "#e6e1e5",
+                        "primary": "#d1bfeb",
+                        "surface-bright": "#3b383b",
+                        "primary-fixed-dim": "#d1bfeb",
+                        "on-primary": "#372a4d",
+                        "outline": "#948f98",
+                        "on-surface": "#e6e1e5",
+                        "on-tertiary-fixed": "#201047",
+                        "tertiary-fixed": "#e9ddff",
+                        "inverse-surface": "#e6e1e5",
+                        "surface-tint": "#d1bfeb",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#cbc4ce",
+                        "tertiary-fixed-dim": "#cfbdfe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-margin": "24px",
+                        "base": "8px",
+                        "card-padding": "20px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-md": ["bebasNeue"],
+                        "label-caps": ["manrope"],
+                        "body-md": ["manrope"],
+                        "body-lg": ["manrope"],
+                        "headline-lg": ["bebasNeue"],
+                        "display-lg": ["bebasNeue"],
+                        "stats-numeric": ["bebasNeue"],
+                        "headline-lg-mobile": ["bebasNeue"]
+                    },
+                    "fontSize": {
+                        "display-md": ["48px", {"lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "400"}],
+                        "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "stats-numeric": ["24px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-primary-container min-h-screen flex flex-col items-center justify-center p-container-margin overflow-hidden stadium-lights">
+<!-- Atmospheric Overlay Particles (Client-side effect) -->
+<div class="absolute inset-0 pointer-events-none opacity-30" id="particle-container"></div>
+<main class="relative z-10 flex flex-col items-center justify-center w-full max-w-lg text-center">
+<!-- App Logo (The Anchor) -->
+<div class="mb-base animate-pulse">
+<img alt="IPL Mini Auction Logo" class="w-64 h-64 md:w-80 md:h-80 object-contain drop-shadow-[0_0_50px_rgba(255,215,0,0.3)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS2rpJnbQDjbe6PvAmw19AkrrUP8uSixmpQ0fkSGjavyORB5KuBqAiB4SrlpSzC_rF31JEkKjYsB1ABQ9RarUEM_8gNCvUBJrgmgB740X0NOedQtaunL-WjWc2hGudq5MTeVA6FbRr2D2z2rKIuxRKReFNYUEDid-U5QqCpAmggbrgxb12W1ww6fN1LNyf-ROtfNbcptPWAXuWoTMgrivmHkKyoTeT5jIPZnC5Yovil22DPituZBzlLoJFZZ-1qG3f91aAeeQZnEmo"/>
+</div>
+<!-- Branding Section (Using JSON Strings and Style Guidance) -->
+<div class="space-y-4">
+<h1 class="font-display-md text-display-md md:font-display-lg md:text-display-lg text-secondary-fixed letter-spacing-wide drop-shadow-lg uppercase">
+                IPL MINI AUCTION
+            </h1>
+<p class="font-body-lg text-body-lg text-on-primary-container max-w-xs mx-auto opacity-80">
+                The Ultimate Friends Auction Experience
+            </p>
+</div>
+<!-- Call to Action -->
+<div class="mt-20">
+<button class="group relative inline-flex items-center justify-center px-10 py-4 font-headline-lg text-headline-lg text-primary-container bg-secondary-fixed rounded-full shadow-lg shadow-secondary-fixed/20 transition-all duration-300 active:scale-95 animate-pulse-gold overflow-hidden" onclick="handleBegin()">
+<span class="relative z-10">TAP TO BEGIN</span>
+<!-- Shimmer effect -->
+<div class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+</button>
+<div class="mt-8 flex items-center justify-center gap-2 text-on-primary-container opacity-50 font-label-caps text-label-caps tracking-widest uppercase">
+<span class="material-symbols-outlined text-[16px]">sports_cricket</span>
+                LIVE FROM THE ARENA
+            </div>
+</div>
+</main>
+<!-- Background Decoration -->
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none">
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-secondary-fixed/5 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-24 -right-24 w-96 h-96 bg-tertiary/5 rounded-full blur-3xl"></div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Atmospheric floating particles
+        const particleContainer = document.getElementById('particle-container');
+        const particleCount = 20;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            const size = Math.random() * 4 + 2;
+            particle.style.position = 'absolute';
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.backgroundColor = '#ffe16d';
+            particle.style.borderRadius = '50%';
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.opacity = Math.random();
+            
+            const duration = Math.random() * 5 + 5;
+            const delay = Math.random() * 5;
+            
+            particle.animate([
+                { transform: 'translateY(0) translateX(0)', opacity: 0 },
+                { transform: `translateY(-${Math.random() * 200 + 100}px) translateX(${Math.random() * 50 - 25}px)`, opacity: 0.8 },
+                { transform: `translateY(-${Math.random() * 400 + 300}px) translateX(${Math.random() * 100 - 50}px)`, opacity: 0 }
+            ], {
+                duration: duration * 1000,
+                delay: delay * 1000,
+                iterations: Infinity,
+                easing: 'ease-in-out'
+            });
+
+            particleContainer.appendChild(particle);
+        }
+
+        function handleBegin() {
+            // Flash effect on click
+            const flash = document.createElement('div');
+            flash.className = 'fixed inset-0 bg-white z-[100] transition-opacity duration-500 pointer-events-none opacity-0';
+            document.body.appendChild(flash);
+            
+            setTimeout(() => {
+                flash.style.opacity = '0.3';
+                setTimeout(() => {
+                    flash.style.opacity = '0';
+                    // Logic for transition to next screen would go here
+                    console.log('Auction Initialized...');
+                }, 200);
+            }, 50);
+        }
+    </script>
+</body></html>

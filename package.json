@@ -1,0 +1,12 @@
+{
+  "name": "ipl-auction-workspace",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm --prefix ipl-auction-game install",
+    "dev": "npm --prefix ipl-auction-game run dev",
+    "build": "npm --prefix ipl-auction-game run build",
+    "start": "node server.cjs",
+    "preview": "npm --prefix ipl-auction-game run preview",
+    "sync-players": "npm --prefix ipl-auction-game run sync-players"
+  }
+}
