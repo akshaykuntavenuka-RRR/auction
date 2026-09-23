@@ -16,17 +16,13 @@ function nameToSlug(name) {
 /**
  * PlayerImage — shows official IPL jersey headshot (from local /players/ folder).
  * Falls back to Wikipedia photo, then coloured initials avatar.
- *
- * Priority:
- *   1. /players/{slug}.png  — IPL jersey image (downloaded by scripts/download-ipl-jerseys.mjs)
- *   2. Wikipedia Pageimages API — real photo
- *   3. UI Avatars initials — stylised fallback
+ * Includes smooth loading animation and instant placeholder feedback.
  */
 export default function PlayerImage({ playerName, role, size = 'full', style = {} }) {
   const slug = nameToSlug(playerName || 'player');
   const localUrl = `/players/${slug}.png`;
 
-  const [photoSrc, setPhotoSrc] = useState(localUrl);  // Try local first
+  const [photoSrc, setPhotoSrc] = useState(localUrl);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [triedLocal, setTriedLocal] = useState(false);
   const [triedWiki, setTriedWiki] = useState(false);
@@ -81,28 +77,91 @@ export default function PlayerImage({ playerName, role, size = 'full', style = {
   };
 
   return (
-    <>
+    <div style={{ position: 'relative', width: baseStyle.width, height: baseStyle.height, overflow: 'hidden', borderRadius: baseStyle.borderRadius }}>
       <style>{`
-        @keyframes playerShimmer {
-          0%   { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
+        @keyframes playerSweep {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        @keyframes playerSpin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes pulseGlow {
+          0%, 100% { opacity: 0.8; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.05); }
         }
       `}</style>
 
-      {/* Shimmer shown behind image while it loads */}
+      {/* Sleek Loading Animation shown while image is loading */}
       {!imgLoaded && (
         <div
           style={{
-            ...baseStyle,
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(90deg, #1a1820 25%, #2a2632 50%, #1a1820 75%)',
-            backgroundSize: '200% 100%',
-            animation: 'playerShimmer 1.5s infinite',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(circle at center, #261f36 0%, #131217 100%)',
+            zIndex: 1,
           }}
-        />
+        >
+          {/* Subtle animated light sweep across the card */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(90deg, transparent, rgba(255, 130, 0, 0.12), transparent)',
+              animation: 'playerSweep 1.8s infinite ease-in-out',
+            }}
+          />
+
+          {/* Central spinner ring with cricket icon */}
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div
+              style={{
+                width: isThumb ? 28 : 42,
+                height: isThumb ? 28 : 42,
+                borderRadius: '50%',
+                border: '2.5px solid rgba(255, 130, 0, 0.18)',
+                borderTopColor: '#ff8200',
+                borderRightColor: '#d1bfeb',
+                animation: 'playerSpin 0.9s infinite linear',
+              }}
+            />
+            <span
+              style={{
+                position: 'absolute',
+                fontSize: isThumb ? 13 : 18,
+                animation: 'pulseGlow 1.4s infinite ease-in-out',
+              }}
+            >
+              🏏
+            </span>
+          </div>
+
+          {!isThumb && (
+            <div
+              style={{
+                marginTop: 10,
+                fontSize: 9,
+                fontWeight: 800,
+                letterSpacing: 1.5,
+                color: '#ff8200',
+                textTransform: 'uppercase',
+                fontFamily: "'Russo One', sans-serif",
+                opacity: 0.9,
+                position: 'relative',
+              }}
+            >
+              Loading Photo...
+            </div>
+          )}
+        </div>
       )}
 
+      {/* Actual Player Image (smoothly fades in once loaded) */}
       <img
         src={photoSrc}
         alt={playerName}
@@ -110,10 +169,12 @@ export default function PlayerImage({ playerName, role, size = 'full', style = {
         onError={handleError}
         style={{
           ...baseStyle,
+          position: 'absolute',
+          inset: 0,
           opacity: imgLoaded ? 1 : 0,
-          transition: 'opacity 0.5s ease',
+          transition: 'opacity 0.35s ease-out',
         }}
       />
-    </>
+    </div>
   );
 }

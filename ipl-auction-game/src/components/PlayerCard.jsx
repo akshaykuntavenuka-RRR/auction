@@ -112,16 +112,32 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
 
   // Full card (for spotlight in Auction.jsx)
   return (
-    <div style={{
-      background: '#1e1c20',
-      border: '1.5px solid rgba(255,255,255,0.16)',
-      borderRadius: 20,
-      padding: breakpoint.isMobile ? '16px 14px' : '18px 22px',
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100%',
-      boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
-    }}>
+    <div
+      key={player.id || player.name}
+      style={{
+        background: '#1e1c20',
+        border: '1.5px solid rgba(255,255,255,0.16)',
+        borderRadius: 20,
+        padding: breakpoint.isMobile ? '16px 14px' : '18px 22px',
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+        animation: 'cardReveal 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+      }}
+    >
+      <style>{`
+        @keyframes cardReveal {
+          0% {
+            opacity: 0.35;
+            transform: translateY(6px) scale(0.988);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
       {/* Top badges: role + nationality */}
       <div style={{
         display: 'flex',

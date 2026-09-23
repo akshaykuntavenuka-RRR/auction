@@ -134,6 +134,20 @@ export default function Auction() {
     }
   }, [chatMessages]);
 
+  // Preload upcoming player photos into memory to completely eliminate loading lag
+  useEffect(() => {
+    if (!players || players.length === 0) return;
+    const nextLimit = Math.min(players.length, currentPlayerIndex + 5);
+    for (let i = currentPlayerIndex + 1; i < nextLimit; i++) {
+      const p = players[i];
+      if (p?.name) {
+        const slug = p.name.toLowerCase().replace(/\./g, '').trim().replace(/\s+/g, '-');
+        const img = new Image();
+        img.src = `/players/${slug}.png`;
+      }
+    }
+  }, [currentPlayerIndex, players]);
+
   const humanTeam = teams.find(t => t.isUser || t.id === humanTeamId);
   const humanId = humanTeam?.id;
 
