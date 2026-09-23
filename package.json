@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "dev": "npm --prefix ipl-auction-game run dev",
-    "build": "npm --prefix ipl-auction-game run build",
+    "build": "npm --prefix ipl-auction-game run build && node scripts/copy-dist.cjs",
     "start": "node server.cjs",
     "preview": "npm --prefix ipl-auction-game run preview",
     "sync-players": "npm --prefix ipl-auction-game run sync-players"
