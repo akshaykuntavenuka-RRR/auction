@@ -1,8 +1,8 @@
 [phases.install]
-cmds = ["npm --prefix ipl-auction-game install"]
+cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["npm --prefix ipl-auction-game run build"]
+cmds = ["npm run build"]
 
 [start]
 cmd = "node server.cjs"
