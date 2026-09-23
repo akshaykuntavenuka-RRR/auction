@@ -115,8 +115,8 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
     <div style={{
       background: '#1e1c20',
       border: '1.5px solid rgba(255,255,255,0.16)',
-      borderRadius: 24,
-      padding: breakpoint.isMobile ? '18px 16px' : 40,
+      borderRadius: 20,
+      padding: breakpoint.isMobile ? '16px 14px' : '18px 22px',
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
@@ -126,18 +126,18 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: breakpoint.isMobile ? 8 : 14,
-        marginBottom: breakpoint.isMobile ? 14 : 24,
+        gap: breakpoint.isMobile ? 8 : 10,
+        marginBottom: breakpoint.isMobile ? 10 : 12,
         flexWrap: 'wrap',
       }}>
         <span style={{
           background: roleColor,
           color: '#0f0e10',
-          padding: breakpoint.isMobile ? '5px 14px' : '8px 22px',
+          padding: breakpoint.isMobile ? '4px 12px' : '5px 16px',
           borderRadius: 99,
-          fontSize: breakpoint.isMobile ? 13 : 16,
+          fontSize: breakpoint.isMobile ? 12 : 13,
           fontWeight: 800,
-          letterSpacing: 2,
+          letterSpacing: 1.5,
           textTransform: 'uppercase',
         }}>{player.role || roleLabel}</span>
 
@@ -145,9 +145,9 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
           <span style={{
             background: 'rgba(255,255,255,0.08)',
             color: '#cbc4ce',
-            padding: breakpoint.isMobile ? '5px 12px' : '8px 20px',
+            padding: breakpoint.isMobile ? '4px 10px' : '5px 14px',
             borderRadius: 99,
-            fontSize: breakpoint.isMobile ? 12 : 15,
+            fontSize: breakpoint.isMobile ? 11 : 12,
             fontWeight: 600,
             border: '1px solid rgba(255,255,255,0.16)',
           }}>{player.nationality}</span>
@@ -158,22 +158,22 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
       <div style={{
         display: 'flex',
         flexDirection: breakpoint.isMobile ? 'column' : 'row',
-        gap: 30,
+        gap: breakpoint.isMobile ? 14 : 20,
         alignItems: 'stretch',
         width: '100%',
       }}>
-        {/* Image Box ~320x380px */}
+        {/* Image Box ~190x215px */}
         <div style={{
-          width: breakpoint.isMobile ? '100%' : '300px',
-          height: breakpoint.isMobile ? '220px' : '360px',
-          minWidth: breakpoint.isMobile ? '100%' : '280px',
-          borderRadius: 18,
+          width: breakpoint.isMobile ? '100%' : '185px',
+          height: breakpoint.isMobile ? '180px' : '215px',
+          minWidth: breakpoint.isMobile ? '100%' : '165px',
+          borderRadius: 14,
           overflow: 'hidden',
           position: 'relative',
           background: '#141316',
           border: '1px solid rgba(255,255,255,0.16)',
           flexShrink: 0,
-          boxShadow: '0 10px 36px rgba(0,0,0,0.7)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
         }}>
           <PlayerImage
             playerName={player.name}
@@ -196,22 +196,22 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
           justifyContent: 'space-between',
         }}>
           <div>
-            <div style={{ fontSize: breakpoint.isMobile ? 12 : 15, color: '#ff8200', fontWeight: 800, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6 }}>
+            <div style={{ fontSize: breakpoint.isMobile ? 11 : 12, color: '#ff8200', fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4 }}>
               {player.ipl || player.team || ''} · {player.team2026 || 'IPL FRANCHISE'}
             </div>
 
             <h1 style={{
               fontFamily: "'Russo One', sans-serif",
-              fontSize: breakpoint.isMobile ? 'clamp(22px, 6vw, 32px)' : 'clamp(28px, 3.5vw, 44px)',
+              fontSize: breakpoint.isMobile ? 'clamp(18px, 4.5vw, 24px)' : 'clamp(20px, 2.2vw, 28px)',
               letterSpacing: '1px',
               color: '#ffffff',
-              lineHeight: 1.05,
-              marginBottom: breakpoint.isMobile ? 12 : 20,
+              lineHeight: 1.1,
+              marginBottom: breakpoint.isMobile ? 6 : 10,
             }}>{player.name}</h1>
           </div>
 
           {/* Stat Boxes: 2 columns x 2 rows */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: breakpoint.isMobile ? 8 : 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: breakpoint.isMobile ? 6 : 10 }}>
             {(isBAT || isWK) && <>
               <StatBox label="IPL Matches" value={player.stats?.matches ?? '-'} isMobile={breakpoint.isMobile} />
               <StatBox label="IPL Runs" value={player.stats?.runs ?? '-'} isMobile={breakpoint.isMobile} />
@@ -253,14 +253,14 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
       </div>
 
       {/* Base Price Line directly below stat grid */}
-      <div style={{ marginTop: breakpoint.isMobile ? 16 : 30, borderTop: '1px solid rgba(255,255,255,0.16)', paddingTop: breakpoint.isMobile ? 14 : 22 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-          <span style={{ fontSize: breakpoint.isMobile ? 12 : 16, color: '#9c8faa', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' }}>Base Price:</span>
-          <span style={{ fontFamily: "'Russo One', sans-serif", fontSize: breakpoint.isMobile ? '26px' : '36px', color: '#ffffff', letterSpacing: '1.5px' }}>₹{basePriceCr} Cr</span>
+      <div style={{ marginTop: breakpoint.isMobile ? 10 : 14, borderTop: '1px solid rgba(255,255,255,0.16)', paddingTop: breakpoint.isMobile ? 8 : 10 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+          <span style={{ fontSize: breakpoint.isMobile ? 11 : 13, color: '#9c8faa', fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase' }}>Base Price:</span>
+          <span style={{ fontFamily: "'Russo One', sans-serif", fontSize: breakpoint.isMobile ? '20px' : '26px', color: '#ffffff', letterSpacing: '1px' }}>₹{basePriceCr} Cr</span>
         </div>
 
         {/* Progress Bar */}
-        <div style={{ marginTop: 12, height: breakpoint.isMobile ? 8 : 12, background: 'rgba(255,255,255,0.14)', borderRadius: 99, overflow: 'hidden' }}>
+        <div style={{ marginTop: 8, height: breakpoint.isMobile ? 6 : 8, background: 'rgba(255,255,255,0.14)', borderRadius: 99, overflow: 'hidden' }}>
           <div style={{ 
             height: '100%', 
             width: `${bidTimer > 0 && countdown !== null ? (countdown / bidTimer) * 100 : 100}%`, 
@@ -280,12 +280,12 @@ function StatBox({ label, value, isMobile }) {
     <div style={{
       background: '#141316',
       border: '1px solid rgba(255,255,255,0.14)',
-      borderRadius: isMobile ? 12 : 16,
-      padding: isMobile ? '10px 12px' : '16px 20px',
+      borderRadius: isMobile ? 10 : 12,
+      padding: isMobile ? '6px 8px' : '8px 12px',
       textAlign: 'center',
     }}>
-      <div style={{ fontSize: isMobile ? 11 : 13.5, color: '#ff8200', fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: isMobile ? 4 : 6 }}>{label}</div>
-      <div style={{ fontFamily: "'Russo One', sans-serif", fontSize: isMobile ? '22px' : '30px', color: '#ffffff', lineHeight: 1 }}>{value}</div>
+      <div style={{ fontSize: isMobile ? 10 : 11, color: '#ff8200', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{label}</div>
+      <div style={{ fontFamily: "'Russo One', sans-serif", fontSize: isMobile ? '18px' : '22px', color: '#ffffff', lineHeight: 1.1 }}>{value}</div>
     </div>
   );
 }

@@ -1990,11 +1990,11 @@ export default function Auction() {
           )}
         </main>
       ) : (
-        <main className={`flex-grow flex flex-col pt-14 sm:pt-16 px-2 sm:px-4 lg:px-6 w-full ${isSoloMode ? 'pb-28 lg:pb-24' : 'pb-36 lg:pb-28'}`}>
-          <div className="w-full flex flex-col lg:flex-row gap-4 lg:gap-6 xl:gap-8 items-start flex-grow">
+        <main className={`flex-grow flex flex-col pt-13 sm:pt-14 px-2 sm:px-4 lg:px-6 w-full ${isSoloMode ? 'pb-20 lg:pb-20' : 'pb-24 lg:pb-24'}`}>
+          <div className="w-full flex flex-col lg:flex-row gap-3 lg:gap-4 xl:gap-5 items-start flex-grow">
 
             {/* COLUMN 1: Player Card & Bidding Block (Top-aligned, zero empty space) */}
-            <div className="w-full lg:w-[52%] xl:w-[50%] 2xl:w-[52%] shrink-0 flex flex-col gap-3 sm:gap-4 justify-start">
+            <div className="w-full lg:w-[50%] xl:w-[48%] 2xl:w-[50%] shrink-0 flex flex-col gap-2.5 sm:gap-3 justify-start">
 
               {/* Player Card (Spotlight) */}
               <div className="w-full">
@@ -2002,10 +2002,10 @@ export default function Auction() {
               </div>
 
               {/* Bid Board */}
-              <div className="glass-card rounded-2xl p-4 sm:p-4.5 border border-[#ff8200]/30 transition-all duration-300 relative overflow-hidden flex flex-col justify-center items-center w-full">
+              <div className="glass-card rounded-2xl p-2.5 sm:p-3 border border-[#ff8200]/30 transition-all duration-300 relative overflow-hidden flex flex-col justify-center items-center w-full">
                 <div className="flex flex-col items-center text-center">
-                  <span className="text-on-surface-variant font-bold text-[10px] sm:text-xs tracking-widest mb-0.5 opacity-75">CURRENT BID</span>
-                  <div className="text-4xl sm:text-5xl font-black text-[#00C853] mb-1 leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>₹{displayBid} Cr</div>
+                  <span className="text-on-surface-variant font-bold text-[9px] sm:text-[10px] tracking-widest mb-0.5 opacity-75">CURRENT BID</span>
+                  <div className="text-3xl sm:text-4xl font-black text-[#00C853] mb-0.5 leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>₹{displayBid} Cr</div>
 
                   {isPaused && (
                     <div className="mb-1 px-2.5 py-0.5 bg-[#ef4444]/20 border border-[#ef4444]/40 rounded-full text-[#ef4444] font-extrabold text-[9px] uppercase tracking-widest animate-pulse flex items-center gap-1">
@@ -2046,7 +2046,7 @@ export default function Auction() {
 
               {/* Controls */}
               {isSoloMode ? (
-                <div className="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 flex flex-col gap-3 w-full justify-center shadow-lg">
+                <div className="glass-card rounded-2xl p-2.5 sm:p-3 border border-white/10 flex flex-col gap-2 w-full justify-center shadow-lg">
                   <div className="flex items-center justify-between">
                     <label className="font-bold text-xs tracking-widest text-[#d1bfeb] opacity-90 uppercase flex items-center gap-1.5">
                       <span className="text-sm">🔨</span>
@@ -2054,37 +2054,37 @@ export default function Auction() {
                     </label>
                     <span className="text-[10px] text-[#cbc4ce] opacity-60 font-semibold tracking-wider uppercase">Quick Increment</span>
                   </div>
-                  <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 w-full">
+                  <div className="flex items-center justify-center gap-3 sm:gap-4 md:gap-5 w-full">
                     <button
                       onClick={() => handleHumanIncrementBid(0.25)}
                       disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.25 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 max-w-[220px] h-16 sm:h-[72px] bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-2xl font-black tracking-wider transition-all hover:scale-[1.04] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer"
+                      className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer"
                     >
-                      <span className="text-xl sm:text-2xl font-black leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>+25L</span>
+                      <span className="text-lg sm:text-xl font-black leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>+25L</span>
                     </button>
                     <button
                       onClick={() => handleHumanIncrementBid(0.50)}
                       disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.50 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 max-w-[220px] h-16 sm:h-[72px] bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-2xl font-black tracking-wider transition-all hover:scale-[1.04] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer"
+                      className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer"
                     >
-                      <span className="text-xl sm:text-2xl font-black leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>+50L</span>
+                      <span className="text-lg sm:text-xl font-black leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>+50L</span>
                     </button>
                     <button
                       onClick={() => handleHumanIncrementBid(1.00)}
                       disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 1.00 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 max-w-[220px] h-16 sm:h-[72px] bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-2xl font-black tracking-wider transition-all hover:scale-[1.04] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer"
+                      className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer"
                     >
-                      <span className="text-xl sm:text-2xl font-black leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>+1 CR</span>
+                      <span className="text-lg sm:text-xl font-black leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>+1 CR</span>
                     </button>
                   </div>
                 </div>
               ) : roomCode && !isHost ? (
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-5 text-center font-bold text-sm uppercase tracking-widest opacity-60 w-full flex items-center justify-center min-h-[90px]">
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center font-bold text-xs uppercase tracking-widest opacity-60 w-full flex items-center justify-center min-h-[70px]">
                   📣 Host is conducting the hammer draft...
                 </div>
               ) : (
                 /* Host Controls */
-                <div className="glass-card rounded-2xl p-4 sm:p-5 border border-white/10 flex flex-col gap-3 w-full justify-center shadow-lg">
+                <div className="glass-card rounded-2xl p-2.5 sm:p-3 border border-white/10 flex flex-col gap-2 w-full justify-center shadow-lg">
                   <div className="flex items-center justify-between">
                     <label className="font-bold text-xs tracking-widest text-[#d1bfeb] opacity-90 uppercase flex items-center gap-1.5">
                       <span className="text-sm">🔨</span>
@@ -2092,15 +2092,15 @@ export default function Auction() {
                     </label>
                     <span className="text-[10px] text-[#cbc4ce] opacity-60 font-semibold tracking-wider uppercase">Quick Increment</span>
                   </div>
-                  <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 w-full">
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.25)} className="flex-1 max-w-[220px] h-16 sm:h-[72px] bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-2xl font-black tracking-wider transition-all hover:scale-[1.04] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer">
-                      <span className="text-xl sm:text-2xl font-black leading-none text-[#141315]" style={{ fontFamily: "'Russo One', sans-serif" }}>+25L</span>
+                  <div className="flex items-center justify-center gap-3 sm:gap-4 md:gap-5 w-full">
+                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.25)} className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer">
+                      <span className="text-lg sm:text-xl font-black leading-none text-[#141315]" style={{ fontFamily: "'Russo One', sans-serif" }}>+25L</span>
                     </button>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.50)} className="flex-1 max-w-[220px] h-16 sm:h-[72px] bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-2xl font-black tracking-wider transition-all hover:scale-[1.04] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer">
-                      <span className="text-xl sm:text-2xl font-black leading-none text-[#141315]" style={{ fontFamily: "'Russo One', sans-serif" }}>+50L</span>
+                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.50)} className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer">
+                      <span className="text-lg sm:text-xl font-black leading-none text-[#141315]" style={{ fontFamily: "'Russo One', sans-serif" }}>+50L</span>
                     </button>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(1.00)} className="flex-1 max-w-[220px] h-16 sm:h-[72px] bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-2xl font-black tracking-wider transition-all hover:scale-[1.04] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer">
-                      <span className="text-xl sm:text-2xl font-black leading-none text-[#141315]" style={{ fontFamily: "'Russo One', sans-serif" }}>+1 CR</span>
+                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(1.00)} className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer">
+                      <span className="text-lg sm:text-xl font-black leading-none text-[#141315]" style={{ fontFamily: "'Russo One', sans-serif" }}>+1 CR</span>
                     </button>
                   </div>
                 </div>
@@ -2108,9 +2108,9 @@ export default function Auction() {
             </div>
 
             {/* RIGHT SIDE: 2 Balanced Columns side-by-side (Commentary & Live Standings) */}
-            <div className="w-full lg:flex-1 min-w-0 flex flex-col gap-3 justify-between flex-grow">
+            <div className="w-full lg:flex-1 min-w-0 flex flex-col gap-2 justify-between flex-grow">
               {/* Panels row: Commentary + Live Standings side by side */}
-              <div className="flex flex-col md:flex-row gap-3 lg:gap-5 items-stretch w-full min-h-[420px] sm:min-h-[520px] md:h-[680px] lg:h-[820px] xl:h-[860px]">
+              <div className="flex flex-col md:flex-row gap-3 lg:gap-4 items-stretch w-full min-h-[380px] md:h-[480px] lg:h-[500px] xl:h-[540px]">
 
                 {/* COLUMN 2: Live Tabbed Card (Commentary & Chat) */}
                 <div className="w-full md:w-1/2 lg:flex-1 min-w-0 glass-card rounded-2xl border border-white/10 flex flex-col overflow-hidden transition-all duration-300 shadow-2xl h-full min-h-0" style={{
