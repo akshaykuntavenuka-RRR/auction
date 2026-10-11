@@ -16,7 +16,7 @@ function App() {
   return (
     <AuctionProvider>
       <Router>
-        <main style={{ flex: '1', display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#141315' }}>
+        <main style={{ flex: '1', display: 'flex', flexDirection: 'column', height: '100vh', maxHeight: '100vh', width: '100vw', overflow: 'hidden', backgroundColor: '#0d0b14' }}>
           <Routes>
             <Route path="/" element={<IntroScreen />} />
             <Route path="/signin" element={<SignIn />} />

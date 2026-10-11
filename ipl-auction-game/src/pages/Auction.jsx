@@ -134,20 +134,6 @@ export default function Auction() {
     }
   }, [chatMessages]);
 
-  // Preload upcoming player photos into memory to completely eliminate loading lag
-  useEffect(() => {
-    if (!players || players.length === 0) return;
-    const nextLimit = Math.min(players.length, currentPlayerIndex + 5);
-    for (let i = currentPlayerIndex + 1; i < nextLimit; i++) {
-      const p = players[i];
-      if (p?.name) {
-        const slug = p.name.toLowerCase().replace(/\./g, '').trim().replace(/\s+/g, '-');
-        const img = new Image();
-        img.src = `/players/${slug}.png`;
-      }
-    }
-  }, [currentPlayerIndex, players]);
-
   const humanTeam = teams.find(t => t.isUser || t.id === humanTeamId);
   const humanId = humanTeam?.id;
 
@@ -1447,11 +1433,10 @@ export default function Auction() {
   });
 
   return (
-    <div className="bg-background text-on-background auction-gradient min-h-screen flex flex-col font-body-md overflow-x-hidden" style={{ backgroundColor: '#141315', color: '#e6e1e5', background: 'radial-gradient(circle at center, #211437 0%, #141315 100%)' }}>
+    <div className="bg-[#121118] text-[#f1f5f9] h-screen w-screen overflow-hidden flex flex-col select-none relative" style={{ backgroundColor: '#121118', color: '#e6e1e5' }}>
       <style>{`
         .glass-card {
-          background: rgba(54, 52, 55, 0.4);
-          backdrop-filter: blur(12px);
+          background: #191726;
           border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .gold-glow {
@@ -1499,54 +1484,54 @@ export default function Auction() {
         }
       `}</style>
 
-      <header className="bg-surface/80 backdrop-blur-xl border-b border-white/20 shadow-lg flex justify-between items-center px-4 sm:px-6 py-2 sm:py-3 w-full fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: 'rgba(20, 19, 21, 0.8)' }}>
-        <div className="flex items-center gap-2 sm:gap-3">
+      <header className="h-11 sm:h-12 shrink-0 bg-[#161421] border-b border-[#2d293d] flex justify-between items-center px-3 sm:px-5 z-30">
+        <div className="flex items-center gap-2 sm:gap-2.5">
           <button
             onClick={() => navigate(-1)}
             title="Go Back"
-            className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
+            className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
           >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </button>
           <button
             onClick={() => navigate('/play-options')}
             title="Go to Home"
-            className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
+            className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
           >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
           </button>
-          <div className="w-px h-6 bg-white/10 mx-1" />
-          <span className="text-secondary-fixed tracking-wider sm:tracking-widest uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: 'clamp(16px, 2.5vw, 22px)', letterSpacing: '4px' }}>
+          <div className="w-px h-5 bg-white/10 mx-1" />
+          <span className="text-secondary-fixed tracking-wider sm:tracking-widest uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: 'clamp(14px, 2vw, 18px)', letterSpacing: '3px' }}>
             {breakpoint.isMobile ? 'IPL DRAFT' : 'IPL AUCTION'}
           </span>
-          <span className="bg-primary/20 text-primary border border-primary/20 px-2 py-0.5 sm:px-3 sm:py-1 rounded text-[10px] sm:text-xs font-semibold uppercase tracking-widest hidden xs:inline-block" style={{ color: '#d1bfeb' }}>
+          <span className="bg-primary/20 text-primary border border-primary/20 px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-semibold uppercase tracking-widest hidden xs:inline-block" style={{ color: '#d1bfeb' }}>
             Live Arena
           </span>
           {auctionRound === 2 ? (
-            <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm" style={{ fontFamily: "'Russo One', sans-serif" }}>
+            <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm" style={{ fontFamily: "'Russo One', sans-serif" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
               ROUND 2 • UNSOLD
             </span>
           ) : (
-            <span className="bg-white/10 text-white/70 border border-white/15 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider hidden sm:inline-block" style={{ fontFamily: "'Russo One', sans-serif" }}>
+            <span className="bg-white/10 text-white/70 border border-white/15 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider hidden sm:inline-block" style={{ fontFamily: "'Russo One', sans-serif" }}>
               ROUND 1
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* PAUSE and END buttons for desktop/tablet/laptop */}
           {isHost && !breakpoint.isMobile && (
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 10,
+              gap: 8,
             }}>
               {/* PAUSE button */}
               <button
@@ -1554,15 +1539,15 @@ export default function Auction() {
                 style={{
                   background: isPaused ? 'rgba(255, 130, 0, 0.15)' : 'rgba(255,255,255,0.08)',
                   border: isPaused ? '1px solid rgba(255, 130, 0, 0.4)' : '1px solid rgba(255,255,255,0.2)',
-                  borderRadius: 8,
-                  padding: '7px 16px',
+                  borderRadius: 6,
+                  padding: '5px 12px',
                   color: isPaused ? '#ff8200' : '#ccc',
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: 600,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 6,
+                  gap: 5,
                   transition: 'all 0.15s',
                 }}
                 onMouseEnter={e => {
@@ -1583,15 +1568,15 @@ export default function Auction() {
                 style={{
                   background: 'rgba(255,71,87,0.15)',
                   border: '1px solid rgba(255,71,87,0.4)',
-                  borderRadius: 8,
-                  padding: '7px 16px',
+                  borderRadius: 6,
+                  padding: '5px 12px',
                   color: '#FF4757',
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: 600,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 6,
+                  gap: 5,
                   transition: 'all 0.15s',
                 }}
                 onMouseEnter={e => {
@@ -2004,382 +1989,346 @@ export default function Auction() {
           )}
         </main>
       ) : (
-        <main className={`flex-grow flex flex-col pt-13 sm:pt-14 px-2 sm:px-4 lg:px-6 w-full ${isSoloMode ? 'pb-20 lg:pb-20' : 'pb-24 lg:pb-24'}`}>
-          <div className="w-full flex flex-col lg:flex-row gap-3 lg:gap-4 xl:gap-5 items-start flex-grow">
+        <main className="flex-1 min-h-0 w-full overflow-hidden flex flex-col p-2 sm:p-2.5">
+          <div className="w-full h-full flex flex-col lg:flex-row gap-2.5 lg:gap-3 items-stretch overflow-hidden">
 
-            {/* COLUMN 1: Player Card & Bidding Block (Top-aligned, zero empty space) */}
-            <div className="w-full lg:w-[50%] xl:w-[48%] 2xl:w-[50%] shrink-0 flex flex-col gap-2.5 sm:gap-3 justify-start">
+            {/* COLUMN 1: Player Card & Bidding Controls (Top-aligned, zero empty gap) */}
+            <div className="w-full lg:w-[48%] xl:w-[46%] shrink-0 flex flex-col gap-2 justify-start">
 
               {/* Player Card (Spotlight) */}
               <div className="w-full">
                 <PlayerCard player={player} countdown={countdown} bidTimer={bidTimer} />
               </div>
 
-              {/* Bid Board */}
-              <div className="glass-card rounded-2xl p-2.5 sm:p-3 border border-[#ff8200]/30 transition-all duration-300 relative overflow-hidden flex flex-col justify-center items-center w-full">
-                <div className="flex flex-col items-center text-center">
-                  <span className="text-on-surface-variant font-bold text-[9px] sm:text-[10px] tracking-widest mb-0.5 opacity-75">CURRENT BID</span>
-                  <div className="text-3xl sm:text-4xl font-black text-[#00C853] mb-0.5 leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>₹{displayBid} Cr</div>
+              {/* Bid Board - Sleek & High Impact */}
+              <div className="rounded-xl p-2 sm:p-2.5 border border-[#ff8200]/30 transition-all duration-200 relative overflow-hidden flex items-center justify-between px-4 sm:px-5 shrink-0" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                <div className="flex flex-col text-left">
+                  <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400">CURRENT BID</span>
+                  <div className="text-2xl sm:text-3xl font-normal text-[#22c55e] leading-none my-0.5" style={{ fontFamily: "'Russo One', sans-serif" }}>
+                    ₹{displayBid} Cr
+                  </div>
+                </div>
 
+                <div className="flex flex-col items-end gap-1">
                   {isPaused && (
-                    <div className="mb-1 px-2.5 py-0.5 bg-[#ef4444]/20 border border-[#ef4444]/40 rounded-full text-[#ef4444] font-extrabold text-[9px] uppercase tracking-widest animate-pulse flex items-center gap-1">
-                      <span className="text-xs leading-none">⏸</span>
-                      AUCTION PAUSED
+                    <div className="px-2 py-0.5 bg-red-500/20 border border-red-500/40 rounded-full text-red-400 font-bold text-[9px] uppercase tracking-wider animate-pulse flex items-center gap-1">
+                      <span>⏸</span> AUCTION PAUSED
                     </div>
                   )}
 
                   {activeBidder ? (
-                    <div className="flex items-center gap-2 px-3 py-1 bg-[#d1bfeb]/10 border border-[#d1bfeb]/20 rounded-full">
+                    <div className="flex items-center gap-1.5 px-2.5 py-0.5 bg-white/10 border border-white/15 rounded-full">
                       {activeBidder.logo ? (
-                        <img src={activeBidder.logo} alt={activeBidder.name} className="w-4 h-4 object-contain" referrerPolicy="no-referrer" />
+                        <img src={activeBidder.logo} alt={activeBidder.name} className="w-3.5 h-3.5 object-contain" referrerPolicy="no-referrer" />
                       ) : (
                         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: activeBidder.color }} />
                       )}
-                      <span className="text-primary font-bold text-xs uppercase tracking-widest">{activeBidder.name}</span>
+                      <span className="text-white font-bold text-[11px] uppercase tracking-wider">{activeBidder.name}</span>
                     </div>
                   ) : (
-                    <div className="text-xs text-on-surface-variant opacity-50 uppercase tracking-widest font-bold">
-                      No active bid placed
-                    </div>
+                    <span className="text-[11px] text-slate-400 uppercase tracking-widest font-semibold">No active bid placed</span>
                   )}
 
                   {isSoloMode && aiThinking && (
-                    <div className="mt-1.5 flex items-center gap-1.5 text-[#ff8200] text-[11px] font-bold uppercase tracking-widest animate-pulse">
+                    <div className="flex items-center gap-1.5 text-[#ff8200] text-[10px] font-bold uppercase tracking-wider animate-pulse">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#ff8200] animate-ping" />
-                      🤖 AI is thinking...
+                      <span>AI Thinking...</span>
                     </div>
                   )}
 
                   {isSoloMode && countdown !== null && (
-                    <div className="mt-1 text-[#ef4444] text-[11px] font-bold uppercase tracking-widest animate-bounce">
-                      ⏳ Actions: {countdown}s / {bidTimer}s
+                    <div className="text-red-400 text-[11px] font-bold uppercase tracking-wider">
+                      ⏳ Timer: {countdown}s / {bidTimer}s
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Controls */}
-              {isSoloMode ? (
-                <div className="glass-card rounded-2xl p-2.5 sm:p-3 border border-white/10 flex flex-col gap-2 w-full justify-center shadow-lg">
-                  <div className="flex items-center justify-between">
-                    <label className="font-bold text-xs tracking-widest text-[#d1bfeb] opacity-90 uppercase flex items-center gap-1.5">
-                      <span className="text-sm">🔨</span>
-                      Raise Bid
-                    </label>
-                    <span className="text-[10px] text-[#cbc4ce] opacity-60 font-semibold tracking-wider uppercase">Quick Increment</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-3 sm:gap-4 md:gap-5 w-full">
+              {/* Controls Bar: +25L, +50L, +1 CR, and SKIP side-by-side (100% visible, never cut off) */}
+              <div className="rounded-xl p-1.5 sm:p-2 border border-white/10 flex items-center gap-2 w-full shrink-0" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                {isSoloMode ? (
+                  <>
                     <button
                       onClick={() => handleHumanIncrementBid(0.25)}
                       disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.25 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer"
+                      className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
                     >
-                      <span className="text-lg sm:text-xl font-black leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>+25L</span>
+                      +25L
                     </button>
                     <button
                       onClick={() => handleHumanIncrementBid(0.50)}
                       disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.50 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer"
+                      className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
                     >
-                      <span className="text-lg sm:text-xl font-black leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>+50L</span>
+                      +50L
                     </button>
                     <button
                       onClick={() => handleHumanIncrementBid(1.00)}
                       disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 1.00 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer"
+                      className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
                     >
-                      <span className="text-lg sm:text-xl font-black leading-none" style={{ fontFamily: "'Russo One', sans-serif" }}>+1 CR</span>
+                      +1 CR
                     </button>
+                    <button
+                      onClick={handleHumanSkip}
+                      disabled={isPaused || (passedTeamIds.includes(humanId) && passedTeamIds.length < teams.length && activeBidder !== null)}
+                      className={`flex-1 h-9 sm:h-9.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer ${passedTeamIds.includes(humanId) ? 'border-[#ff8200] text-[#ff8200]' : ''}`}
+                    >
+                      <span>⏭</span>
+                      <span>{passedTeamIds.includes(humanId) ? 'SKIPPED' : 'SKIP'}</span>
+                    </button>
+                  </>
+                ) : roomCode && !isHost ? (
+                  <div className="text-center font-bold text-xs uppercase tracking-widest text-slate-300 w-full py-1.5">
+                    📣 Host is conducting the live draft...
                   </div>
-                </div>
-              ) : roomCode && !isHost ? (
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center font-bold text-xs uppercase tracking-widest opacity-60 w-full flex items-center justify-center min-h-[70px]">
-                  📣 Host is conducting the hammer draft...
-                </div>
-              ) : (
-                /* Host Controls */
-                <div className="glass-card rounded-2xl p-2.5 sm:p-3 border border-white/10 flex flex-col gap-2 w-full justify-center shadow-lg">
-                  <div className="flex items-center justify-between">
-                    <label className="font-bold text-xs tracking-widest text-[#d1bfeb] opacity-90 uppercase flex items-center gap-1.5">
-                      <span className="text-sm">🔨</span>
-                      Raise Bid
-                    </label>
-                    <span className="text-[10px] text-[#cbc4ce] opacity-60 font-semibold tracking-wider uppercase">Quick Increment</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-3 sm:gap-4 md:gap-5 w-full">
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.25)} className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer">
-                      <span className="text-lg sm:text-xl font-black leading-none text-[#141315]" style={{ fontFamily: "'Russo One', sans-serif" }}>+25L</span>
-                    </button>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.50)} className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer">
-                      <span className="text-lg sm:text-xl font-black leading-none text-[#141315]" style={{ fontFamily: "'Russo One', sans-serif" }}>+50L</span>
-                    </button>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(1.00)} className="flex-1 max-w-[220px] h-11 sm:h-12 bg-gradient-to-b from-[#ff9a30] via-[#ff8200] to-[#e05a00] hover:brightness-110 text-[#141315] disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-black tracking-wider transition-all hover:scale-[1.03] active:scale-95 flex items-center justify-center border border-[#ff8200]/40 shadow-xl cursor-pointer">
-                      <span className="text-lg sm:text-xl font-black leading-none text-[#141315]" style={{ fontFamily: "'Russo One', sans-serif" }}>+1 CR</span>
-                    </button>
-                  </div>
-                </div>
-              )}
+                ) : (
+                  <>
+                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.25)} className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs tracking-wider shadow-md">+25L</button>
+                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.50)} className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs tracking-wider shadow-md">+50L</button>
+                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(1.00)} className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs tracking-wider shadow-md">+1 CR</button>
+                    <button onClick={handleHumanSkip} disabled={isPaused} className="flex-1 h-9 sm:h-9.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-lg font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-1">⏭ SKIP</button>
+                  </>
+                )}
+              </div>
             </div>
 
-            {/* RIGHT SIDE: 2 Balanced Columns side-by-side (Commentary & Live Standings) */}
-            <div className="w-full lg:flex-1 min-w-0 flex flex-col gap-2 justify-between flex-grow">
-              {/* Panels row: Commentary + Live Standings side by side */}
-              <div className="flex flex-col md:flex-row gap-3 lg:gap-4 items-stretch w-full min-h-[380px] md:h-[480px] lg:h-[500px] xl:h-[540px]">
+            {/* RIGHT SIDE: 2 Columns side-by-side (Commentary & Live Standings), fitting height 100% */}
+            <div className="flex-1 h-full min-w-0 flex flex-row gap-3 items-stretch overflow-hidden">
 
-                {/* COLUMN 2: Live Tabbed Card (Commentary & Chat) */}
-                <div className="w-full md:w-1/2 lg:flex-1 min-w-0 glass-card rounded-2xl border border-white/10 flex flex-col overflow-hidden transition-all duration-300 shadow-2xl h-full min-h-0" style={{
-                  background: 'rgba(30, 28, 32, 0.55)',
-                  backdropFilter: 'blur(16px)',
-                  boxShadow: activeTab === 'chat' ? '0 12px 40px rgba(255, 130, 0, 0.08)' : '0 8px 32px rgba(0,0,0,0.3)',
-                }}>
-                  {/* Tabs Header */}
-                  <div className="flex border-b border-white/10 shrink-0">
-                    <button
-                      onClick={() => setActiveTab('commentary')}
-                      className={`flex-grow py-3.5 text-xs sm:text-sm font-black tracking-widest uppercase transition-all duration-200 border-b-2 flex items-center justify-center gap-2 cursor-pointer ${activeTab === 'commentary'
-                        ? 'border-[#ff8200] text-[#ff8200] bg-white/5'
-                        : 'border-transparent text-white/50 hover:text-white hover:bg-white/5'
-                        }`}
-                    >
-                      <span className="text-lg sm:text-xl">🎙️</span>
-                      COMMENTARY
-                    </button>
-                    <button
-                      onClick={() => setActiveTab('chat')}
-                      className={`flex-grow py-3.5 text-xs sm:text-sm font-black tracking-widest uppercase transition-all duration-200 border-b-2 flex items-center justify-center gap-2 relative cursor-pointer ${activeTab === 'chat'
-                        ? 'border-[#ff8200] text-[#ff8200] bg-white/5'
-                        : 'border-transparent text-white/50 hover:text-white hover:bg-white/5'
-                        }`}
-                    >
-                      <span className="text-lg sm:text-xl">💬</span>
-                      TEAM CHAT
-                      {unreadChats > 0 && activeTab !== 'chat' && (
-                        <span className="absolute top-2 right-3 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-black animate-pulse">
-                          {unreadChats}
-                        </span>
-                      )}
-                    </button>
+              {/* COLUMN 2: Live Tabbed Card (Commentary & Chat) */}
+              <div className="flex-1 h-full min-w-0 rounded-xl border border-white/15 flex flex-col overflow-hidden shadow-2xl" style={{
+                background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)',
+              }}>
+                {/* Tabs Header */}
+                <div className="flex border-b border-white/10 shrink-0 h-11">
+                  <button
+                    onClick={() => setActiveTab('commentary')}
+                    className={`flex-grow py-2 text-xs font-bold tracking-wider uppercase transition-all duration-200 border-b-2 flex items-center justify-center gap-1.5 cursor-pointer ${activeTab === 'commentary'
+                      ? 'border-[#ff8200] text-[#ff8200] bg-white/5'
+                      : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
+                      }`}
+                  >
+                    <span>🎙️</span>
+                    <span>COMMENTARY</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('chat')}
+                    className={`flex-grow py-2 text-xs font-bold tracking-wider uppercase transition-all duration-200 border-b-2 flex items-center justify-center gap-1.5 relative cursor-pointer ${activeTab === 'chat'
+                      ? 'border-[#ff8200] text-[#ff8200] bg-white/5'
+                      : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
+                      }`}
+                  >
+                    <span>💬</span>
+                    <span>TEAM CHAT</span>
+                    {unreadChats > 0 && activeTab !== 'chat' && (
+                      <span className="absolute top-1.5 right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-bold animate-pulse">
+                        {unreadChats}
+                      </span>
+                    )}
+                  </button>
+                </div>
+
+                {/* Tab content */}
+                {activeTab === 'commentary' ? (
+                  <div className="flex-grow min-h-0 p-3 sm:p-4 overflow-y-auto text-xs flex flex-col gap-2 scrollbar-hide">
+                    {commentary.length > 0 ? (
+                      commentary.map((log, i) => (
+                        <div key={i} className={`py-1.5 border-b border-white/5 last:border-0 leading-relaxed font-semibold transition-all ${i === 0 ? 'text-[#ff8200] text-sm' : 'text-slate-300'}`}>
+                          {log}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-slate-500 text-center py-8 text-xs">No commentary yet</div>
+                    )}
                   </div>
-
-                  {/* Tab content */}
-                  {activeTab === 'commentary' ? (
-                    <div className="flex-grow min-h-0 p-4 sm:p-5 overflow-y-auto text-sm sm:text-base flex flex-col gap-3">
-                      {commentary.length > 0 ? (
-                        commentary.map((log, i) => (
-                          <div key={i} className={`py-2 border-b border-white/5 last:border-0 leading-relaxed font-bold transition-all ${i === 0 ? 'text-[#ff8200] text-base sm:text-lg scale-100' : 'text-on-surface-variant opacity-75'}`}>
-                            {log}
-                          </div>
-                        ))
-                      ) : (
-                        <div className="text-white/40 text-center py-10 text-sm">No commentary yet</div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="flex-grow min-h-0 flex flex-col overflow-hidden p-3.5 sm:p-4">
-                      {/* Messages view */}
-                      <div className="flex-grow min-h-0 overflow-y-auto flex flex-col gap-3 mb-3 p-1">
-                        {chatMessages.map((msg) => {
-                          if (msg.isSystem) {
-                            return (
-                              <div key={msg.id} className="text-center text-xs sm:text-sm text-[#ff8200] py-1.5 px-3 bg-[#ff8200]/10 rounded-xl border border-[#ff8200]/20 font-bold tracking-wide">
-                                {msg.text}
-                              </div>
-                            );
-                          }
-                          const senderColor = msg.isUser
-                            ? '#ff8200'
-                            : msg.sender?.includes('Kolkata') ? '#c084fc'
-                            : msg.sender?.includes('Mumbai') ? '#38bdf8'
-                            : msg.sender?.includes('Delhi') ? '#60a5fa'
-                            : msg.sender?.includes('Gujarat') ? '#2dd4bf'
-                            : msg.sender?.includes('Chennai') ? '#facc15'
-                            : msg.sender?.includes('Bengaluru') || msg.sender?.includes('Punjab') ? '#f87171'
-                            : msg.sender?.includes('Sunrisers') ? '#fb923c'
-                            : msg.sender?.includes('Lucknow') ? '#38bdf8'
-                            : msg.sender?.includes('Rajasthan') ? '#f472b6'
-                            : (msg.color || '#38bdf8');
-
+                ) : (
+                  <div className="flex-grow min-h-0 flex flex-col overflow-hidden p-3">
+                    {/* Messages view */}
+                    <div className="flex-grow min-h-0 overflow-y-auto flex flex-col gap-2 mb-2 p-1 scrollbar-hide">
+                      {chatMessages.map((msg) => {
+                        if (msg.isSystem) {
                           return (
-                            <div
-                              key={msg.id}
-                              className={`flex flex-col max-w-[88%] rounded-2xl px-4 py-2.5 text-sm sm:text-base leading-relaxed transition-all ${msg.isUser
-                                ? 'self-end bg-[#ff8200]/20 border border-[#ff8200]/30 text-white shadow-md shadow-[#ff8200]/5'
-                                : 'self-start bg-white/[0.08] border border-white/15 text-white/95 shadow-sm'
-                                }`}
-                            >
-                              <div className="flex items-center gap-2 mb-1 font-bold text-xs sm:text-sm tracking-wide">
-                                {msg.logo && <img src={msg.logo} alt="" className="w-4 h-4 object-contain" />}
-                                <span style={{ color: senderColor }}>{msg.sender}</span>
-                                <span className="text-[10px] sm:text-xs text-white/50 font-normal ml-auto">{msg.timestamp}</span>
-                              </div>
-                              <div className="font-medium text-white/95 break-words leading-relaxed">{msg.text}</div>
+                            <div key={msg.id} className="text-center text-xs text-[#ff8200] py-1 px-2.5 bg-[#ff8200]/10 rounded-lg border border-[#ff8200]/20 font-semibold tracking-wide">
+                              {msg.text}
                             </div>
                           );
-                        })}
-                        <div ref={chatEndRef} />
-                      </div>
+                        }
+                        const senderColor = msg.isUser
+                          ? '#ff8200'
+                          : msg.sender?.includes('Kolkata') ? '#c084fc'
+                          : msg.sender?.includes('Mumbai') ? '#38bdf8'
+                          : msg.sender?.includes('Delhi') ? '#60a5fa'
+                          : msg.sender?.includes('Gujarat') ? '#2dd4bf'
+                          : msg.sender?.includes('Chennai') ? '#facc15'
+                          : msg.sender?.includes('Bengaluru') || msg.sender?.includes('Punjab') ? '#f87171'
+                          : msg.sender?.includes('Sunrisers') ? '#fb923c'
+                          : msg.sender?.includes('Lucknow') ? '#38bdf8'
+                          : msg.sender?.includes('Rajasthan') ? '#f472b6'
+                          : (msg.color || '#38bdf8');
 
-                      {/* Emoji Picker Popover */}
-                      {showEmojiPicker && (
-                        <div className="bg-[#1e1c20]/95 border border-white/20 rounded-xl p-3 shadow-2xl mb-2 backdrop-blur-xl shrink-0">
-                          <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-white/10 text-xs font-bold text-[#ff8200] tracking-wider uppercase">
-                            <span className="flex items-center gap-1.5">
-                              <span className="text-sm">🏏</span> EMOJI REACTIONS
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => setShowEmojiPicker(false)}
-                              className="text-white/50 hover:text-white text-sm px-1.5 hover:bg-white/10 rounded cursor-pointer"
-                            >
-                              ✕
-                            </button>
+                        return (
+                          <div
+                            key={msg.id}
+                            className={`flex flex-col max-w-[88%] rounded-xl px-3 py-2 text-xs leading-relaxed transition-all ${msg.isUser
+                              ? 'self-end bg-[#ff8200]/20 border border-[#ff8200]/30 text-white'
+                              : 'self-start bg-white/[0.08] border border-white/15 text-white/95'
+                              }`}
+                          >
+                            <div className="flex items-center gap-1.5 mb-1 font-bold text-[11px] tracking-wide">
+                              {msg.logo && <img src={msg.logo} alt="" className="w-3.5 h-3.5 object-contain" />}
+                              <span style={{ color: senderColor }}>{msg.sender}</span>
+                              <span className="text-[10px] text-slate-400 font-normal ml-auto">{msg.timestamp}</span>
+                            </div>
+                            <div className="font-medium text-white break-words leading-relaxed">{msg.text}</div>
                           </div>
-                          <div className="grid grid-cols-8 gap-1.5 max-h-[130px] overflow-y-auto pr-0.5">
-                            {EMOJI_LIST.map((emoji, idx) => (
-                              <button
-                                key={idx}
-                                type="button"
-                                onClick={() => {
-                                  sendChatMessage(emoji);
-                                  setShowEmojiPicker(false);
-                                }}
-                                className="text-xl p-1.5 rounded-lg hover:bg-white/15 hover:scale-125 transition-all flex items-center justify-center cursor-pointer active:scale-95"
-                              >
-                                {emoji}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                        );
+                      })}
+                      <div ref={chatEndRef} />
+                    </div>
 
-                      {/* Input Bar */}
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          sendChatMessage(chatInput);
-                          setShowEmojiPicker(false);
-                        }}
-                        className="flex gap-2 items-center w-full relative shrink-0"
-                      >
-                        <div className="relative flex-grow flex items-center">
-                          <input
-                            type="text"
-                            value={chatInput}
-                            onChange={(e) => setChatInput(e.target.value)}
-                            placeholder="Say something with emojis..."
-                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-11 py-2.5 text-sm sm:text-base text-white placeholder-white/40 focus:outline-none focus:border-[#ff8200]/50"
-                          />
+                    {/* Emoji Picker Popover */}
+                    {showEmojiPicker && (
+                      <div className="bg-[#1e1c20] border border-white/20 rounded-xl p-2.5 shadow-2xl mb-2 shrink-0">
+                        <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-white/10 text-xs font-bold text-[#ff8200] tracking-wider uppercase">
+                          <span>🏏 EMOJI REACTIONS</span>
                           <button
                             type="button"
-                            onClick={() => setShowEmojiPicker(prev => !prev)}
-                            title="Add Emoji"
-                            className={`absolute right-3 text-lg transition-all hover:scale-110 active:scale-90 cursor-pointer p-0.5 rounded ${showEmojiPicker ? 'opacity-100 scale-110' : 'opacity-70 hover:opacity-100'}`}
+                            onClick={() => setShowEmojiPicker(false)}
+                            className="text-white/50 hover:text-white text-xs px-1 hover:bg-white/10 rounded cursor-pointer"
                           >
-                            😊
+                            ✕
                           </button>
                         </div>
-                        <button
-                          type="submit"
-                          className="bg-[#ff8200] hover:bg-[#ff8200]/80 text-[#141315] font-black px-4 py-2.5 rounded-xl text-xs sm:text-sm tracking-widest transition-all flex items-center justify-center gap-1 active:scale-95 shadow-md shadow-[#ff8200]/10 shrink-0 cursor-pointer"
-                        >
-                          SEND
-                        </button>
-                      </form>
-                    </div>
-                  )}
-                </div>
+                        <div className="grid grid-cols-8 gap-1 max-h-[110px] overflow-y-auto">
+                          {EMOJI_LIST.map((emoji, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => {
+                                sendChatMessage(emoji);
+                                setShowEmojiPicker(false);
+                              }}
+                              className="text-lg p-1 rounded hover:bg-white/15 transition-all flex items-center justify-center cursor-pointer active:scale-95"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-                {/* COLUMN 3: Live Standings Panel */}
-                <div className="w-full md:w-1/2 lg:flex-1 min-w-0 h-full rounded-2xl overflow-hidden shadow-2xl flex flex-col min-h-0">
-                  <LiveTeamsPanel />
-                </div>
-
-              </div>{/* end inner panels row */}
-
-              {/* SKIP BUTTON — below both right panels */}
-              <div className="flex justify-end items-center gap-3 w-full mt-1">
-                <button
-                  onClick={handleHumanSkip}
-                  disabled={isPaused || (passedTeamIds.includes(humanId) && passedTeamIds.length < teams.length && activeBidder !== null)}
-                  className={`w-36 sm:w-40 h-9 sm:h-10 bg-white/10 hover:bg-white/20 border border-white/25 text-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95 cursor-pointer ${
-                    passedTeamIds.includes(humanId) ? 'border-[#ff8200]/50 text-[#ff8200]' : ''
-                  }`}
-                  style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.4)' }}
-                >
-                  <span className="text-sm leading-none">⏭</span>
-                  <span>{passedTeamIds.includes(humanId) ? (passedTeamIds.length >= teams.length ? 'ALL SKIPPED' : 'SKIPPED') : 'SKIP'}</span>
-                </button>
-              </div>
-
-            </div>
-          </div>
-
-          {/* Franchise Team Cards Status Bottom Bar (Solo & Multiplayer) */}
-          <div className="fixed bottom-0 left-0 w-full p-2 sm:p-3 z-[60] bg-[#141315]/90 backdrop-blur-2xl border-t border-white/10 shadow-[0_-8px_24px_rgba(0,0,0,0.6)]">
-            <div className="w-full max-w-[1920px] mx-auto overflow-x-auto scrollbar-hide">
-              <div className={`flex items-center gap-2 sm:gap-3 min-w-max px-2 sm:px-4 py-1 justify-start md:justify-center ${roomCode && !isHost ? 'opacity-95' : ''} ${isPaused ? 'opacity-50 pointer-events-none' : ''}`}>
-                {teams.map(t => {
-                  const isActive = activeBidder?.id === t.id;
-                  const isHuman = t.isUser || t.id === humanTeamId;
-                  const isFull = isTeamFull(t.id);
-
-                  return (
-                    <div
-                      key={t.id}
-                      onClick={() => !isSoloMode && isHost && !isFull && handleSelectBidder(t)}
-                      className={`glass-card p-2 sm:p-2.5 rounded-xl border min-w-[155px] sm:min-w-[185px] flex items-center gap-2.5 text-left transition-all duration-300 flex-shrink-0 ${
-                        !isSoloMode && isHost ? 'cursor-pointer hover:border-[#ff8200]/30 hover:scale-[1.03]' : 'cursor-default'
-                      } ${isActive ? 'scale-105 sm:scale-105 -translate-y-1 z-10 border-[#ff8200] gold-glow bg-[#ff8200]/10' : 'border-white/10 bg-white/[0.03]'
-                        } ${isHuman ? 'border-[#ff8200]/50 gold-glow' : ''} ${isFull ? 'opacity-45' : ''}`}
-                      style={{
-                        borderColor: isActive
-                          ? '#ff8200'
-                          : isHuman
-                            ? 'rgba(255, 130, 0, 0.5)'
-                            : 'rgba(255, 255, 255, 0.1)',
-                        boxShadow: isActive ? '0 0 16px rgba(255, 130, 0, 0.3)' : isHuman ? '0 0 12px rgba(255, 130, 0, 0.15)' : 'none'
+                    {/* Input Bar */}
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        sendChatMessage(chatInput);
+                        setShowEmojiPicker(false);
                       }}
+                      className="flex gap-2 items-center w-full relative shrink-0"
                     >
-                      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-white/10 p-1 flex items-center justify-center overflow-hidden flex-shrink-0 border border-white/10">
-                        {t.logo ? (
-                          <img src={t.logo} alt={t.name} className="w-full h-full object-contain" referrerPolicy="no-referrer" />
-                        ) : (
-                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: t.color, boxShadow: `0 0 10px ${t.color}` }} />
-                        )}
+                      <div className="relative flex-grow flex items-center">
+                        <input
+                          type="text"
+                          value={chatInput}
+                          onChange={(e) => setChatInput(e.target.value)}
+                          placeholder="Say something with emojis..."
+                          className="w-full bg-[#110f18] border border-white/15 rounded-xl pl-3.5 pr-10 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#ff8200]"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowEmojiPicker(prev => !prev)}
+                          title="Add Emoji"
+                          className="absolute right-3 text-base cursor-pointer p-0.5 rounded opacity-70 hover:opacity-100"
+                        >
+                          😊
+                        </button>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-1">
-                          <span className="font-bold text-[10px] sm:text-xs uppercase tracking-wider truncate" style={{ fontFamily: "'Russo One', sans-serif", color: isActive ? '#ff8200' : isHuman ? '#ff8200' : '#e6e1e5' }}>
-                            {t.name}
-                          </span>
-                          {isHuman && (
-                            <span className="bg-[#ff8200] text-black px-1 py-0.2 rounded text-[7px] font-black uppercase tracking-wider flex-shrink-0">
-                              YOU
-                            </span>
-                          )}
-                          {isFull && (
-                            <span className="bg-red-600/20 text-red-500 px-1 py-0.2 rounded text-[7px] font-bold uppercase tracking-wider flex-shrink-0">
-                              FULL
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-baseline justify-between mt-1">
-                          <span className="font-stats-numeric text-xs sm:text-sm text-secondary-fixed leading-none font-bold" style={{ fontFamily: "'Russo One', sans-serif", color: '#ffffff' }}>
-                            ₹{t.budget} Cr
-                          </span>
-                          <span className="text-[10px] font-bold" style={{ color: isFull ? '#ef4444' : '#cbc4ce' }}>
-                            {isFull ? 'FULL' : `${getTeamRosterSize(t.id)}/${maxTeamSize}`}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                      <button
+                        type="submit"
+                        className="bg-[#ff8200] hover:bg-[#ff8200]/90 text-[#141315] font-bold px-3.5 py-2 rounded-xl text-xs tracking-wider transition-all active:scale-95 shrink-0 cursor-pointer"
+                      >
+                        SEND
+                      </button>
+                    </form>
+                  </div>
+                )}
               </div>
+
+              {/* COLUMN 3: Live Standings Panel */}
+              <div className="w-[44%] max-w-[360px] h-full rounded-xl overflow-hidden shadow-2xl flex flex-col min-h-0 border border-white/15" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)' }}>
+                <LiveTeamsPanel />
+              </div>
+
             </div>
           </div>
         </main>
       )}
+
+      {/* Franchise Team Cards Status Bottom Bar (Solo & Multiplayer) */}
+      <div className="h-[46px] sm:h-[48px] shrink-0 w-full px-2 z-30 bg-[#161421] border-t border-[#2d293d] flex items-center shadow-lg">
+        <div className="w-full max-w-[1920px] mx-auto overflow-x-auto scrollbar-hide">
+          <div className={`flex items-center gap-1.5 sm:gap-2.5 min-w-max px-2 py-0.5 justify-start md:justify-center ${roomCode && !isHost ? 'opacity-95' : ''} ${isPaused ? 'opacity-50 pointer-events-none' : ''}`}>
+            {teams.map(t => {
+              const isActive = activeBidder?.id === t.id;
+              const isHuman = t.isUser || t.id === humanTeamId;
+              const isFull = isTeamFull(t.id);
+
+              return (
+                <div
+                  key={t.id}
+                  onClick={() => !isSoloMode && isHost && !isFull && handleSelectBidder(t)}
+                  className={`glass-card p-1 sm:p-1.5 rounded-xl border min-w-[135px] sm:min-w-[155px] flex items-center gap-2 text-left transition-all duration-300 flex-shrink-0 ${
+                    !isSoloMode && isHost ? 'cursor-pointer hover:border-[#ff8200]/30 hover:scale-[1.03]' : 'cursor-default'
+                  } ${isActive ? 'scale-105 sm:scale-105 -translate-y-0.5 z-10 border-[#ff8200] gold-glow bg-[#ff8200]/10' : 'border-white/10 bg-white/[0.03]'
+                    } ${isHuman ? 'border-[#ff8200]/50 gold-glow' : ''} ${isFull ? 'opacity-45' : ''}`}
+                  style={{
+                    borderColor: isActive
+                      ? '#ff8200'
+                      : isHuman
+                        ? 'rgba(255, 130, 0, 0.5)'
+                        : 'rgba(255, 255, 255, 0.1)',
+                    boxShadow: isActive ? '0 0 14px rgba(255, 130, 0, 0.3)' : isHuman ? '0 0 10px rgba(255, 130, 0, 0.15)' : 'none'
+                  }}
+                >
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/10 p-0.5 flex items-center justify-center overflow-hidden flex-shrink-0 border border-white/10">
+                    {t.logo ? (
+                      <img src={t.logo} alt={t.name} className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+                    ) : (
+                      <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: t.color, boxShadow: `0 0 8px ${t.color}` }} />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-bold text-[9px] sm:text-[11px] uppercase tracking-wider truncate" style={{ fontFamily: "'Russo One', sans-serif", color: isActive ? '#ff8200' : isHuman ? '#ff8200' : '#e6e1e5' }}>
+                        {t.name}
+                      </span>
+                      {isHuman && (
+                        <span className="bg-[#ff8200] text-black px-1 py-0.2 rounded text-[7px] font-black uppercase tracking-wider flex-shrink-0">
+                          YOU
+                        </span>
+                      )}
+                      {isFull && (
+                        <span className="bg-red-600/20 text-red-500 px-1 py-0.2 rounded text-[7px] font-bold uppercase tracking-wider flex-shrink-0">
+                          FULL
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-baseline justify-between mt-0.5">
+                      <span className="font-stats-numeric text-[11px] sm:text-xs text-secondary-fixed leading-none font-bold" style={{ fontFamily: "'Russo One', sans-serif", color: '#ffffff' }}>
+                        ₹{t.budget} Cr
+                      </span>
+                      <span className="text-[9px] font-bold" style={{ color: isFull ? '#ef4444' : '#cbc4ce' }}>
+                        {isFull ? 'FULL' : `${getTeamRosterSize(t.id)}/${maxTeamSize}`}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
 
 

@@ -280,12 +280,11 @@ export default function Setup() {
   };
 
   return (
-    <div className="bg-background text-on-background min-h-screen font-body-md overflow-x-hidden relative pb-32" style={{ backgroundColor: '#141315', color: '#e6e1e5' }}>
+    <div className="bg-[#121118] text-[#f1f5f9] h-screen w-screen overflow-hidden flex flex-col relative select-none">
       <style>{`
         .glass-panel {
-          background: rgba(54, 52, 55, 0.4);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: #191726;
+          border: 1px solid #2e2b3e;
         }
         .gold-glow {
           box-shadow: 0 0 15px rgba(255, 130, 0, 0.3);
@@ -435,16 +434,15 @@ export default function Setup() {
       `}</style>
 
       {/* Navigation Header */}
-      <nav className="bg-surface/80 border-b border-white/10 shadow-lg flex justify-between items-center px-6 py-3 w-full fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: 'rgba(20, 19, 21, 0.95)' }}>
+      <nav className="h-14 bg-[#161421] border-b border-[#2d293d] flex justify-between items-center px-4 sm:px-6 flex-shrink-0 z-30">
         <div className="flex items-center gap-3">
           {/* Back button */}
           <button
             onClick={() => navigate(-1)}
             title="Go Back"
-            className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
-            style={{ color: '#cbc4ce' }}
+            className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white transition-all cursor-pointer"
           >
-            <svg className="w-5 h-5 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </button>
@@ -452,16 +450,15 @@ export default function Setup() {
           <button
             onClick={() => navigate('/play-options')}
             title="Go to Home"
-            className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
-            style={{ color: '#cbc4ce' }}
+            className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white transition-all cursor-pointer"
           >
-            <svg className="w-5 h-5 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
           </button>
-          <div className="w-px h-6 bg-white/10 mx-1" />
-          <span className="text-2xl">🏏</span>
-          <span className="text-secondary-fixed tracking-widest" style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: 'clamp(16px, 2.5vw, 22px)', letterSpacing: '4px' }}>IPL AUCTION</span>
+          <div className="w-px h-5 bg-white/10 mx-1" />
+          <span className="text-xl">🏏</span>
+          <span style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: '18px', letterSpacing: '2px' }}>IPL AUCTION</span>
         </div>
         <div className="flex items-center gap-4">
           <ProfileMenu />
@@ -470,28 +467,25 @@ export default function Setup() {
 
       {/* Setup configuration container */}
       <main 
-        className="mx-auto pt-24"
+        className="flex-1 overflow-y-auto min-h-0 w-full"
         style={{
-          maxWidth: '720px',
-          width: '100%',
           paddingLeft: breakpoint.isMobile ? '16px' : '24px',
           paddingRight: breakpoint.isMobile ? '16px' : '24px',
-          paddingBottom: breakpoint.isMobile ? '120px' : '48px'
+          paddingTop: '20px',
+          paddingBottom: '24px'
         }}
       >
-        <header className="text-center mb-12">
-          <div className="inline-flex items-center justify-center mb-4">
-            <span className="text-5xl animate-bounce">🏏</span>
-          </div>
-          <h1 className="text-secondary-fixed mb-2 drop-shadow-2xl" style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: 'clamp(20px, 3.5vw, 32px)', letterSpacing: '2px' }}>
-            IPL AUCTION
-          </h1>
-          <p className="text-on-surface-variant opacity-75" style={{ color: '#cbc4ce', fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(12px, 1.8vw, 14px)', letterSpacing: '0.5px' }}>
-            Build your dream squad · Bid smart · Win big
-          </p>
-        </header>
+        <div style={{ maxWidth: '780px', margin: '0 auto' }}>
+          <header className="text-center mb-6">
+            <h1 style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: '26px', letterSpacing: '2px' }} className="mb-1">
+              AUCTION ROOM SETUP
+            </h1>
+            <p className="text-slate-300 font-sans text-xs font-medium">
+              Configure franchises, auction purse, and bidding rules
+            </p>
+          </header>
 
-        <section className="space-y-12">
+          <section className="space-y-8">
           {/* Multiplayer Room Lobby Info Panel */}
           {gameMode === 'multiplayer' && (
             <div className="glass-panel p-6 rounded-xl border border-[#ff8200]/30 space-y-6 animate-fade-in relative overflow-hidden">
@@ -587,12 +581,12 @@ export default function Setup() {
             /* Host or Solo Configuration Panels */
             <>
           {/* Number of Teams */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">👥</span>
-              <h2 className="text-on-surface uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", fontSize: '10px', letterSpacing: '2px', color: '#9980c8' }}>Number of Teams</h2>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">👥</span>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-[#ff9d47] font-sans">Number of Teams</h2>
             </div>
-            <div className="flex gap-4 flex-wrap">
+            <div className="flex gap-3 flex-wrap">
               {[4, 6, 8, 10].map(n => {
                 const isActive = numTeams === n;
                 return (
@@ -600,15 +594,15 @@ export default function Setup() {
                     key={n}
                     type="button"
                     onClick={() => setNumTeams(n)}
-                    className={`flex-1 py-4 rounded-xl font-display-md text-3xl font-bold transition-all transform hover:scale-105 active:scale-95 ${
+                    className={`flex-1 py-3 rounded-xl font-display-md text-2xl font-bold transition-all transform hover:scale-105 active:scale-95 cursor-pointer ${
                       isActive
                         ? 'gold-gradient text-inverse-on-surface gold-glow inner-glow-gold'
-                        : 'border border-white/10 text-on-surface-variant/60 hover:bg-white/5'
+                        : 'border border-white/10 text-slate-300 hover:bg-white/5'
                     }`}
                     style={{
                       fontFamily: "'Russo One', sans-serif",
-                      background: isActive ? 'linear-gradient(135deg, #ff8200 0%, #e05a00 100%)' : 'transparent',
-                      color: isActive ? '#323033' : '#cbc4ce'
+                      background: isActive ? 'linear-gradient(135deg, #ff8200 0%, #e05a00 100%)' : '#191726',
+                      color: isActive ? '#141315' : '#cbd5e1'
                     }}
                   >
                     {n}
@@ -619,17 +613,17 @@ export default function Setup() {
           </div>
 
           {/* Budget Setup */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex justify-between items-end">
-              <div className="flex items-center gap-3">
-                <span className="text-xl">💰</span>
-                <h2 className="text-on-surface uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", fontSize: '10px', letterSpacing: '2px', color: '#9980c8' }}>Budget per Team</h2>
+              <div className="flex items-center gap-2">
+                <span className="text-lg">💰</span>
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[#ff9d47] font-sans">Budget per Team</h2>
               </div>
-              <div className="text-secondary-fixed font-bold" style={{ fontFamily: "'Russo One', sans-serif", color: '#ffffff', fontSize: 'clamp(20px, 3.5vw, 32px)' }}>
+              <div className="font-bold" style={{ fontFamily: "'Russo One', sans-serif", color: '#ffffff', fontSize: '22px' }}>
                 ₹{budgetCr} Cr
               </div>
             </div>
-            <div className="relative pt-4">
+            <div className="relative pt-2">
               <input
                 type="range"
                 min="50"
@@ -640,7 +634,7 @@ export default function Setup() {
                 className="w-full appearance-none cursor-pointer"
                 style={{ background: 'transparent' }}
               />
-              <div className="flex justify-between mt-4 text-xs font-bold uppercase tracking-widest opacity-50" style={{ color: '#cbc4ce' }}>
+              <div className="flex justify-between mt-2 text-xs font-semibold uppercase tracking-wider text-slate-400 font-sans">
                 <span>₹50 CR</span>
                 <span>₹200 CR</span>
               </div>
@@ -648,17 +642,17 @@ export default function Setup() {
           </div>
 
           {/* Team Capacity Setup */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex justify-between items-end">
-              <div className="flex items-center gap-3">
-                <span className="text-xl">👥</span>
-                <h2 className="text-on-surface uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", fontSize: '10px', letterSpacing: '2px', color: '#9980c8' }}>Team Roster Capacity</h2>
+              <div className="flex items-center gap-2">
+                <span className="text-lg">👥</span>
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[#ff9d47] font-sans">Team Roster Capacity</h2>
               </div>
-              <div className="text-secondary-fixed font-bold" style={{ fontFamily: "'Russo One', sans-serif", color: '#ffffff', fontSize: 'clamp(20px, 3.5vw, 32px)' }}>
+              <div className="font-bold" style={{ fontFamily: "'Russo One', sans-serif", color: '#ffffff', fontSize: '22px' }}>
                 {maxTeamSize} Players
               </div>
             </div>
-            <div className="relative pt-4">
+            <div className="relative pt-2">
               <input
                 type="range"
                 min="11"
@@ -669,44 +663,43 @@ export default function Setup() {
                 className="w-full appearance-none cursor-pointer"
                 style={{ background: 'transparent' }}
               />
-              <div className="flex justify-between mt-4 text-xs font-bold uppercase tracking-widest opacity-50" style={{ color: '#cbc4ce' }}>
+              <div className="flex justify-between mt-2 text-xs font-semibold uppercase tracking-wider text-slate-400 font-sans">
                 <span>11 PLAYERS</span>
                 <span>25 PLAYERS</span>
               </div>
             </div>
           </div>
 
-
           {/* AI Difficulty Selector (Solo mode only) */}
           {isSoloMode && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <span className="text-xl">🤖</span>
-                <h2 className="text-on-surface uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", fontSize: '10px', letterSpacing: '2px', color: '#9980c8' }}>AI Managers Difficulty</h2>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🤖</span>
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[#ff9d47] font-sans">AI Managers Difficulty</h2>
               </div>
-              <div className="flex gap-4 flex-wrap">
+              <div className="flex gap-3 flex-wrap">
                 {['easy', 'medium', 'hard'].map(level => {
                   const isActive = aiDifficulty === level;
                   const label = level === 'easy' ? 'Easy (Conservative) 🛡️' : level === 'medium' ? 'Medium (Balanced) ⚖️' : 'Hard (Aggressive) 🔥';
                   const colors = {
-                    easy: { bg: 'rgba(0, 245, 160, 0.1)', text: '#00F5A0' },
-                    medium: { bg: 'rgba(0, 201, 255, 0.1)', text: '#00C9FF' },
-                    hard: { bg: 'rgba(255, 60, 172, 0.1)', text: '#FF3CAC' },
+                    easy: { bg: 'rgba(0, 245, 160, 0.15)', text: '#00F5A0', border: '#00F5A0' },
+                    medium: { bg: 'rgba(0, 201, 255, 0.15)', text: '#00C9FF', border: '#00C9FF' },
+                    hard: { bg: 'rgba(255, 60, 172, 0.15)', text: '#FF3CAC', border: '#FF3CAC' },
                   };
                   return (
                     <button
                       key={level}
                       type="button"
                       onClick={() => setAiDifficulty(level)}
-                      className={`flex-1 py-4 rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 border cursor-pointer ${
+                      className={`flex-1 py-3 rounded-xl font-bold font-sans text-sm transition-all transform hover:scale-105 active:scale-95 border cursor-pointer ${
                         isActive
-                          ? 'scale-105 shadow-lg'
-                          : 'border-white/10 text-on-surface-variant/60 hover:bg-white/5 opacity-55'
+                          ? 'shadow-lg'
+                          : 'border-white/10 text-slate-400 hover:bg-white/5'
                       }`}
                       style={{
-                        backgroundColor: isActive ? colors[level].bg : 'transparent',
-                        borderColor: isActive ? colors[level].text : 'rgba(255,255,255,0.1)',
-                        color: colors[level].text,
+                        backgroundColor: isActive ? colors[level].bg : '#191726',
+                        borderColor: isActive ? colors[level].border : 'rgba(255,255,255,0.1)',
+                        color: isActive ? colors[level].text : '#94a3b8',
                       }}
                     >
                       {label}
@@ -718,12 +711,12 @@ export default function Setup() {
           )}
 
           {/* Player Auction Order */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">🔀</span>
-              <h2 className="text-on-surface uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", fontSize: '10px', letterSpacing: '2px', color: '#9980c8' }}>Player Auction Order</h2>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🔀</span>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-[#ff9d47] font-sans">Player Auction Order</h2>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2.5">
               {[
                 { key: 'batters',       label: 'Batters',        icon: '🏏', desc: 'BAT → WK → AR → BOWL' },
                 { key: 'wicketkeepers', label: 'WKs',            icon: '🧤', desc: 'WK → BAT → AR → BOWL' },
@@ -735,32 +728,32 @@ export default function Setup() {
                   key={key}
                   type="button"
                   onClick={() => setPlayerOrder(key)}
-                  className={`order-btn${playerOrder === key ? ' active' : ''} flex-1 min-w-[100px]`}
+                  className={`order-btn${playerOrder === key ? ' active' : ''} flex-1 min-w-[90px] py-2.5 px-2`}
+                  style={{ background: playerOrder === key ? 'rgba(255,130,0,0.15)' : '#191726' }}
                 >
-                  <span style={{ fontSize: 22 }}>{icon}</span>
-                  <span style={{ fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(13px, 2vw, 16px)', letterSpacing: '1px' }}>{label}</span>
+                  <span style={{ fontSize: 20 }}>{icon}</span>
+                  <span style={{ fontFamily: "'Russo One', sans-serif", fontSize: '13px', letterSpacing: '0.5px' }}>{label}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Bidding Timer */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex justify-between items-end">
-              <div className="flex items-center gap-3">
-                <span className="text-xl">⏱️</span>
-                <h2 className="text-on-surface uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", fontSize: '10px', letterSpacing: '2px', color: '#9980c8' }}>Bidding Timer</h2>
+              <div className="flex items-center gap-2">
+                <span className="text-lg">⏱️</span>
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[#ff9d47] font-sans">Bidding Timer</h2>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{
                   fontFamily: "'Russo One', sans-serif",
-                  fontSize: 'clamp(20px, 3.5vw, 32px)',
+                  fontSize: '22px',
                   color: '#ffffff',
                   lineHeight: 1,
-                  minWidth: 52,
                   textAlign: 'right'
                 }}>{bidTimer}s</span>
-                <span style={{ fontSize: 11, color: '#cbc4ce', opacity: 0.6, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>/ bid</span>
+                <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>/ bid</span>
               </div>
             </div>
             <div
@@ -775,7 +768,7 @@ export default function Setup() {
               }}
             >
               {/* Track line */}
-              <div style={{ position: 'absolute', left: 0, right: 0, height: 2, borderRadius: 9999, background: 'rgba(255,255,255,0.12)' }}>
+              <div style={{ position: 'absolute', left: 0, right: 0, height: 4, borderRadius: 9999, background: 'rgba(255,255,255,0.15)' }}>
                 {/* Filled portion */}
                 <div style={{
                   position: 'absolute',
@@ -803,27 +796,22 @@ export default function Setup() {
                 pointerEvents: 'none'
               }} />
             </div>
-            <div className="grid grid-cols-6 gap-2 mt-3">
+            <div className="grid grid-cols-6 gap-2 mt-2">
               {[5, 10, 15, 20, 25, 30].map(s => (
                 <button
                   key={s}
                   type="button"
                   onClick={() => setBidTimer(s)}
-                  className="w-full flex items-center justify-center"
+                  className="w-full flex items-center justify-center font-sans font-bold"
                   style={{
-                    height: 40,
-                    borderRadius: 10,
-                    border: bidTimer === s ? '1.5px solid #ff8200' : '1.5px solid rgba(255,255,255,0.1)',
-                    background: bidTimer === s ? 'rgba(255,130,0,0.12)' : 'transparent',
-                    color: bidTimer === s ? '#ff8200' : '#cbc4ce',
-                    fontWeight: 700,
+                    height: 36,
+                    borderRadius: 8,
+                    border: bidTimer === s ? '1.5px solid #ff8200' : '1px solid rgba(255,255,255,0.1)',
+                    background: bidTimer === s ? 'rgba(255,130,0,0.15)' : '#191726',
+                    color: bidTimer === s ? '#ff8200' : '#cbd5e1',
                     fontSize: 12,
-                    fontFamily: "'Russo One', sans-serif",
-                    letterSpacing: '1px',
                     cursor: 'pointer',
-                    transition: 'all 0.18s',
-                    boxShadow: bidTimer === s ? '0 0 10px rgba(255,215,0,0.2)' : 'none',
-                    transform: bidTimer === s ? 'scale(1.05)' : 'scale(1)'
+                    transition: 'all 0.18s'
                   }}
                 >{s}s</button>
               ))}
@@ -831,34 +819,35 @@ export default function Setup() {
           </div>
 
           {/* Define Team Names */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">✏️</span>
-              <h2 className="text-on-surface uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", fontSize: '10px', letterSpacing: '2px', color: '#9980c8' }}>Define Team Names</h2>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">✏️</span>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-[#ff9d47] font-sans">Define Franchise Teams</h2>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {teamNames.map((team, idx) => {
                 const active = isActiveTeam(team);
                 return (
                   <div
                     key={idx}
-                    className={`glass-panel p-4 rounded-xl flex flex-col justify-between gap-3 border transition-all group ${
+                    className={`glass-panel p-3.5 rounded-xl flex flex-col justify-between gap-2.5 border transition-all ${
                       team.isUser 
-                        ? 'border-secondary-fixed/50 gold-glow' 
+                        ? 'border-[#ff8200] gold-glow' 
                         : active 
-                          ? 'border-[#00C9FF]/30 hover:border-[#00C9FF]/60' 
-                          : 'border-white/10 opacity-45 hover:opacity-85 hover:border-white/20'
+                          ? 'border-[#00C9FF]/50' 
+                          : 'border-white/10 opacity-50'
                     }`}
                     style={{ 
+                      backgroundColor: '#191726',
                       borderColor: team.isUser 
-                        ? 'rgba(255, 130, 0, 0.5)' 
+                        ? '#ff8200' 
                         : active 
-                          ? 'rgba(0, 201, 255, 0.3)' 
+                          ? 'rgba(0, 201, 255, 0.4)' 
                           : 'rgba(255, 255, 255, 0.1)' 
                     }}
                   >
-                    <div className="flex flex-col gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center p-1 border border-white/15 overflow-hidden flex-shrink-0">
+                    <div className="flex flex-col gap-2">
+                      <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center p-1 border border-white/15 overflow-hidden flex-shrink-0">
                         {team.logo ? (
                           <img src={team.logo} alt={team.name} className="w-full h-full object-contain" referrerPolicy="no-referrer" />
                         ) : (
@@ -867,43 +856,36 @@ export default function Setup() {
                       </div>
                       <div>
                         <div className="flex items-center justify-between gap-1 mb-1">
-                          <span className="text-[9px] font-bold uppercase tracking-widest opacity-70 truncate" style={{ color: team.isUser ? '#ff8200' : active ? '#00C9FF' : '#cbc4ce' }}>
+                          <span className="text-[10px] font-bold uppercase tracking-wider font-sans" style={{ color: team.isUser ? '#ff8200' : active ? '#00C9FF' : '#94a3b8' }}>
                             TEAM {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
                           </span>
                           {team.isUser ? (
-                            <span className="text-[8px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-[#ff8200]/20 text-[#ff8200] border border-[#ff8200]/30 flex-shrink-0">YOU</span>
+                            <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#ff8200]/20 text-[#ff8200] border border-[#ff8200]/40 flex-shrink-0 font-sans">YOU</span>
                           ) : active ? (
-                            <span className="text-[8px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-[#00C9FF]/20 text-[#00C9FF] border border-[#00C9FF]/30 flex-shrink-0">ACTIVE (AI)</span>
+                            <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#00C9FF]/20 text-[#00C9FF] border border-[#00C9FF]/40 flex-shrink-0 font-sans">ACTIVE</span>
                           ) : (
-                            <span className="text-[8px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-white/5 text-white/40 border border-white/10 flex-shrink-0">INACTIVE</span>
+                            <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-white/5 text-white/40 border border-white/10 flex-shrink-0 font-sans">IDLE</span>
                           )}
                         </div>
                         <input
                           type="text"
                           value={team.name}
                           onChange={(e) => handleTeamNameChange(idx, e.target.value)}
-                          className="w-full bg-transparent border-none p-0 focus:ring-0 font-bold text-lg outline-none truncate"
-                          style={{
-                            fontFamily: "'Russo One', sans-serif",
-                            color: team.isUser ? '#ff8200' : active ? '#00C9FF' : '#e6e1e5',
-                            border: 'none',
-                            outline: 'none',
-                            fontSize: '16px'
-                          }}
+                          className="w-full bg-transparent border-none p-0 focus:ring-0 font-sans font-bold text-sm text-white outline-none truncate"
                         />
                       </div>
                     </div>
                     
-                    <div className="w-full pt-2 border-t border-white/5 flex justify-end">
+                    <div className="w-full pt-2 border-t border-white/10 flex justify-end">
                       {team.isUser ? (
-                        <div className="flex items-center gap-1 text-[#ff8200] text-[9px] font-bold tracking-wider uppercase" style={{ color: '#ff8200' }}>
+                        <div className="flex items-center gap-1 text-[#ff8200] text-[10px] font-bold tracking-wider uppercase font-sans">
                           <span>✅</span>
-                          YOU
+                          YOUR TEAM
                         </div>
                       ) : (
                         <button
                           onClick={() => handleSelectUserTeam(idx)}
-                          className="w-full bg-white/5 hover:bg-[#ff8200] hover:text-black border border-white/10 hover:border-[#ff8200] py-1 rounded-lg text-[9px] font-bold tracking-wider uppercase transition-all duration-300 text-on-surface-variant hover:scale-105"
+                          className="w-full bg-white/10 hover:bg-[#ff8200] hover:text-black border border-white/10 hover:border-[#ff8200] py-1 rounded text-[10px] font-bold tracking-wider uppercase transition-colors text-slate-200 cursor-pointer font-sans"
                         >
                           PLAY AS
                         </button>
@@ -917,47 +899,42 @@ export default function Setup() {
             </>
           )}
         </section>
+        </div>
       </main>
 
       {/* Sticky Bottom Actions footer */}
       {!isMultiplayerGuest && (
         <footer 
-          className="fixed bottom-0 left-0 w-full z-[60] backdrop-blur-md" 
-          style={{ 
-            backgroundColor: breakpoint.isMobile ? '#ff8200' : 'rgba(20, 19, 21, 0.4)',
-            padding: breakpoint.isMobile ? '12px' : '24px',
-            borderTop: breakpoint.isMobile ? '1px solid rgba(255,215,0,0.2)' : 'none'
-          }}
+          className="h-18 border-t border-[#2e2b3e] bg-[#161421] px-4 sm:px-6 flex items-center justify-center flex-shrink-0 z-30"
+          style={{ height: '72px' }}
         >
-          <div className="max-w-4xl mx-auto">
+          <div className="w-full max-w-md">
             <button
               onClick={handleStartAuction}
               disabled={isStarting}
-              className={`w-full py-4 sm:py-5 rounded-xl sm:rounded-2xl gold-gradient text-inverse-on-surface font-display-md text-2xl sm:text-3xl font-bold tracking-widest gold-glow inner-glow-gold transform transition-all shadow-2xl flex items-center justify-center gap-4 group ${
-                isStarting ? 'opacity-85 cursor-wait btn-loading-shimmer' : 'active:scale-95 hover:scale-[1.01] cursor-pointer'
+              className={`w-full py-3 rounded-xl font-display-md text-xl font-bold tracking-widest gold-glow inner-glow-gold transform transition-all shadow-xl flex items-center justify-center gap-3 group cursor-pointer ${
+                isStarting ? 'opacity-85 cursor-wait btn-loading-shimmer' : 'active:scale-95 hover:scale-[1.01]'
               }`}
               style={{
                 fontFamily: "'Russo One', sans-serif",
-                background: breakpoint.isMobile ? '#0a0020' : 'linear-gradient(135deg, #ff8200 0%, #e05a00 100%)',
-                fontSize: 'clamp(16px, 2.5vw, 22px)',
-                letterSpacing: '3px',
-                color: breakpoint.isMobile ? '#ff8200' : '#323033'
+                background: 'linear-gradient(135deg, #ff8200 0%, #e05a00 100%)',
+                letterSpacing: '2px',
+                color: '#141315'
               }}
             >
               {isStarting ? (
                 <>
-                  <svg className="animate-spin w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <circle cx="12" cy="12" r="10" strokeWidth="4" className="opacity-25" />
                     <path fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" className="opacity-75" />
                   </svg>
                   <span>STARTING AUCTION...</span>
-                  <span className="text-xl sm:text-2xl animate-bounce">🏏</span>
                 </>
               ) : (
                 <>
-                  <span className="animate-pulse">🚀</span>
+                  <span>🚀</span>
                   <span>START AUCTION</span>
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </>
@@ -966,12 +943,6 @@ export default function Setup() {
           </div>
         </footer>
       )}
-
-      {/* Decorative vectors */}
-      <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-secondary-fixed/10 blur-[120px] rounded-full" style={{ backgroundColor: 'rgba(255, 130, 0, 0.05)' }} />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-primary/5 blur-[120px] rounded-full" style={{ backgroundColor: 'rgba(209, 191, 235, 0.03)' }} />
-      </div>
     </div>
   );
 }

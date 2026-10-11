@@ -290,178 +290,118 @@ export default function SignIn() {
         }
       `}</style>
 
-      {/* Decorative Atmosphere & Stadium Background */}
+      {/* High-Contrast Stadium Background */}
       <div 
-        className="absolute inset-0 z-0 pointer-events-none opacity-85" 
-        style={{ backgroundImage: 'url("/stadium_night_view.png")', backgroundSize: 'cover', backgroundPosition: 'center', height: '100vh', width: '100vw', overflow: 'hidden' }} 
+        className="absolute inset-0 z-0 pointer-events-none opacity-60" 
+        style={{ backgroundImage: 'url("/stadium_night_view.png")', backgroundSize: 'cover', backgroundPosition: 'center', height: '100vh', width: '100vw' }} 
       />
-      <div className="absolute inset-0 z-1 pointer-events-none bg-gradient-to-b from-[#090d16]/70 via-[#0a0020]/30 to-[#050010]/80" />
-      <div className="absolute inset-0 z-5 stadium-glow pointer-events-none" />
-      <div className="absolute inset-0 z-10 geometric-lines opacity-40 pointer-events-none" />
-      
-      {/* Ambient Glowing Orbs for Glass Transparency Blur Effect */}
-      <div className="absolute top-1/4 left-1/3 w-80 h-80 rounded-full bg-white opacity-20 blur-[100px] pointer-events-none z-10 animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/3 w-96 h-96 rounded-full bg-white opacity-15 blur-[120px] pointer-events-none z-10" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-white opacity-15 blur-[90px] pointer-events-none z-10" />
-
-      {/* Interactive mouse cursor glow spotlight (SignIn page only) */}
-      <div className="bg-mouse-spotlight" />
-
+      <div className="absolute inset-0 z-1 pointer-events-none bg-gradient-to-b from-[#090d16]/90 via-[#0a0020]/75 to-[#050010]/95" />
 
       <main 
-        className="relative z-30 flex flex-col items-center justify-center w-full"
-        style={{
-          paddingLeft: '16px',
-          paddingRight: '16px',
-        }}
+        className="relative z-30 flex flex-col items-center justify-center w-full h-full px-4"
       >
         <div 
           ref={cardRef}
           onMouseMove={handleCardMouseMove}
           onMouseLeave={handleCardMouseLeave}
-          className="glass-panel flex flex-col items-center transform transition-all duration-500 hover:scale-[1.01] relative overflow-hidden"
+          className="flex flex-col items-center relative overflow-hidden"
           style={{
-            width: '90%',
-            maxWidth: '320px',
-            padding: '24px 24px',
+            width: '100%',
+            maxWidth: '380px',
+            padding: '32px 28px',
             borderRadius: '20px',
-            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25)'
+            background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            boxShadow: '0 16px 48px rgba(0, 0, 0, 0.65)'
           }}
         >
-          {/* Card content sitting above spotlight glow */}
-          <div className="relative z-10 flex flex-col items-center w-full">
-            {/* Heading */}
-            <div className="text-center mb-5">
-              <h1
-                className="text-secondary-fixed uppercase tracking-wider"
-                style={{ 
-                  fontFamily: "'Russo One', sans-serif", 
-                  color: '#ff8200',
-                  fontSize: '22px',
-                  letterSpacing: '1.5px',
-                  textShadow: '0 2px 12px rgba(255, 130, 0, 0.4)'
-                }}
-              >
-                Welcome Back
-              </h1>
-              <p 
-                className="mt-1.5 uppercase" 
-                style={{ 
-                  fontFamily: "'Russo One', sans-serif",
-                  fontSize: '10px',
-                  letterSpacing: '2px',
-                  color: 'rgba(255, 255, 255, 0.75)',
-                  textShadow: '0 1px 4px rgba(0, 0, 0, 0.6)'
-                }}
-              >
-                THE HAMMER AWAITS YOUR STRATEGY
-              </p>
+          {/* Card Header */}
+          <div className="flex flex-col items-center text-center mb-6">
+            <div className="w-12 h-12 mb-3 rounded-full bg-gradient-to-tr from-[#ff8200]/20 to-[#ff9d47]/40 border border-[#ff8200]/40 flex items-center justify-center text-2xl shadow-lg">
+              🏏
+            </div>
+            <h1 
+              className="text-2xl tracking-wider text-[#ff8200] leading-none mb-2"
+              style={{ fontFamily: "'Russo One', sans-serif", fontWeight: 400 }}
+            >
+              WELCOME BACK
+            </h1>
+            <p className="text-xs uppercase tracking-widest text-slate-300 font-semibold" style={{ fontFamily: "'Inter', sans-serif" }}>
+              The hammer awaits your strategy
+            </p>
+          </div>
+
+          {/* Form Actions */}
+          <div className="w-full flex flex-col gap-4">
+            {/* Google Sign In Trigger */}
+            <button
+              onClick={handleGoogleClick}
+              disabled={loadingState.active}
+              className="w-full h-11 bg-white hover:bg-slate-100 text-slate-900 rounded-xl px-4 flex items-center justify-center gap-3 font-bold text-xs uppercase tracking-wider transition-all duration-200 active:scale-95 shadow-lg border border-white"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+              </svg>
+              <span>Continue with Google</span>
+            </button>
+
+            {/* Subtle Divider */}
+            <div className="flex items-center gap-3 my-1">
+              <div className="h-[1px] flex-1 bg-white/20" />
+              <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold" style={{ fontFamily: "'Inter', sans-serif" }}>OR</span>
+              <div className="h-[1px] flex-1 bg-white/20" />
             </div>
 
-            {/* Login Actions */}
-            <div className="w-full space-y-4">
-              {/* Google Sign In */}
-              <button
-                onClick={handleGoogleClick}
+            {/* Owner Nickname Input */}
+            <div className="w-full space-y-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider block text-slate-300" style={{ fontFamily: "'Inter', sans-serif" }}>
+                Your Owner Name
+              </label>
+              <input
+                type="text"
+                value={username}
                 disabled={loadingState.active}
-                onMouseEnter={() => setIsGlowHover(true)}
-                onMouseLeave={() => setIsGlowHover(false)}
-                className={`w-full h-11 bg-white hover:bg-white/95 text-surface uppercase flex items-center justify-center gap-3 transition-all duration-200 active:scale-95 group relative overflow-hidden rounded-xl shadow-lg ${loadingState.active ? 'opacity-70 cursor-not-allowed' : ''}`}
-                style={{ 
-                  color: '#141315',
-                  fontFamily: "'Russo One', sans-serif",
-                  fontSize: '13px',
-                  letterSpacing: '1px'
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !loadingState.active) {
+                    handleGuestSignIn();
+                  }
                 }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                {loadingState.active && loadingState.isGoogle ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-gray-400 border-t-[#4285F4] rounded-full animate-spin" />
-                    <span>Signing in...</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" viewBox="0 0 24 24">
-                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                    </svg>
-                    Continue with Google
-                  </>
-                )}
-              </button>
-
-              {/* Separator */}
-              <div className="flex items-center gap-3 py-1">
-                <div className="h-[1px] flex-1" style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
-                <span className="text-[10px] text-white/70 uppercase font-semibold tracking-wider">or</span>
-                <div className="h-[1px] flex-1" style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
-              </div>
-
-              {/* Owner Nickname Input */}
-              <div className="w-full space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider block ml-1" style={{ fontFamily: "'Russo One', sans-serif", color: 'rgba(255, 255, 255, 0.85)', letterSpacing: '1.5px', fontSize: '9px' }}>
-                  Your Owner Name
-                </label>
-                <input
-                  type="text"
-                  value={username}
-                  disabled={loadingState.active}
-                  onChange={(e) => setUsername(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !loadingState.active) {
-                      handleGuestSignIn();
-                    }
-                  }}
-                  placeholder="Enter nickname..."
-                  className="w-full rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-[#ff8200] focus:ring-1 focus:ring-[#ff8200] transition-all placeholder:text-white/40 disabled:opacity-50"
-                  style={{ 
-                    backgroundColor: 'rgba(0, 0, 0, 0.45)', 
-                    borderColor: 'rgba(255, 255, 255, 0.2)', 
-                    borderWidth: '1px',
-                    borderStyle: 'solid',
-                    color: '#ffffff', 
-                    fontSize: '14px', 
-                    fontFamily: "'Russo One', sans-serif",
-                    backdropFilter: 'blur(8px)'
-                  }}
-                />
-              </div>
-
-              {/* Action Trigger */}
-              <button
-                onClick={handleGuestSignIn}
-                disabled={loadingState.active}
-                className={`w-full h-11 border text-[#ff8200] hover:bg-[#ff8200] hover:text-black uppercase transition-all duration-300 active:scale-95 rounded-xl flex items-center justify-center gap-2 font-bold shadow-md ${loadingState.active ? 'opacity-75 cursor-not-allowed' : ''}`}
-                style={{ 
-                  backgroundColor: 'rgba(255, 130, 0, 0.12)',
-                  borderColor: 'rgba(255, 130, 0, 0.5)',
-                  fontFamily: "'Russo One', sans-serif",
-                  fontSize: '13px',
-                  letterSpacing: '1px'
-                }}
-              >
-                {loadingState.active && !loadingState.isGoogle ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-[#ff8200] border-t-transparent rounded-full animate-spin" />
-                    <span>Entering Arena...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>🚀</span>
-                    Continue as Guest
-                  </>
-                )}
-              </button>
+                placeholder="Enter nickname..."
+                className="w-full rounded-xl px-4 py-2.5 text-white bg-[#110f18] border border-white/20 focus:outline-none focus:border-[#ff8200] focus:ring-1 focus:ring-[#ff8200] transition-all placeholder:text-slate-500 disabled:opacity-50 text-sm font-medium"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              />
             </div>
 
-            <div className="mt-4 text-center">
-              <p className="text-[9px] leading-relaxed max-w-[240px] mx-auto text-white/60" style={{ fontFamily: "'Russo One', sans-serif" }}>
-                By signing in you agree to our <span className="text-[#ff8200] hover:underline cursor-pointer">Terms of Service</span> and <span className="text-[#ff8200] hover:underline cursor-pointer">Privacy Policy</span>.
-              </p>
-            </div>
+            {/* Action Trigger */}
+            <button
+              onClick={handleGuestSignIn}
+              disabled={loadingState.active}
+              className={`w-full h-11 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white uppercase transition-all duration-200 active:scale-95 rounded-xl flex items-center justify-center gap-2 font-bold text-xs tracking-wider shadow-lg ${loadingState.active ? 'opacity-75 cursor-not-allowed' : ''}`}
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              {loadingState.active && !loadingState.isGoogle ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Entering Arena...</span>
+                </>
+              ) : (
+                <>
+                  <span>🚀</span>
+                  <span>Continue as Guest</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="mt-5 text-center">
+            <p className="text-[11px] leading-relaxed text-slate-400 max-w-[260px] mx-auto" style={{ fontFamily: "'Inter', sans-serif" }}>
+              By signing in you agree to our <span className="text-[#ff8200] hover:underline cursor-pointer font-semibold">Terms of Service</span> and <span className="text-[#ff8200] hover:underline cursor-pointer font-semibold">Privacy Policy</span>.
+            </p>
           </div>
         </div>
       </main>

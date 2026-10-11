@@ -90,12 +90,11 @@ export default function Results() {
   }
 
   return (
-    <div className="bg-surface text-on-surface font-body-md overflow-x-hidden min-h-screen pb-32 relative" style={{ backgroundColor: '#141315', color: '#e6e1e5' }}>
+    <div className="bg-[#121118] text-[#f1f5f9] h-screen w-screen overflow-hidden flex flex-col relative select-none">
       <style>{`
         .glass-card {
-          background: rgba(54, 52, 55, 0.4);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: #191726;
+          border: 1px solid #2e2b3e;
         }
         .gold-glow {
           box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
@@ -141,31 +140,29 @@ export default function Results() {
         ))}
       </div>
 
-      <header className="bg-surface/80 backdrop-blur-xl border-b border-white/20 shadow-lg flex justify-between items-center px-6 py-3 w-full fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: 'rgba(20, 19, 21, 0.8)' }}>
+      <header className="h-14 bg-[#161421] border-b border-[#2d293d] flex justify-between items-center px-4 sm:px-6 flex-shrink-0 z-30">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
             title="Go Back"
-            className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
-            style={{ color: '#cbc4ce' }}
+            className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white transition-all cursor-pointer"
           >
-            <svg className="w-5 h-5 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </button>
           <button
             onClick={() => navigate('/play-options')}
             title="Go to Home"
-            className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
-            style={{ color: '#cbc4ce' }}
+            className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white transition-all cursor-pointer"
           >
-            <svg className="w-5 h-5 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
           </button>
-          <div className="w-px h-6 bg-white/10 mx-1" />
-          <span className="text-2xl">🏏</span>
-          <h1 className="text-secondary-fixed tracking-widest uppercase" style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: 'clamp(16px, 2.5vw, 22px)', letterSpacing: '4px' }}>
+          <div className="w-px h-5 bg-white/10 mx-1" />
+          <span className="text-xl">🏏</span>
+          <h1 className="tracking-widest uppercase font-bold" style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: '18px', letterSpacing: '2px' }}>
             IPL AUCTION
           </h1>
         </div>
@@ -173,7 +170,8 @@ export default function Results() {
       </header>
 
       {/* Hero content header */}
-      <main className="max-w-7xl mx-auto px-6 pt-24">
+      <main className="flex-1 overflow-y-auto min-h-0 w-full px-4 sm:px-6 py-6">
+        <div className="max-w-7xl mx-auto space-y-8">
         <section className="text-center mb-12">
           <div className="inline-block sparkle-container">
             <h2 className="text-secondary-fixed-dim drop-shadow-[0_0_15px_rgba(255,130,0,0.4)] mb-2 uppercase" style={{ fontFamily: "'Russo One', sans-serif", color: '#ffffff', fontSize: 'clamp(24px, 5vw, 48px)', letterSpacing: '3px' }}>
@@ -469,11 +467,8 @@ export default function Results() {
             New Auction
           </button>
         </div>
+        </div>
       </main>
-
-      {/* Ambient background glows */}
-      <div className="fixed top-[-10%] right-[-10%] w-[500px] h-[500px] bg-secondary-fixed/5 blur-[120px] rounded-full pointer-events-none -z-10" style={{ backgroundColor: 'rgba(255, 215, 0, 0.03)' }} />
-      <div className="fixed bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10" style={{ backgroundColor: 'rgba(209, 191, 235, 0.05)' }} />
     </div>
   );
 }

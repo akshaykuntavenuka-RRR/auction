@@ -112,84 +112,78 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
 
   // Full card (for spotlight in Auction.jsx)
   return (
-    <div
-      key={player.id || player.name}
-      style={{
-        background: '#1e1c20',
-        border: '1.5px solid rgba(255,255,255,0.16)',
-        borderRadius: 20,
-        padding: breakpoint.isMobile ? '16px 14px' : '18px 22px',
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
-        animation: 'cardReveal 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-      }}
-    >
-      <style>{`
-        @keyframes cardReveal {
-          0% {
-            opacity: 0.35;
-            transform: translateY(6px) scale(0.988);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-      `}</style>
-      {/* Top badges: role + nationality */}
+    <div style={{
+      background: 'linear-gradient(145deg, #1b1924 0%, #121019 100%)',
+      border: '1px solid rgba(255, 255, 255, 0.16)',
+      borderRadius: 12,
+      padding: '8px 12px',
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+      boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+      fontFamily: "'Inter', sans-serif"
+    }}>
+      {/* Top Header: Role badge, Nationality badge, and Base Price */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: breakpoint.isMobile ? 8 : 10,
-        marginBottom: breakpoint.isMobile ? 10 : 12,
+        justifyContent: 'space-between',
+        marginBottom: 4,
         flexWrap: 'wrap',
+        gap: 6,
       }}>
-        <span style={{
-          background: roleColor,
-          color: '#0f0e10',
-          padding: breakpoint.isMobile ? '4px 12px' : '5px 16px',
-          borderRadius: 99,
-          fontSize: breakpoint.isMobile ? 12 : 13,
-          fontWeight: 800,
-          letterSpacing: 1.5,
-          textTransform: 'uppercase',
-        }}>{player.role || roleLabel}</span>
-
-        {player.nationality && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{
-            background: 'rgba(255,255,255,0.08)',
-            color: '#cbc4ce',
-            padding: breakpoint.isMobile ? '4px 10px' : '5px 14px',
+            background: roleColor,
+            color: '#0f0e10',
+            padding: '1.5px 8px',
             borderRadius: 99,
-            fontSize: breakpoint.isMobile ? 11 : 12,
-            fontWeight: 600,
-            border: '1px solid rgba(255,255,255,0.16)',
-          }}>{player.nationality}</span>
-        )}
+            fontSize: 10,
+            fontWeight: 800,
+            letterSpacing: 0.8,
+            textTransform: 'uppercase',
+          }}>{player.role || roleLabel}</span>
+
+          {player.nationality && (
+            <span style={{
+              background: 'rgba(255,255,255,0.08)',
+              color: '#e2e8f0',
+              padding: '1.5px 6px',
+              borderRadius: 99,
+              fontSize: 9,
+              fontWeight: 600,
+              border: '1px solid rgba(255,255,255,0.16)',
+            }}>{player.nationality}</span>
+          )}
+        </div>
+
+        {/* Base Price Badge */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ fontSize: 9, color: '#94a3b8', fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase' }}>BASE PRICE:</span>
+          <span style={{ fontFamily: "'Russo One', sans-serif", fontSize: '15px', color: '#ffffff', letterSpacing: '0.5px' }}>₹{basePriceCr} Cr</span>
+        </div>
       </div>
 
       {/* Main info row: Image on left + Details on right */}
       <div style={{
         display: 'flex',
         flexDirection: breakpoint.isMobile ? 'column' : 'row',
-        gap: breakpoint.isMobile ? 14 : 20,
+        gap: 10,
         alignItems: 'stretch',
         width: '100%',
       }}>
-        {/* Image Box ~190x215px */}
+        {/* Compact Image Box */}
         <div style={{
-          width: breakpoint.isMobile ? '100%' : '185px',
-          height: breakpoint.isMobile ? '180px' : '215px',
-          minWidth: breakpoint.isMobile ? '100%' : '165px',
-          borderRadius: 14,
+          width: breakpoint.isMobile ? '100%' : '120px',
+          height: breakpoint.isMobile ? '135px' : '130px',
+          minWidth: breakpoint.isMobile ? '100%' : '120px',
+          borderRadius: 10,
           overflow: 'hidden',
           position: 'relative',
-          background: '#141316',
+          background: '#13111a',
           border: '1px solid rgba(255,255,255,0.16)',
           flexShrink: 0,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+          boxShadow: '0 4px 14px rgba(0,0,0,0.5)',
         }}>
           <PlayerImage
             playerName={player.name}
@@ -212,22 +206,23 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
           justifyContent: 'space-between',
         }}>
           <div>
-            <div style={{ fontSize: breakpoint.isMobile ? 11 : 12, color: '#ff8200', fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4 }}>
+            <div style={{ fontSize: 9, color: '#ff8200', fontWeight: 800, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 1 }}>
               {player.ipl || player.team || ''} · {player.team2026 || 'IPL FRANCHISE'}
             </div>
 
             <h1 style={{
               fontFamily: "'Russo One', sans-serif",
-              fontSize: breakpoint.isMobile ? 'clamp(18px, 4.5vw, 24px)' : 'clamp(20px, 2.2vw, 28px)',
-              letterSpacing: '1px',
+              fontSize: breakpoint.isMobile ? '18px' : '19px',
+              letterSpacing: '0.5px',
               color: '#ffffff',
-              lineHeight: 1.1,
-              marginBottom: breakpoint.isMobile ? 6 : 10,
+              lineHeight: 1.15,
+              marginBottom: 4,
+              fontWeight: 400
             }}>{player.name}</h1>
           </div>
 
           {/* Stat Boxes: 2 columns x 2 rows */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: breakpoint.isMobile ? 6 : 10 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>
             {(isBAT || isWK) && <>
               <StatBox label="IPL Matches" value={player.stats?.matches ?? '-'} isMobile={breakpoint.isMobile} />
               <StatBox label="IPL Runs" value={player.stats?.runs ?? '-'} isMobile={breakpoint.isMobile} />
@@ -268,40 +263,32 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
         </div>
       </div>
 
-      {/* Base Price Line directly below stat grid */}
-      <div style={{ marginTop: breakpoint.isMobile ? 10 : 14, borderTop: '1px solid rgba(255,255,255,0.16)', paddingTop: breakpoint.isMobile ? 8 : 10 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-          <span style={{ fontSize: breakpoint.isMobile ? 11 : 13, color: '#9c8faa', fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase' }}>Base Price:</span>
-          <span style={{ fontFamily: "'Russo One', sans-serif", fontSize: breakpoint.isMobile ? '20px' : '26px', color: '#ffffff', letterSpacing: '1px' }}>₹{basePriceCr} Cr</span>
-        </div>
-
-        {/* Progress Bar */}
-        <div style={{ marginTop: 8, height: breakpoint.isMobile ? 6 : 8, background: 'rgba(255,255,255,0.14)', borderRadius: 99, overflow: 'hidden' }}>
-          <div style={{ 
-            height: '100%', 
-            width: `${bidTimer > 0 && countdown !== null ? (countdown / bidTimer) * 100 : 100}%`, 
-            background: roleColor, 
-            borderRadius: 99,
-            boxShadow: `0 0 16px ${roleColor}`,
-            transition: countdown !== null && countdown < bidTimer ? 'width 1s linear' : 'none'
-          }} />
-        </div>
+      {/* Progress Bar directly at bottom of card */}
+      <div style={{ marginTop: 5, height: 3.5, background: 'rgba(255,255,255,0.12)', borderRadius: 99, overflow: 'hidden' }}>
+        <div style={{ 
+          height: '100%', 
+          width: `${bidTimer > 0 && countdown !== null ? (countdown / bidTimer) * 100 : 100}%`, 
+          background: roleColor, 
+          borderRadius: 99,
+          boxShadow: `0 0 10px ${roleColor}`,
+          transition: countdown !== null && countdown < bidTimer ? 'width 1s linear' : 'none'
+        }} />
       </div>
     </div>
   );
 }
 
-function StatBox({ label, value, isMobile }) {
+function StatBox({ label, value }) {
   return (
     <div style={{
-      background: '#141316',
-      border: '1px solid rgba(255,255,255,0.14)',
-      borderRadius: isMobile ? 10 : 12,
-      padding: isMobile ? '6px 8px' : '8px 12px',
+      background: '#121019',
+      border: '1px solid rgba(255,255,255,0.12)',
+      borderRadius: 6,
+      padding: '3px 5px',
       textAlign: 'center',
     }}>
-      <div style={{ fontSize: isMobile ? 10 : 11, color: '#ff8200', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{label}</div>
-      <div style={{ fontFamily: "'Russo One', sans-serif", fontSize: isMobile ? '18px' : '22px', color: '#ffffff', lineHeight: 1.1 }}>{value}</div>
+      <div style={{ fontSize: 8, color: '#ff9d47', fontWeight: 700, letterSpacing: 0.6, textTransform: 'uppercase', marginBottom: 1 }}>{label}</div>
+      <div style={{ fontFamily: "'Russo One', sans-serif", fontSize: '13.5px', color: '#ffffff', lineHeight: 1, fontWeight: 400 }}>{value}</div>
     </div>
   );
 }

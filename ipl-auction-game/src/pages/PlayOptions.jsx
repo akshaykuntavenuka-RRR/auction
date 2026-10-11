@@ -145,68 +145,38 @@ export default function PlayOptions() {
   };
 
   return (
-    <div className="bg-surface text-on-surface min-h-screen flex flex-col justify-center items-center px-6 relative" style={{ backgroundColor: '#141315', color: '#e6e1e5' }}>
+    <div className="bg-[#0c0a14] text-white h-screen w-screen overflow-hidden flex flex-col justify-between items-center relative" style={{ color: '#ffffff' }}>
       <style>{`
-        .glass-card {
-          background: rgba(20, 20, 30, 0.35) !important;
-          backdrop-filter: blur(16px) !important;
-          -webkit-backdrop-filter: blur(16px) !important;
-          border: 1px solid rgba(255, 255, 255, 0.12) !important;
-          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+        .game-mode-card {
+          background: linear-gradient(145deg, #1d1a29 0%, #13111c 100%);
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          border-radius: 18px;
+          box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .stadium-glow {
-          background: radial-gradient(circle at center, rgba(255, 255, 255, 0.12) 0%, rgba(20, 19, 21, 0) 70%);
-        }
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes spin-reverse {
-          from { transform: rotate(360deg); }
-          to { transform: rotate(0deg); }
-        }
-        @keyframes pulse-ring {
-          0% { transform: scale(0.92); opacity: 0.8; }
-          50% { transform: scale(1.1); opacity: 0.3; }
-          100% { transform: scale(0.92); opacity: 0.8; }
-        }
-        @keyframes shimmer-bar {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(250%); }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 3s linear infinite;
-        }
-        .animate-spin-reverse {
-          animation: spin-reverse 2.2s linear infinite;
-        }
-        .animate-pulse-ring {
-          animation: pulse-ring 2s ease-in-out infinite;
-        }
-        .animate-shimmer {
-          animation: shimmer-bar 1.5s infinite;
+        .game-mode-card:hover {
+          border-color: rgba(255, 130, 0, 0.5);
+          box-shadow: 0 16px 44px rgba(0, 0, 0, 0.65), 0 0 20px rgba(255, 130, 0, 0.15);
         }
       `}</style>
 
       {/* Atmospheric Background & Glow */}
       <div 
-        className="absolute inset-0 z-0 pointer-events-none opacity-50" 
-        style={{ backgroundImage: 'url("/stadium_night_view.png")', backgroundSize: 'cover', backgroundPosition: 'center' }} 
+        className="absolute inset-0 z-0 pointer-events-none opacity-40" 
+        style={{ backgroundImage: 'url("/stadium_night_view.png")', backgroundSize: 'cover', backgroundPosition: 'center', height: '100vh', width: '100vw' }} 
       />
-      <div className="absolute inset-0 z-1 pointer-events-none bg-gradient-to-b from-[#090d16]/80 via-[#0a0020]/60 to-[#050010]/90" />
-      <div className="absolute inset-0 stadium-glow pointer-events-none z-2" />
+      <div className="absolute inset-0 z-1 pointer-events-none bg-gradient-to-b from-[#090d16]/90 via-[#0a0020]/80 to-[#050010]/95" />
 
       {/* Navigation Header */}
-      <nav className="bg-surface/80 border-b border-white/10 shadow-lg flex items-center justify-between px-6 py-3 w-full fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: 'rgba(20, 19, 21, 0.95)' }}>
+      <nav className="border-b border-white/10 shadow-lg flex items-center justify-between px-6 py-3 w-full fixed top-0 left-0 right-0 z-50 h-14" style={{ backgroundColor: '#13111c' }}>
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
             disabled={!!loadingMode}
             title="Go Back"
-            className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer disabled:opacity-50"
-            style={{ color: '#cbc4ce' }}
+            className="flex items-center justify-center w-8 h-8 rounded-full border border-white/15 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer disabled:opacity-50 text-slate-300"
           >
-            <svg className="w-5 h-5 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </button>
@@ -214,95 +184,76 @@ export default function PlayOptions() {
             onClick={() => navigate('/')}
             disabled={!!loadingMode}
             title="Go to Home"
-            className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer disabled:opacity-50"
-            style={{ color: '#cbc4ce' }}
+            className="flex items-center justify-center w-8 h-8 rounded-full border border-white/15 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer disabled:opacity-50 text-slate-300"
           >
-            <svg className="w-5 h-5 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
           </button>
-          <div className="w-px h-6 bg-white/10 mx-1" />
-          <span className="text-2xl">🏏</span>
-          <span className="font-bold uppercase" style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: 'clamp(16px, 2.5vw, 22px)', letterSpacing: '4px' }}>IPL AUCTION</span>
+          <div className="w-px h-5 bg-white/15 mx-1" />
+          <span className="text-xl">🏏</span>
+          <span className="font-normal uppercase tracking-wider" style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: '18px' }}>IPL AUCTION</span>
         </div>
         <ProfileMenu />
       </nav>
 
-      <main className="relative z-10 w-full max-w-4xl flex flex-col items-center mt-16 px-4 sm:px-6">
-        <header className="text-center mb-6">
-          <div className="inline-flex items-center justify-center mb-4">
-            <span className="text-6xl animate-bounce">🏏</span>
+      {/* Main Content Area - Fully contained inside viewport */}
+      <main className="relative z-10 w-full max-w-4xl flex-1 flex flex-col justify-center items-center px-4 sm:px-6 pt-16 pb-4">
+        <header className="text-center mb-5">
+          <div className="inline-flex items-center justify-center mb-2">
+            <span className="text-4xl animate-bounce">🏏</span>
           </div>
-          <h1 className="text-secondary-fixed font-bold leading-none mb-3" style={{ fontFamily: "'Russo One', sans-serif", color: '#ff8200', fontSize: 'clamp(20px, 3.5vw, 32px)', letterSpacing: '2px' }}>
+          <h1 className="font-normal leading-none mb-2 text-[#ff8200]" style={{ fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(22px, 3vw, 30px)' }}>
             SELECT GAME MODE
           </h1>
-          <p className="text-on-surface-variant opacity-75 uppercase" style={{ color: '#cbc4ce', fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(12px, 1.8vw, 14px)', letterSpacing: '0.5px' }}>
+          <p className="text-xs uppercase tracking-widest text-slate-300 font-semibold" style={{ fontFamily: "'Inter', sans-serif" }}>
             Choose how you want to build your dream squad
           </p>
         </header>
 
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           {/* Card 1: Play Solo vs AI */}
           <div
-            onMouseMove={handleCardMouseMove}
-            onMouseLeave={handleCardMouseLeave}
-            className={`glass-card p-6 sm:p-8 hover:border-[#ff8200] group transition-all transform hover:scale-[1.02] hover:-translate-y-1 duration-300 relative overflow-hidden flex flex-col justify-between ${loadingMode && loadingMode !== 'solo' ? 'opacity-50 pointer-events-none' : ''}`}
-            style={{ 
-              backgroundColor: 'rgba(20, 20, 30, 0.35)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255, 140, 40, 0.25)',
-              borderRadius: '16px',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-              minHeight: breakpoint.isMobile ? '140px' : '200px'
-            }}
+            className={`game-mode-card p-5 sm:p-6 flex flex-col justify-between ${loadingMode && loadingMode !== 'solo' ? 'opacity-50 pointer-events-none' : ''}`}
           >
-            <div className="absolute -right-8 -top-8 w-24 h-24 bg-[#ff8200]/5 blur-2xl rounded-full group-hover:bg-[#ff8200]/10 transition-colors pointer-events-none" />
-            <div className="relative z-10">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#ff8200]/10 rounded-xl flex items-center justify-center mb-4 sm:mb-6 border border-[#ff8200]/25">
-                <span className="text-3xl sm:text-4xl">🤖</span>
+            <div>
+              <div className="w-12 h-12 bg-[#ff8200]/15 rounded-xl flex items-center justify-center mb-3 border border-[#ff8200]/30 shadow-md">
+                <span className="text-2xl">🤖</span>
               </div>
               <h2 
-                className="text-on-surface font-bold uppercase tracking-wider mb-2" 
-                style={{ 
-                  fontFamily: "'Russo One', sans-serif",
-                  fontSize: 'clamp(16px, 2.5vw, 22px)',
-                  letterSpacing: '1.5px'
-                }}
+                className="text-white font-normal uppercase tracking-wider mb-2" 
+                style={{ fontFamily: "'Russo One', sans-serif", fontSize: '18px' }}
               >
                 Solo vs AI Bidders
               </h2>
-              <p className="opacity-75 text-on-surface-variant mb-4" style={{ color: '#cbc4ce', fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(12px, 1.8vw, 14px)', letterSpacing: '0.5px' }}>
-                Confront active AI managers equipped with dynamic bidding personalities. Select a difficulty tier and draft your ultimate IPL dream franchise:
+              <p className="text-xs text-slate-300 font-medium mb-4 leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
+                Confront active AI managers equipped with dynamic bidding personalities. Select a difficulty tier and draft your dream franchise:
               </p>
 
               {/* Difficulty pills */}
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-4">
                 {['easy', 'medium', 'hard'].map((level) => {
                   const isActive = aiDifficulty === level;
                   const colors = {
-                    easy: { bg: 'rgba(0, 245, 160, 0.15)', border: 'rgba(0, 245, 160, 0.5)', text: '#00F5A0' },
-                    medium: { bg: 'rgba(0, 201, 255, 0.15)', border: 'rgba(0, 201, 255, 0.5)', text: '#00C9FF' },
-                    hard: { bg: 'rgba(255, 60, 172, 0.15)', border: 'rgba(255, 60, 172, 0.5)', text: '#FF3CAC' },
+                    easy: { bg: 'rgba(0, 245, 160, 0.18)', border: '#00F5A0', text: '#00F5A0' },
+                    medium: { bg: 'rgba(0, 201, 255, 0.18)', border: '#00C9FF', text: '#00C9FF' },
+                    hard: { bg: 'rgba(255, 60, 172, 0.18)', border: '#FF3CAC', text: '#FF3CAC' },
                   };
                   return (
                     <button
                       key={level}
                       onClick={() => setAiDifficulty(level)}
                       disabled={!!loadingMode}
-                      className={`px-3 py-1.5 rounded-full font-bold uppercase tracking-wider transition-all border cursor-pointer ${
+                      className={`px-3 py-1 rounded-full font-bold uppercase tracking-wider transition-all border cursor-pointer text-xs ${
                         isActive 
-                          ? 'scale-105 shadow-lg font-bold' 
-                          : 'opacity-50 hover:opacity-100'
+                          ? 'scale-105 shadow-md' 
+                          : 'opacity-60 hover:opacity-100'
                       }`}
                       style={{
                         backgroundColor: isActive ? colors[level].bg : 'rgba(255, 255, 255, 0.05)',
-                        borderColor: isActive ? colors[level].text : 'rgba(255, 255, 255, 0.1)',
+                        borderColor: isActive ? colors[level].border : 'rgba(255, 255, 255, 0.15)',
                         color: colors[level].text,
-                        fontFamily: "'Russo One', sans-serif",
-                        fontSize: '10px',
-                        letterSpacing: '1px'
+                        fontFamily: "'Inter', sans-serif"
                       }}
                     >
                       {level === 'easy' ? 'Easy 🛡️' : level === 'medium' ? 'Medium ⚖️' : 'Hard 🔥'}
@@ -315,18 +266,12 @@ export default function PlayOptions() {
             <button
               onClick={handleSelectSolo}
               disabled={!!loadingMode}
-              className={`relative z-10 w-full py-3 bg-[#ff8200] text-[#141315] hover:bg-[#ff8200]/90 rounded-xl font-bold uppercase tracking-widest hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg ${loadingMode === 'solo' ? 'opacity-90' : ''} ${loadingMode && loadingMode !== 'solo' ? 'opacity-50 cursor-not-allowed' : ''}`}
-              style={{ 
-                color: '#141315', 
-                backgroundColor: '#ff8200', 
-                fontFamily: "'Russo One', sans-serif",
-                fontSize: 'clamp(13px, 2vw, 16px)',
-                letterSpacing: '1px'
-              }}
+              className={`w-full py-3 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white rounded-xl font-bold uppercase tracking-wider hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg text-xs ${loadingMode === 'solo' ? 'opacity-90' : ''} ${loadingMode && loadingMode !== 'solo' ? 'opacity-50 cursor-not-allowed' : ''}`}
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
               {loadingMode === 'solo' ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-[#141315] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   <span>Loading Solo...</span>
                 </>
               ) : (
@@ -342,35 +287,19 @@ export default function PlayOptions() {
 
           {/* Card 2: Play Online with Friends */}
           <div
-            onMouseMove={handleCardMouseMove}
-            onMouseLeave={handleCardMouseLeave}
-            className={`glass-card p-6 sm:p-8 hover:border-[#d1bfeb] group transition-all transform hover:scale-[1.02] hover:-translate-y-1 duration-300 relative overflow-hidden flex flex-col justify-between ${loadingMode && loadingMode !== 'multiplayer' ? 'opacity-50 pointer-events-none' : ''}`}
-            style={{ 
-              backgroundColor: 'rgba(20, 20, 30, 0.35)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '16px',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-              minHeight: breakpoint.isMobile ? '140px' : '200px'
-            }}
+            className={`game-mode-card p-5 sm:p-6 flex flex-col justify-between ${loadingMode && loadingMode !== 'multiplayer' ? 'opacity-50 pointer-events-none' : ''}`}
           >
-            <div className="absolute -right-8 -top-8 w-24 h-24 bg-[#d1bfeb]/5 blur-2xl rounded-full group-hover:bg-[#d1bfeb]/10 transition-colors pointer-events-none" />
-            <div className="relative z-10">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-[#d1bfeb]/10 rounded-xl flex items-center justify-center mb-4 sm:mb-6 border border-[#d1bfeb]/25">
-                <span className="text-3xl sm:text-4xl">👥</span>
+            <div>
+              <div className="w-12 h-12 bg-[#cfbdfe]/15 rounded-xl flex items-center justify-center mb-3 border border-[#cfbdfe]/30 shadow-md">
+                <span className="text-2xl">👥</span>
               </div>
               <h2 
-                className="text-on-surface font-bold uppercase tracking-wider mb-2" 
-                style={{ 
-                  fontFamily: "'Russo One', sans-serif",
-                  fontSize: 'clamp(16px, 2.5vw, 22px)',
-                  letterSpacing: '1.5px'
-                }}
+                className="text-white font-normal uppercase tracking-wider mb-2" 
+                style={{ fontFamily: "'Russo One', sans-serif", fontSize: '18px' }}
               >
                 Play Online with Friends
               </h2>
-              <p className="opacity-75 text-on-surface-variant mb-6" style={{ color: '#cbc4ce', fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(12px, 1.8vw, 14px)', letterSpacing: '0.5px' }}>
+              <p className="text-xs text-slate-300 font-medium mb-4 leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
                 Host a multiplayer room or enter a friend's room code to bid side-by-side in real-time. Pick your team and sync the draft!
               </p>
             </div>
@@ -378,23 +307,17 @@ export default function PlayOptions() {
             <button
               onClick={handleSelectOnline}
               disabled={!!loadingMode}
-              className={`relative z-10 w-full py-3 bg-[#d1bfeb] text-[#141315] hover:bg-[#d1bfeb]/90 rounded-xl font-bold uppercase tracking-widest hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg ${loadingMode === 'multiplayer' ? 'opacity-90' : ''} ${loadingMode && loadingMode !== 'multiplayer' ? 'opacity-50 cursor-not-allowed' : ''}`}
-              style={{ 
-                color: '#141315', 
-                backgroundColor: '#d1bfeb',
-                fontFamily: "'Russo One', sans-serif",
-                fontSize: 'clamp(13px, 2vw, 16px)',
-                letterSpacing: '1px'
-              }}
+              className={`w-full py-3 bg-gradient-to-r from-[#8b5cf6] to-[#6d28d9] hover:brightness-110 text-white rounded-xl font-bold uppercase tracking-wider hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg text-xs ${loadingMode === 'multiplayer' ? 'opacity-90' : ''} ${loadingMode && loadingMode !== 'multiplayer' ? 'opacity-50 cursor-not-allowed' : ''}`}
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
               {loadingMode === 'multiplayer' ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-[#141315] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   <span>Loading Multiplayer...</span>
                 </>
               ) : (
                 <>
-                  <span>Go to multiplayer</span>
+                  <span>Go to Multiplayer</span>
                   <svg className="w-4 h-4 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
@@ -406,70 +329,34 @@ export default function PlayOptions() {
 
         {/* Join Room Card */}
         <div
-          onMouseMove={handleCardMouseMove}
-          onMouseLeave={handleCardMouseLeave}
-          className={`glass-card mt-6 w-full relative overflow-hidden transition-all duration-300 hover:scale-[1.01] hover:-translate-y-0.5 group cursor-pointer ${loadingMode && loadingMode !== 'join' ? 'opacity-50 pointer-events-none' : ''}`}
-          style={{ 
-            backgroundColor: 'rgba(20, 20, 30, 0.35)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: '16px',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-          }}
+          className={`game-mode-card mt-4 w-full cursor-pointer p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 ${loadingMode && loadingMode !== 'join' ? 'opacity-50 pointer-events-none' : ''}`}
           onClick={() => !loadingMode && handleSelectJoin()}
         >
-          {/* Glow blob */}
-          <div className="absolute -right-8 -top-8 w-28 h-28 bg-[#00C9FF]/5 blur-2xl rounded-full group-hover:bg-[#00C9FF]/10 transition-colors pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 sm:px-8 sm:py-6 gap-4 sm:gap-6">
-            {/* Left: icon + text */}
-            <div className="flex items-center gap-4 sm:gap-5">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#00C9FF]/10 rounded-xl flex items-center justify-center border border-[#00C9FF]/25 flex-shrink-0">
-                <span className="text-2xl">🔑</span>
-              </div>
-              <div>
-                <p className="font-bold uppercase tracking-widest mb-0.5 opacity-60" style={{ color: '#00C9FF', fontFamily: "'Russo One', sans-serif", fontSize: '10px' }}>
-                  Already have a room code?
-                </p>
-                <h3 className="font-bold uppercase tracking-wider" style={{ fontFamily: "'Russo One', sans-serif", color: '#e6e1e5', fontSize: 'clamp(16px, 2.5vw, 22px)', letterSpacing: '1.5px' }}>
-                  Join a Room
-                </h3>
-                <p className="opacity-60 mt-0.5" style={{ color: '#cbc4ce', fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(12px, 1.8vw, 14px)', letterSpacing: '0.5px' }}>
-                  Enter a friend's 6-digit code and jump straight into the auction
-                </p>
-              </div>
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-[#00C9FF]/15 rounded-xl flex items-center justify-center border border-[#00C9FF]/30 flex-shrink-0">
+              <span className="text-xl">🔑</span>
             </div>
-
-            {/* Right: arrow button */}
-            <button
-              onClick={(e) => { e.stopPropagation(); if (!loadingMode) handleSelectJoin(); }}
-              disabled={!!loadingMode}
-              className={`w-full sm:w-auto flex-shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold uppercase tracking-widest transition-all hover:scale-105 active:scale-95 cursor-pointer ${loadingMode === 'join' ? 'opacity-90' : ''}`}
-              style={{ 
-                backgroundColor: 'rgba(0, 201, 255, 0.15)', 
-                color: '#00C9FF', 
-                border: '1px solid rgba(0, 201, 255, 0.3)',
-                fontFamily: "'Russo One', sans-serif",
-                fontSize: 'clamp(13px, 2vw, 16px)',
-                letterSpacing: '1px'
-              }}
-            >
-              {loadingMode === 'join' ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-[#00C9FF] border-t-transparent rounded-full animate-spin" />
-                  <span>Connecting...</span>
-                </>
-              ) : (
-                <>
-                  <span>Join</span>
-                  <svg className="w-4 h-4 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </>
-              )}
-            </button>
+            <div>
+              <p className="font-bold uppercase tracking-widest text-[#00C9FF] text-[10px]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                Already have a room code?
+              </p>
+              <h3 className="font-normal uppercase tracking-wider text-white text-base" style={{ fontFamily: "'Russo One', sans-serif" }}>
+                Join a Room
+              </h3>
+              <p className="text-xs text-slate-300 font-medium mt-0.5" style={{ fontFamily: "'Inter', sans-serif" }}>
+                Enter a friend's 6-digit code and jump straight into the auction
+              </p>
+            </div>
           </div>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); if (!loadingMode) handleSelectJoin(); }}
+            disabled={!!loadingMode}
+            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer text-xs text-[#00C9FF] border border-[#00C9FF]/40 bg-[#00C9FF]/10 ${loadingMode === 'join' ? 'opacity-90' : ''}`}
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+            Enter Code →
+          </button>
         </div>
       </main>
 
