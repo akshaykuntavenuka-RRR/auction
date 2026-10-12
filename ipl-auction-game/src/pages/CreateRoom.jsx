@@ -1,27 +1,19 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuction } from '../context/AuctionContext';
 import { createRoom, updateTeamChoice } from '../lib/db';
 import { isRealSupabaseConfigured } from '../lib/supabase';
 
 import ProfileMenu from '../components/ProfileMenu';
+import LoadingScreen from '../components/LoadingScreen';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useNavLoading } from '../hooks/useNavLoading';
 
-const teamColors = [
-  { name: 'Blue', hex: '#004BA0' },
-  { name: 'Gold', hex: '#FDB913' },
-  { name: 'Red', hex: '#EC1C24' },
-  { name: 'Purple', hex: '#3A225D' },
-  { name: 'Navy', hex: '#0B2265' },
-  { name: 'Pink', hex: '#E82E88' },
-  { name: 'Orange', hex: '#FF822A' },
-  { name: 'Sky Blue', hex: '#1353AD' },
-  { name: 'Teal', hex: '#4CA6A6' },
-  { name: 'Red-Silver', hex: '#DD1F26' }
-];
+const selectedColor = '#FF8200';
 
 export default function CreateRoom() {
   const navigate = useNavigate();
+  const { goBack, goHome } = useNavLoading();
   const { 
     currentUser, 
     authLoading, 
@@ -42,7 +34,6 @@ export default function CreateRoom() {
   const [numTeams, setNumTeams] = useState(6);
   const [budgetCr, setBudgetCr] = useState(100);
   const [teamName, setTeamName] = useState('');
-  const [selectedColor, setSelectedColor] = useState(teamColors[0].hex);
   const [loading, setLoading] = useState(false);
 
   // Redirection guard if not logged in
@@ -56,7 +47,9 @@ export default function CreateRoom() {
     }
   }, [currentUser, authLoading, navigate]);
 
-  if (authLoading) return null;
+  if (authLoading) {
+    return <LoadingScreen title="PREPARING CREATOR..." subtitle="Initializing host environment..." />;
+  }
 
   const handleCreate = async () => {
     if (!teamName.trim()) {
@@ -118,6 +111,9 @@ export default function CreateRoom() {
 
   return (
     <div className="bg-background text-on-background min-h-screen font-body-md overflow-x-hidden relative pb-32" style={{ backgroundColor: '#141315', color: '#e6e1e5' }}>
+      {loading && (
+        <LoadingScreen title="CREATING ROOM..." subtitle="Generating 6-character room code & setting up draft room..." />
+      )}
       <style>{`
         .glass-panel {
           background: rgba(54, 52, 55, 0.4);
@@ -222,7 +218,7 @@ export default function CreateRoom() {
         <div className="flex items-center gap-3">
           {/* Back button */}
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => goBack('SAVING PROGRESS...', 'Saving room configurations & returning...')}
             title="Go Back"
             className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
@@ -233,7 +229,7 @@ export default function CreateRoom() {
           </button>
           {/* Home button */}
           <button
-            onClick={() => navigate('/play-options')}
+            onClick={() => goHome('/play-options', 'RETURNING TO MENU...', 'Saving draft room rules & returning to main menu...')}
             title="Go to Home"
             className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}

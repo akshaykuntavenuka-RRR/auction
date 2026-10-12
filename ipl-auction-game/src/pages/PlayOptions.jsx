@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuction } from '../context/AuctionContext';
 import { prefetchAuctionDetails } from '../lib/playerSync';
 import ProfileMenu from '../components/ProfileMenu';
-import { useBreakpoint } from '../hooks/useBreakpoint';
+import LoadingScreen from '../components/LoadingScreen';
+import { useNavLoading } from '../hooks/useNavLoading';
 
 export default function PlayOptions() {
   const navigate = useNavigate();
-  const breakpoint = useBreakpoint();
+  const { goHome } = useNavLoading();
   const { 
     currentUser, 
     authLoading,
     setGameMode, 
     resetAuction, 
-    isSoloMode, 
     setIsSoloMode, 
     aiDifficulty, 
     setAiDifficulty 
@@ -23,7 +23,6 @@ export default function PlayOptions() {
   const [loadingMode, setLoadingMode] = useState(null); // 'solo' | 'multiplayer' | 'join' | null
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingDetail, setLoadingDetail] = useState('');
-  const [isCachedSource, setIsCachedSource] = useState(true);
 
   // Route back to signin if not authenticated
   useEffect(() => {
@@ -32,7 +31,33 @@ export default function PlayOptions() {
     }
   }, [currentUser, authLoading, navigate]);
 
-  if (authLoading) return null;
+  const handleStayOnPage = useCallback((type) => {
+    if (loadingMode) return;
+    goHome(
+      '/play-options',
+      'MANAGING DATA...',
+      type === 'home'
+        ? 'Refreshing game mode preferences & player cache...'
+        : 'Session verified. Staying on Game Modes hub.'
+    );
+  }, [loadingMode, goHome]);
+
+  // Prevent browser back button from navigating to login or tap-to-begin page
+  useEffect(() => {
+    window.history.pushState(null, '', window.location.pathname);
+    const handlePopState = () => {
+      window.history.pushState(null, '', window.location.pathname);
+      handleStayOnPage('back');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [handleStayOnPage]);
+
+  if (authLoading) {
+    return <LoadingScreen title="LOADING MODES..." subtitle="Checking franchise auction network status..." />;
+  }
 
   const handleSelectSolo = async () => {
     if (loadingMode) return;
@@ -43,7 +68,6 @@ export default function PlayOptions() {
     try {
       // Fetch details using client-side cache to avoid server load
       const result = await prefetchAuctionDetails();
-      setIsCachedSource(result.fromCache);
       
       setLoadingProgress(55);
       setLoadingDetail(result.fromCache 
@@ -80,7 +104,6 @@ export default function PlayOptions() {
     try {
       // Check cache to avoid hitting Supabase repeatedly
       const result = await prefetchAuctionDetails();
-      setIsCachedSource(result.fromCache);
 
       setLoadingProgress(60);
       setLoadingDetail(result.fromCache 
@@ -115,8 +138,7 @@ export default function PlayOptions() {
     setLoadingDetail('Connecting to Matchmaking Network & verifying cache...');
 
     try {
-      const result = await prefetchAuctionDetails();
-      setIsCachedSource(result.fromCache);
+      await prefetchAuctionDetails();
 
       setLoadingProgress(70);
       setLoadingDetail('Network ready • Client cache verified • Opening Join Portal...');
@@ -129,19 +151,6 @@ export default function PlayOptions() {
       console.warn('Join prefetch fallback:', err);
       navigate('/join');
     }
-  };
-
-  const handleCardMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
-    e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
-  };
-
-  const handleCardMouseLeave = (e) => {
-    e.currentTarget.style.setProperty('--mouse-x', `50%`);
-    e.currentTarget.style.setProperty('--mouse-y', `50%`);
   };
 
   return (
@@ -171,9 +180,10 @@ export default function PlayOptions() {
       <nav className="border-b border-white/10 shadow-lg flex items-center justify-between px-6 py-3 w-full fixed top-0 left-0 right-0 z-50 h-14" style={{ backgroundColor: '#13111c' }}>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate(-1)}
+            id="play-options-back-btn"
+            onClick={() => handleStayOnPage('back')}
             disabled={!!loadingMode}
-            title="Go Back"
+            title="Stay on Game Modes"
             className="flex items-center justify-center w-8 h-8 rounded-full border border-white/15 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer disabled:opacity-50 text-slate-300"
           >
             <svg className="w-4 h-4 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -181,9 +191,10 @@ export default function PlayOptions() {
             </svg>
           </button>
           <button
-            onClick={() => navigate('/')}
+            id="play-options-home-btn"
+            onClick={() => handleStayOnPage('home')}
             disabled={!!loadingMode}
-            title="Go to Home"
+            title="Refresh Game Modes"
             className="flex items-center justify-center w-8 h-8 rounded-full border border-white/15 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer disabled:opacity-50 text-slate-300"
           >
             <svg className="w-4 h-4 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">

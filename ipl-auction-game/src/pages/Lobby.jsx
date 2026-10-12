@@ -5,7 +5,9 @@ import { supabase, isRealSupabaseConfigured } from '../lib/supabase';
 
 import { getRoomMembers, updateTeamChoice, setMemberReady, startRoomAuction } from '../lib/db';
 import ProfileMenu from '../components/ProfileMenu';
+import LoadingScreen from '../components/LoadingScreen';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useNavLoading } from '../hooks/useNavLoading';
 
 const defaultLobbyTeams = [
   { name: 'Mumbai Indians', color: '#004BA0', logo: '/logos/mi.svg' },
@@ -23,6 +25,7 @@ const defaultLobbyTeams = [
 export default function Lobby() {
   const { roomCode } = useParams();
   const navigate = useNavigate();
+  const { goBack, goHome } = useNavLoading();
   const breakpoint = useBreakpoint();
   const {
     currentUser,
@@ -38,6 +41,7 @@ export default function Lobby() {
   } = useAuction();
 
   const [loading, setLoading] = useState(true);
+  const [maxTeams, setMaxTeams] = useState(6);
   const [errorMessage, setErrorMessage] = useState('');
   const [starting, setStarting] = useState(false);
   // Track initial room status so we don't auto-navigate on rooms that were already active
@@ -52,8 +56,6 @@ export default function Lobby() {
       navigate('/signin');
     }
   }, [currentUser, authLoading, navigate]);
-
-  if (authLoading) return null;
 
   // Synchronize room code state
   useEffect(() => {
@@ -81,16 +83,18 @@ export default function Lobby() {
         if (isRealSupabase) {
           const { data: dbRoom } = await supabase
             .from('rooms')
-            .select('host_id, status')
+            .select('host_id, status, num_teams')
             .eq('room_code', activeCode)
             .single();
           if (dbRoom) {
             setIsHost(userId === dbRoom.host_id);
+            if (dbRoom.num_teams) setMaxTeams(dbRoom.num_teams);
             // Capture initial status to prevent auto-navigation on already-active rooms
             initialRoomStatusRef.current = dbRoom.status;
           }
         } else if (mockRoom) {
           setIsHost(userId === mockRoom.host_id);
+          if (mockRoom.num_teams) setMaxTeams(mockRoom.num_teams);
           initialRoomStatusRef.current = mockRoom.status;
         }
 
@@ -322,13 +326,12 @@ export default function Lobby() {
     }
   };
 
+  if (authLoading) {
+    return <LoadingScreen title="AUTHENTICATING..." subtitle="Verifying player session credentials..." />;
+  }
+
   if (loading) {
-    return (
-      <div className="bg-[#141315] text-[#e6e1e5] min-h-screen flex flex-col justify-center items-center font-body-md">
-        <span className="text-5xl animate-spin mb-4">⏳</span>
-        <h2 className="text-xl font-bold uppercase tracking-wider text-[#ff8200]">Connecting to Lobby...</h2>
-      </div>
-    );
+    return <LoadingScreen title="CONNECTING TO LOBBY..." subtitle={`Syncing room #${activeCode} roster and franchise choices...`} />;
   }
 
   const currentUserMember = roomMembers.find(m => m.user_id === userId);
@@ -379,7 +382,7 @@ export default function Lobby() {
         <div className="flex items-center gap-3">
           {/* Back button */}
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => goBack('LEAVING LOBBY...', 'Disconnecting from room & returning...')}
             title="Go Back"
             className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
@@ -390,7 +393,7 @@ export default function Lobby() {
           </button>
           {/* Home button */}
           <button
-            onClick={() => navigate('/play-options')}
+            onClick={() => goHome('/play-options', 'RETURNING TO MENU...', 'Disconnecting from lobby & returning to main menu...')}
             title="Go to Home"
             className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
@@ -440,10 +443,21 @@ export default function Lobby() {
         
         {/* Left Info & Picker Side */}
         <div className="lg:col-span-7 space-y-8">
+          {errorMessage && (
+            <div className="p-4 rounded-xl bg-red-500/15 border border-red-500/40 text-red-300 text-xs font-bold text-center">
+              ⚠️ {errorMessage}
+            </div>
+          )}
           {/* Header Box */}
           <div className="glass-panel p-6 rounded-2xl flex justify-between items-center flex-wrap gap-4 border border-white/10">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#ff8200]">MULTIPLAYER ACTIVE</span>
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#ff8200]">MULTIPLAYER ACTIVE</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[10px] font-bold tracking-wider uppercase font-mono">
+                  👥 {roomMembers.length} of {maxTeams} Players in Room
+                </span>
+              </div>
               <h1 className="text-on-surface font-bold mt-1" style={{ fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(24px, 5vw, 48px)', letterSpacing: '3px' }}>AUCTION LOBBY</h1>
             </div>
 
@@ -533,9 +547,28 @@ export default function Lobby() {
         <div className="lg:col-span-5 space-y-8">
           <div className="glass-panel p-6 sm:p-8 rounded-3xl space-y-6 flex flex-col justify-between min-h-[420px] border border-white/10 shadow-2xl">
             <div>
-              <h2 className="uppercase font-bold mb-6 text-[#ff8200] drop-shadow-[0_2px_10px_rgba(255,130,0,0.15)]" style={{ fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(16px, 2.5vw, 22px)', letterSpacing: '1.5px' }}>
-                Joined Players
-              </h2>
+              <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
+                <div className="flex items-center gap-2.5">
+                  <h2 className="uppercase font-bold text-[#ff8200] drop-shadow-[0_2px_10px_rgba(255,130,0,0.15)]" style={{ fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(16px, 2.5vw, 22px)', letterSpacing: '1.5px' }}>
+                    Joined Players
+                  </h2>
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#ff8200]/20 text-[#ff8200] border border-[#ff8200]/30 text-xs font-mono font-bold">
+                    {roomMembers.length}
+                  </span>
+                </div>
+                <span className="text-xs font-semibold text-slate-300">
+                  {roomMembers.length} / {maxTeams} spots filled
+                </span>
+              </div>
+
+              {roomMembers.length === 1 && (
+                <div className="mb-4 p-3 bg-white/5 border border-white/10 rounded-xl text-xs text-slate-300 flex items-center justify-between gap-2">
+                  <span>💡 Only 1 player in the room. Share room code <strong className="text-[#ff8200] font-mono tracking-widest">{activeCode}</strong> with friends to join!</span>
+                  <button onClick={handleShareLobby} className="text-xs text-[#ff8200] hover:underline font-bold uppercase cursor-pointer flex-shrink-0">
+                    Share
+                  </button>
+                </div>
+              )}
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
                 {roomMembers.map((member, idx) => (

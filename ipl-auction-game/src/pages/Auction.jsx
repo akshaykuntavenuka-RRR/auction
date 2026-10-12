@@ -7,7 +7,9 @@ import { getAIBid } from '../lib/aiBidder';
 import ProfileMenu from '../components/ProfileMenu';
 import PlayerCard from '../components/PlayerCard';
 import LiveTeamsPanel from '../components/LiveTeamsPanel';
+import LoadingScreen from '../components/LoadingScreen';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useNavLoading } from '../hooks/useNavLoading';
 
 const EMOJI_LIST = [
   '🏏', '🏆', '🔥', '⚡', '💥', '💰', '🤑', '👏',
@@ -19,6 +21,7 @@ const EMOJI_LIST = [
 export default function Auction() {
   const navigate = useNavigate();
   const breakpoint = useBreakpoint();
+  const { goBack, goHome } = useNavLoading();
   const {
     currentUser,
     authLoading,
@@ -32,7 +35,6 @@ export default function Auction() {
     unsoldPlayers,
     setUnsoldPlayers,
     auctionRound,
-    setAuctionRound,
     startRound2,
     markPlayerSold,
     markPlayerUnsold,
@@ -54,7 +56,6 @@ export default function Auction() {
   // Bidding state variables
   const [currentBid, setCurrentBid] = useState(0);
   const [activeBidder, setActiveBidder] = useState(null);
-  const [customBidInput, setCustomBidInput] = useState('');
   const [isPaused, setIsPaused] = useState(false);
 
   // Solo Mode Bidding loop states
@@ -174,6 +175,7 @@ export default function Auction() {
       }, 3500); // 3.5 seconds delay
       return () => clearTimeout(timer);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [soldStatus]);
 
   const gavelSoundRef = useRef(null);
@@ -220,7 +222,7 @@ export default function Auction() {
   function triggerAICommentaryOnPlayer(playerObj) {
     if (!isSoloMode || !playerObj) return;
 
-    let comments = [];
+    let comments;
     const role = playerObj.roleCode || playerObj.role || 'BAT';
 
     if (role === 'BAT' || role === 'WK') {
@@ -304,7 +306,7 @@ export default function Auction() {
     // AI bot reactions in Solo mode
     if (isSoloMode) {
       const userText = text.toLowerCase();
-      let aiResponse = "";
+      let aiResponse;
 
       if (userText.includes('bid') || userText.includes('buy') || userText.includes('want')) {
         const responses = [
@@ -384,7 +386,6 @@ export default function Auction() {
     const nextBaseCr = getPlayerBaseCr(nextPlayer);
     setCurrentBid(nextBaseCr);
     setActiveBidder(null);
-    setCustomBidInput('');
 
     // If multiplayer — update Supabase so all friends skip too
     if (roomCode) {
@@ -490,6 +491,7 @@ export default function Auction() {
       const baseCr = getPlayerBaseCr(player);
       startNewAuctionRound(baseCr);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, isSoloMode]);
 
   // Clean up timers on unmount (Hook 3)
@@ -602,6 +604,7 @@ export default function Auction() {
         };
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomCode, isHost, teams, players, currentPlayerIndex, humanTeam, currentUser]);
 
   // Sync SKIP and END to all players via rooms table updates (Hook 6)
@@ -635,18 +638,16 @@ export default function Auction() {
     return () => {
       supabase.removeChannel(channel);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomCode, currentPlayerIndex, players]);
 
   // Early returns placed AFTER all Hook declarations to strictly satisfy Rules of Hooks
-  if (authLoading) return null;
-  if (playersLoading) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#141315', flexDirection: 'column', gap: 16 }}>
-      {/* Russo One is loaded globally */}
-      <div style={{ width: 60, height: 60, border: '3px solid rgba(255,130,0,0.2)', borderTop: '3px solid #ff8200', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-      <div style={{ fontFamily: "'Russo One', sans-serif", fontSize: 'clamp(16px, 2.5vw, 22px)', color: '#ff8200', letterSpacing: '2px' }}>LOADING PLAYERS...</div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
-  );
+  if (authLoading) {
+    return <LoadingScreen title="AUTHENTICATING..." subtitle="Connecting your profile to the live IPL Auction engine..." />;
+  }
+  if (playersLoading) {
+    return <LoadingScreen title="LOADING PLAYERS..." subtitle="Loading official player database, base prices and stats..." />;
+  }
 
   function renderRound1CompleteModal() {
     const unsoldList = unsoldPlayers || [];
@@ -770,10 +771,7 @@ export default function Auction() {
 
   // Constants computed during render when player is guaranteed to be defined
   const basePriceCr = getPlayerBaseCr(player);
-  // Standard single-tap BID button increment: always 25 Lakh (0.25 Cr)
-  const nextIncrement = 0.25;
   const safeCurrentBid = (typeof currentBid === 'number' && !isNaN(currentBid) && currentBid > 0) ? currentBid : basePriceCr;
-  const nextBidVal = Math.round((safeCurrentBid + nextIncrement) * 4) / 4;
   const displayBid = safeCurrentBid;
 
   function isRealSupabase() {
@@ -888,7 +886,6 @@ export default function Auction() {
 
     setCurrentBid(safeBase);
     setActiveBidder(null);
-    setCustomBidInput('');
     setPassedTeamIds(initialPassed);
     setSoldStatus(null);
     setWinningBidder(null);
@@ -1037,7 +1034,7 @@ export default function Auction() {
       // AI chat commentary chance on bid placements
       if (Math.random() < 0.25) {
         const isHuman = bidderTeam.id === humanId;
-        let comment = "";
+        let comment;
         if (isHuman) {
           const comments = [
             `Going strong, CSK!`,
@@ -1096,7 +1093,7 @@ export default function Auction() {
     // Trigger AI reaction comment on sold
     if (isSoloMode) {
       const isHuman = bidderObj.id === humanId;
-      let comment = "";
+      let comment;
       if (isHuman) {
         const comments = [
           `Congratulations! That's a good buy.`,
@@ -1182,26 +1179,6 @@ export default function Auction() {
 
 
 
-  function handleHumanBid() {
-    if (isPaused) return;
-    if (!humanId) return;
-    if (passedTeamIdsRef.current.includes(humanId)) return;
-    if (isTeamFull(humanId)) {
-      alert("Your team roster is FULL! Cannot place more bids.");
-      return;
-    }
-
-    const newBid = nextBidVal;
-
-    if (newBid > (humanTeam?.budget || 0)) {
-      alert(`Insufficient funds! Your team only has ₹${humanTeam?.budget} Cr remaining.`);
-      return;
-    }
-
-    addCommentary(`💰 ${humanTeam?.name || 'CSK'} (You) bid ₹${newBid} Cr`);
-    placeBid(newBid, humanTeam);
-  }
-
   function handleHumanIncrementBid(amountCr) {
     if (isPaused) return;
     if (!humanId) return;
@@ -1251,8 +1228,6 @@ export default function Auction() {
     }
   }
 
-  const handleHumanPass = handleHumanSkip;
-
   // Incremental bid helper
   function handleRaiseBid(amountCr) {
     if (isPaused) return;
@@ -1267,26 +1242,6 @@ export default function Auction() {
     const safeCurrent = (typeof currentBid === 'number' && !isNaN(currentBid) && currentBid > 0) ? currentBid : basePriceCr;
     const newBid = Number((safeCurrent + amountCr).toFixed(2));
     placeBid(newBid, humanTeam);
-  }
-
-  function handleCustomBid(e) {
-    e.preventDefault();
-    if (isPaused) return;
-    if (!humanTeam) {
-      alert("No human team found!");
-      return;
-    }
-    if (isTeamFull(humanId)) {
-      alert("Your team roster is FULL! Cannot place more bids.");
-      return;
-    }
-    const parsed = parseFloat(customBidInput);
-    if (!isNaN(parsed) && parsed >= basePriceCr) {
-      const newBid = Number(parsed.toFixed(2));
-      placeBid(newBid, humanTeam);
-    } else {
-      alert(`Please enter a bid of at least the base price of ₹${basePriceCr} Cr`);
-    }
   }
 
   function handleSelectBidder(t) {
@@ -1328,84 +1283,6 @@ export default function Auction() {
       if (aiThinkingTimerRef.current) clearTimeout(aiThinkingTimerRef.current);
       setAiThinking(false);
       syncAuctionState('pause', currentBid, activeBidder?.id);
-    }
-  }
-
-  // Perform transaction of selling the player (manual button trigger)
-  async function handleSold() {
-    if (!activeBidder) {
-      alert('Please select an Active Bidder from the team cards below first!');
-      return;
-    }
-
-    if (currentBid > activeBidder.budget) {
-      alert(`Insufficient funds! ${activeBidder.name} only has ₹${activeBidder.budget} Cr remaining.`);
-      return;
-    }
-
-    clearAllTimers(); // Stop any active countdown ticking
-    const bidPanel = document.querySelector('.bid-glow-panel');
-    if (bidPanel) {
-      bidPanel.style.backgroundColor = 'rgba(0, 200, 83, 0.3)';
-      setTimeout(() => {
-        bidPanel.style.backgroundColor = 'rgba(54, 52, 55, 0.4)';
-      }, 400);
-    }
-
-    syncAuctionState('sold', currentBid, activeBidder.id);
-    setWinningBidder(activeBidder);
-    setWinningPrice(currentBid);
-    setSoldStatus('sold');
-
-    // Trigger manual sold AI reaction
-    if (isSoloMode) {
-      const isHuman = activeBidder.id === humanId;
-      let comment = "";
-      if (isHuman) {
-        const comments = [
-          `Congratulations! That's a good buy.`,
-          `Nice buy, CSK! He'll fit well.`,
-          `A solid addition to your squad, congrats!`,
-          `You got him cheap, great business!`
-        ];
-        comment = comments[Math.floor(Math.random() * comments.length)];
-      } else {
-        const comments = [
-          `Yes! Glad we secured ${player.name}.`,
-          `A great addition to our squad!`,
-          `He fits perfectly into our team plans.`,
-          `We got our target player!`
-        ];
-        comment = comments[Math.floor(Math.random() * comments.length)];
-      }
-      triggerAIChat(comment, 1000);
-    }
-  }
-
-  async function handleUnsold() {
-    clearAllTimers(); // Stop any active countdown ticking
-    const bidPanel = document.querySelector('.bid-glow-panel');
-    if (bidPanel) {
-      bidPanel.style.backgroundColor = 'rgba(239, 68, 68, 0.35)';
-      setTimeout(() => {
-        bidPanel.style.backgroundColor = 'rgba(54, 52, 55, 0.4)';
-      }, 400);
-    }
-    syncAuctionState('unsold', currentBid, null);
-    setWinningBidder(null);
-    setWinningPrice(0);
-    setSoldStatus('unsold');
-
-    // Trigger manual unsold AI reaction
-    if (isSoloMode) {
-      const comments = [
-        `Surprised nobody wanted ${player.name}.`,
-        `His base price was a bit high.`,
-        `Decent player, but too risky at that price.`,
-        `Passed on this one, saving budget.`
-      ];
-      const comment = comments[Math.floor(Math.random() * comments.length)];
-      triggerAIChat(comment, 1000);
     }
   }
 
@@ -1487,7 +1364,7 @@ export default function Auction() {
       <header className="h-11 sm:h-12 shrink-0 bg-[#161421] border-b border-[#2d293d] flex justify-between items-center px-3 sm:px-5 z-30">
         <div className="flex items-center gap-2 sm:gap-2.5">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => goBack('SAVING AUCTION...', 'Saving live auction bids & returning...')}
             title="Go Back"
             className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
@@ -1497,7 +1374,7 @@ export default function Auction() {
             </svg>
           </button>
           <button
-            onClick={() => navigate('/play-options')}
+            onClick={() => goHome('/play-options', 'RETURNING TO HOME...', 'Saving auction room data and returning to main menu...')}
             title="Go to Home"
             className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
@@ -2000,94 +1877,94 @@ export default function Auction() {
                 <PlayerCard player={player} countdown={countdown} bidTimer={bidTimer} />
               </div>
 
-              {/* Bid Board - Sleek & High Impact */}
-              <div className="rounded-xl p-2 sm:p-2.5 border border-[#ff8200]/30 transition-all duration-200 relative overflow-hidden flex items-center justify-between px-4 sm:px-5 shrink-0" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+              {/* Bid Board - Sleek, Taller & High Impact */}
+              <div className="rounded-xl p-3 sm:p-4 border border-[#ff8200]/30 transition-all duration-200 relative overflow-hidden flex items-center justify-between px-5 sm:px-6 shrink-0" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
                 <div className="flex flex-col text-left">
-                  <span className="text-[9px] uppercase font-bold tracking-widest text-slate-400">CURRENT BID</span>
-                  <div className="text-2xl sm:text-3xl font-normal text-[#22c55e] leading-none my-0.5" style={{ fontFamily: "'Russo One', sans-serif" }}>
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 mb-1">CURRENT BID</span>
+                  <div className="text-3xl sm:text-[34px] font-normal text-[#22c55e] leading-none my-0.5" style={{ fontFamily: "'Russo One', sans-serif" }}>
                     ₹{displayBid} Cr
                   </div>
                 </div>
 
-                <div className="flex flex-col items-end gap-1">
+                <div className="flex flex-col items-end gap-1.5">
                   {isPaused && (
-                    <div className="px-2 py-0.5 bg-red-500/20 border border-red-500/40 rounded-full text-red-400 font-bold text-[9px] uppercase tracking-wider animate-pulse flex items-center gap-1">
+                    <div className="px-2.5 py-1 bg-red-500/20 border border-red-500/40 rounded-full text-red-400 font-bold text-[10px] uppercase tracking-wider animate-pulse flex items-center gap-1">
                       <span>⏸</span> AUCTION PAUSED
                     </div>
                   )}
 
                   {activeBidder ? (
-                    <div className="flex items-center gap-1.5 px-2.5 py-0.5 bg-white/10 border border-white/15 rounded-full">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-white/10 border border-white/15 rounded-full">
                       {activeBidder.logo ? (
-                        <img src={activeBidder.logo} alt={activeBidder.name} className="w-3.5 h-3.5 object-contain" referrerPolicy="no-referrer" />
+                        <img src={activeBidder.logo} alt={activeBidder.name} className="w-4 h-4 object-contain" referrerPolicy="no-referrer" />
                       ) : (
-                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: activeBidder.color }} />
+                        <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: activeBidder.color }} />
                       )}
-                      <span className="text-white font-bold text-[11px] uppercase tracking-wider">{activeBidder.name}</span>
+                      <span className="text-white font-bold text-xs uppercase tracking-wider">{activeBidder.name}</span>
                     </div>
                   ) : (
-                    <span className="text-[11px] text-slate-400 uppercase tracking-widest font-semibold">No active bid placed</span>
+                    <span className="text-xs text-slate-400 uppercase tracking-widest font-semibold">No active bid placed</span>
                   )}
 
                   {isSoloMode && aiThinking && (
-                    <div className="flex items-center gap-1.5 text-[#ff8200] text-[10px] font-bold uppercase tracking-wider animate-pulse">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#ff8200] animate-ping" />
+                    <div className="flex items-center gap-1.5 text-[#ff8200] text-[11px] font-bold uppercase tracking-wider animate-pulse">
+                      <span className="w-2 h-2 rounded-full bg-[#ff8200] animate-ping" />
                       <span>AI Thinking...</span>
                     </div>
                   )}
 
                   {isSoloMode && countdown !== null && (
-                    <div className="text-red-400 text-[11px] font-bold uppercase tracking-wider">
+                    <div className="text-red-400 text-xs font-bold uppercase tracking-wider">
                       ⏳ Timer: {countdown}s / {bidTimer}s
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Controls Bar: +25L, +50L, +1 CR, and SKIP side-by-side (100% visible, never cut off) */}
-              <div className="rounded-xl p-1.5 sm:p-2 border border-white/10 flex items-center gap-2 w-full shrink-0" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+              {/* Controls Bar: +25L, +50L, +1 CR, and SKIP side-by-side (Taller, 100% visible) */}
+              <div className="rounded-xl p-2 sm:p-2.5 border border-white/10 flex items-center gap-2.5 w-full shrink-0" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
                 {isSoloMode ? (
                   <>
                     <button
                       onClick={() => handleHumanIncrementBid(0.25)}
                       disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.25 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
+                      className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs sm:text-sm tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
                     >
                       +25L
                     </button>
                     <button
                       onClick={() => handleHumanIncrementBid(0.50)}
                       disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.50 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
+                      className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs sm:text-sm tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
                     >
                       +50L
                     </button>
                     <button
                       onClick={() => handleHumanIncrementBid(1.00)}
                       disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 1.00 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
+                      className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs sm:text-sm tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
                     >
                       +1 CR
                     </button>
                     <button
                       onClick={handleHumanSkip}
                       disabled={isPaused || (passedTeamIds.includes(humanId) && passedTeamIds.length < teams.length && activeBidder !== null)}
-                      className={`flex-1 h-9 sm:h-9.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer ${passedTeamIds.includes(humanId) ? 'border-[#ff8200] text-[#ff8200]' : ''}`}
+                      className={`flex-1 h-11 sm:h-12 bg-white/10 hover:bg-white/20 border border-white/20 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold uppercase text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer ${passedTeamIds.includes(humanId) ? 'border-[#ff8200] text-[#ff8200]' : ''}`}
                     >
                       <span>⏭</span>
                       <span>{passedTeamIds.includes(humanId) ? 'SKIPPED' : 'SKIP'}</span>
                     </button>
                   </>
                 ) : roomCode && !isHost ? (
-                  <div className="text-center font-bold text-xs uppercase tracking-widest text-slate-300 w-full py-1.5">
+                  <div className="text-center font-bold text-xs sm:text-sm uppercase tracking-widest text-slate-300 w-full py-2">
                     📣 Host is conducting the live draft...
                   </div>
                 ) : (
                   <>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.25)} className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs tracking-wider shadow-md">+25L</button>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.50)} className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs tracking-wider shadow-md">+50L</button>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(1.00)} className="flex-1 h-9 sm:h-9.5 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs tracking-wider shadow-md">+1 CR</button>
-                    <button onClick={handleHumanSkip} disabled={isPaused} className="flex-1 h-9 sm:h-9.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-lg font-bold uppercase text-xs tracking-wider flex items-center justify-center gap-1">⏭ SKIP</button>
+                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.25)} className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs sm:text-sm tracking-wider shadow-md">+25L</button>
+                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.50)} className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs sm:text-sm tracking-wider shadow-md">+50L</button>
+                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(1.00)} className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs sm:text-sm tracking-wider shadow-md">+1 CR</button>
+                    <button onClick={handleHumanSkip} disabled={isPaused} className="flex-1 h-11 sm:h-12 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-lg font-bold uppercase text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1.5">⏭ SKIP</button>
                   </>
                 )}
               </div>
@@ -2097,7 +1974,7 @@ export default function Auction() {
             <div className="flex-1 h-full min-w-0 flex flex-row gap-3 items-stretch overflow-hidden">
 
               {/* COLUMN 2: Live Tabbed Card (Commentary & Chat) */}
-              <div className="flex-1 h-full min-w-0 rounded-xl border border-white/15 flex flex-col overflow-hidden shadow-2xl" style={{
+              <div className="flex-1 w-1/2 h-full min-w-0 rounded-xl border border-white/15 flex flex-col overflow-hidden shadow-2xl" style={{
                 background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)',
               }}>
                 {/* Tabs Header */}
@@ -2255,8 +2132,8 @@ export default function Auction() {
                 )}
               </div>
 
-              {/* COLUMN 3: Live Standings Panel */}
-              <div className="w-[44%] max-w-[360px] h-full rounded-xl overflow-hidden shadow-2xl flex flex-col min-h-0 border border-white/15" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)' }}>
+              {/* COLUMN 3: Live Standings Panel (Exact same width & height as Column 2) */}
+              <div className="flex-1 w-1/2 h-full min-w-0 rounded-xl border border-white/15 flex flex-col overflow-hidden shadow-2xl" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)' }}>
                 <LiveTeamsPanel />
               </div>
 

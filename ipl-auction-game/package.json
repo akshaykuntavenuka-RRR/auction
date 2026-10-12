@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "start": "node server.cjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "sync-players": "node scripts/sync_to_supabase.cjs"

@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuction } from '../context/AuctionContext';
 import ProfileMenu from '../components/ProfileMenu';
 import PlayerCard from '../components/PlayerCard';
+import LoadingScreen from '../components/LoadingScreen';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useNavLoading } from '../hooks/useNavLoading';
+import { saveGameHistory } from '../lib/gameHistory';
 
 export default function Results() {
   const navigate = useNavigate();
   const breakpoint = useBreakpoint();
+  const { goBack, goHome } = useNavLoading();
   const { 
     currentUser,
     authLoading,
@@ -19,10 +23,13 @@ export default function Results() {
     auctionRound,
     startRound2,
     isSoloMode,
-    humanTeamId
+    humanTeamId,
+    aiDifficulty,
+    roomCode
   } = useAuction();
   const [confetti, setConfetti] = useState([]);
   const [expandedTeams, setExpandedTeams] = useState({});
+  const savedHistoryRef = useRef(false);
 
   // Auth guard
   useEffect(() => {
@@ -30,8 +37,6 @@ export default function Results() {
       navigate('/signin');
     }
   }, [currentUser, authLoading, navigate]);
-
-  if (authLoading) return null;
 
   // Premium confetti visual effect on mount
   useEffect(() => {
@@ -46,6 +51,72 @@ export default function Results() {
     }));
     setConfetti(generated);
   }, []);
+
+  // Auto-save completed game summary to Career History
+  useEffect(() => {
+    if (savedHistoryRef.current || !teams || teams.length === 0) return;
+    savedHistoryRef.current = true;
+
+    try {
+      const myTeam = teams.find(t => t.isUser || t.id === humanTeamId) || teams[0];
+      const mySquad = soldPlayers.filter(sp => sp.team_id === myTeam?.id);
+      const mySpent = mySquad.reduce((sum, p) => sum + (p.sold_for || 0), 0);
+      const myRemaining = myTeam ? (myTeam.budget ?? (budgetCr - mySpent)) : 0;
+
+      let starPlayer = null;
+      if (mySquad.length > 0) {
+        const sorted = [...mySquad].sort((a, b) => (b.sold_for || 0) - (a.sold_for || 0));
+        starPlayer = sorted[0];
+      }
+
+      const teamValuations = teams.map(t => {
+        const squad = soldPlayers.filter(sp => sp.team_id === t.id);
+        const totalVal = squad.reduce((sum, p) => sum + p.sold_for, 0);
+        return {
+          teamId: t.id,
+          name: t.name,
+          color: t.color,
+          isHuman: t.isUser || t.id === humanTeamId,
+          value: totalVal,
+          squadCount: squad.length
+        };
+      }).sort((a, b) => b.value - a.value);
+
+      const humanRank = teamValuations.findIndex(t => t.isHuman) + 1;
+      const totalRanked = teamValuations.length;
+      const evalTitle = isSoloMode 
+        ? (humanRank === 1 
+            ? "🏆 You Won! Amazing auction!" 
+            : (humanRank <= Math.ceil(totalRanked / 2) 
+                ? "👍 Good Game! Keep practicing!" 
+                : "😅 The AI outsmarted you this time!"))
+        : (auctionRound === 2 ? 'Final Auction Complete' : 'Auction Complete');
+
+      saveGameHistory({
+        mode: isSoloMode ? 'Solo vs AI' : 'Multiplayer',
+        difficulty: isSoloMode ? (aiDifficulty || 'medium') : null,
+        roomCode: roomCode || null,
+        teamName: myTeam?.name || 'My Franchise',
+        teamColor: myTeam?.color || '#ff8200',
+        rank: humanRank > 0 ? humanRank : 1,
+        totalTeams: teams.length,
+        resultTitle: evalTitle,
+        initialBudgetCr: budgetCr || 100,
+        spentCr: mySpent,
+        remainingCr: myRemaining,
+        playersCount: mySquad.length,
+        squad: mySquad,
+        topPlayer: starPlayer,
+        teamsLeaderboard: teamValuations
+      }, currentUser?.id);
+    } catch (err) {
+      console.warn('Game history save error:', err);
+    }
+  }, [teams, soldPlayers, budgetCr, isSoloMode, humanTeamId, currentUser, aiDifficulty, roomCode, auctionRound]);
+
+  if (authLoading) {
+    return <LoadingScreen title="EVALUATING RESULTS..." subtitle="Compiling squad rosters, purses and tournament metrics..." />;
+  }
 
   const handleNewAuction = () => {
     resetAuction();
@@ -143,7 +214,7 @@ export default function Results() {
       <header className="h-14 bg-[#161421] border-b border-[#2d293d] flex justify-between items-center px-4 sm:px-6 flex-shrink-0 z-30">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => goBack('RETURNING...', 'Navigating back to auction view...')}
             title="Go Back"
             className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white transition-all cursor-pointer"
           >
@@ -152,7 +223,7 @@ export default function Results() {
             </svg>
           </button>
           <button
-            onClick={() => navigate('/play-options')}
+            onClick={() => goHome('/play-options', 'RETURNING TO MENU...', 'Saving results & returning to main menu...')}
             title="Go to Home"
             className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white transition-all cursor-pointer"
           >

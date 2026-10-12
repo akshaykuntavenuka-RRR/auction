@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuction } from '../context/AuctionContext';
 import { joinRoom } from '../lib/db';
 import ProfileMenu from '../components/ProfileMenu';
+import LoadingScreen from '../components/LoadingScreen';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useNavLoading } from '../hooks/useNavLoading';
 
 export default function JoinRoom() {
   const navigate = useNavigate();
+  const { goBack, goHome } = useNavLoading();
   const { roomCode: paramCode } = useParams();
   const breakpoint = useBreakpoint();
   const { currentUser, signInAsGuest, setRoomCode, setIsHost, setRoomMembers } = useAuction();
@@ -15,6 +18,11 @@ export default function JoinRoom() {
   const [roomInput, setRoomInput] = useState('');
   const [nickname, setNickname] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingState, setLoadingState] = useState({
+    active: false,
+    title: 'VALIDATING ROOM CODE...',
+    subtitle: ''
+  });
   const [errorMsg, setErrorMsg] = useState('');
 
   // Handle route param pre-fill
@@ -40,15 +48,20 @@ export default function JoinRoom() {
     const targetName = nickname.trim();
 
     if (!targetCode || targetCode.length !== 6) {
-      setErrorMsg('Please enter a valid 6-character Room Code!');
+      setErrorMsg('Please enter a valid 6-character Room Code (e.g. IPL4X9)!');
       return;
     }
     if (!targetName) {
-      setErrorMsg('Please enter room name to join the lobby!');
+      setErrorMsg('Please enter your name to join the lobby!');
       return;
     }
 
     setLoading(true);
+    setLoadingState({
+      active: true,
+      title: 'VALIDATING ROOM CODE...',
+      subtitle: `Checking if Room #${targetCode} is created & active...`
+    });
 
     try {
       let finalUser = currentUser;
@@ -60,25 +73,41 @@ export default function JoinRoom() {
 
       const userId = finalUser.id || 'guest-' + Date.now();
       
-      // Call joinRoom API
+      // Call joinRoom API - strictly validates room code existence, status, and player capacity
       const { room, members } = await joinRoom(targetCode, userId, targetName, null);
+
+      const count = members ? members.length : 1;
+      setLoadingState({
+        active: true,
+        title: 'ROOM VERIFIED! CONNECTING TO LOBBY...',
+        subtitle: `Room #${targetCode} verified with ${count} ${count === 1 ? 'player' : 'players'}. Redirecting to lobby screen...`
+      });
 
       // Set context values
       setRoomCode(targetCode);
       setIsHost(userId === room.host_id);
       setRoomMembers(members);
 
-      setLoading(false);
-      navigate(`/lobby/${targetCode}`);
+      // Smooth loading transition into lobby screen
+      setTimeout(() => {
+        navigate(`/lobby/${targetCode}`);
+      }, 700);
     } catch (err) {
       console.error(err);
-      setErrorMsg(err.message || 'Failed to join the room lobby.');
+      setErrorMsg(err.message || 'Room code is invalid or room could not be found.');
       setLoading(false);
+      setLoadingState({ active: false, title: '', subtitle: '' });
     }
   };
 
   return (
     <div className="bg-surface text-on-surface font-body-md overflow-hidden min-h-screen w-full relative flex flex-col justify-center items-center" style={{ backgroundColor: '#141315', color: '#e6e1e5' }}>
+      {loadingState.active && (
+        <LoadingScreen
+          title={loadingState.title}
+          subtitle={loadingState.subtitle || `Verifying room code ${roomInput.toUpperCase()} & connecting...`}
+        />
+      )}
       <style>{`
         .glass-panel {
           background: rgba(54, 52, 55, 0.4);
@@ -98,7 +127,7 @@ export default function JoinRoom() {
       <nav className="bg-surface/80 border-b border-white/10 shadow-lg flex items-center justify-between px-6 py-3 w-full fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: 'rgba(20, 19, 21, 0.95)' }}>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => goBack('RETURNING...', 'Exiting join room portal...')}
             title="Go Back"
             className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
@@ -108,7 +137,7 @@ export default function JoinRoom() {
             </svg>
           </button>
           <button
-            onClick={() => navigate('/play-options')}
+            onClick={() => goHome('/play-options', 'RETURNING TO MENU...', 'Returning to the main menu...')}
             title="Go to Home"
             className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}

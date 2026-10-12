@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { supabase, isRealSupabaseConfigured } from '../lib/supabase';
 
 import { mockPlayers, getSeededPlayers, shufflePlayers } from '../data/players';
@@ -44,6 +44,13 @@ export function AuctionProvider({ children }) {
     localStorage.setItem('ipl_theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Global Navigation Loading State (for back/home transitions & data sync)
+  const [navLoading, setNavLoading] = useState({
+    active: false,
+    title: '',
+    subtitle: '',
+  });
 
 
   const [auctionRound, setAuctionRound] = useState(() => Number(localStorage.getItem('ipl_auction_round')) || 1);
@@ -486,8 +493,6 @@ export function AuctionProvider({ children }) {
       markPlayerSold,
       markPlayerUnsold,
       resetAuction,
-      logout,
-      signInAsGuest,
       gameMode,
       setGameMode,
       roomId,
@@ -513,13 +518,16 @@ export function AuctionProvider({ children }) {
       maxTeamSize,
       setMaxTeamSize,
       theme,
-      setTheme
+      setTheme,
+      navLoading,
+      setNavLoading
     }}>
       {children}
     </AuctionContext.Provider>
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuction() {
   return useContext(AuctionContext);
 }

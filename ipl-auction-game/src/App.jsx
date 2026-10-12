@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignIn from './pages/SignIn';
 import IntroScreen from './pages/IntroScreen';
@@ -10,28 +9,45 @@ import CreateRoom from './pages/CreateRoom';
 import Lobby from './pages/Lobby';
 import JoinRoom from './pages/JoinRoom';
 import AdminSync from './pages/AdminSync';
-import { AuctionProvider } from './context/AuctionContext';
+import { AuctionProvider, useAuction } from './context/AuctionContext';
+import LoadingScreen from './components/LoadingScreen';
+
+function AppLayout() {
+  const { navLoading } = useAuction();
+
+  return (
+    <>
+      {navLoading?.active && (
+        <LoadingScreen
+          title={navLoading.title || 'MANAGING DATA...'}
+          subtitle={navLoading.subtitle || 'Saving progress and navigating...'}
+        />
+      )}
+      <main style={{ flex: '1', display: 'flex', flexDirection: 'column', height: '100vh', maxHeight: '100vh', width: '100vw', overflow: 'hidden', backgroundColor: '#0d0b14' }}>
+        <Routes>
+          <Route path="/" element={<IntroScreen />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/setup" element={<Setup />} />
+          <Route path="/auction" element={<Auction />} />
+          <Route path="/results" element={<Results />} />
+          <Route path="/play-options" element={<PlayOptions />} />
+          <Route path="/create-room" element={<CreateRoom />} />
+          <Route path="/lobby/:roomCode" element={<Lobby />} />
+          <Route path="/join/:roomCode" element={<JoinRoom />} />
+          <Route path="/join-room" element={<JoinRoom />} />
+          <Route path="/join" element={<JoinRoom />} />
+          <Route path="/admin/sync" element={<AdminSync />} />
+        </Routes>
+      </main>
+    </>
+  );
+}
 
 function App() {
   return (
     <AuctionProvider>
       <Router>
-        <main style={{ flex: '1', display: 'flex', flexDirection: 'column', height: '100vh', maxHeight: '100vh', width: '100vw', overflow: 'hidden', backgroundColor: '#0d0b14' }}>
-          <Routes>
-            <Route path="/" element={<IntroScreen />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/setup" element={<Setup />} />
-            <Route path="/auction" element={<Auction />} />
-            <Route path="/results" element={<Results />} />
-            <Route path="/play-options" element={<PlayOptions />} />
-            <Route path="/create-room" element={<CreateRoom />} />
-            <Route path="/lobby/:roomCode" element={<Lobby />} />
-            <Route path="/join/:roomCode" element={<JoinRoom />} />
-            <Route path="/join-room" element={<JoinRoom />} />
-            <Route path="/join" element={<JoinRoom />} />
-            <Route path="/admin/sync" element={<AdminSync />} />
-          </Routes>
-        </main>
+        <AppLayout />
       </Router>
     </AuctionProvider>
   );

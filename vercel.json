@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
+  "outputDirectory": "ipl-auction-game/dist",
   "routes": [
     {
       "src": "/cricinfo-img/(.*)",

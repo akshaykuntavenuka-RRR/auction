@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuction } from '../context/AuctionContext';
+import GameHistoryModal from './GameHistoryModal';
+import { getGameHistoryStats } from '../lib/gameHistory';
 
 const iplTeamLogos = [
   { name: 'CSK', logo: '/logos/csk.svg' },
@@ -25,6 +27,8 @@ export default function ProfileMenu() {
   const [nameInput, setNameInput] = useState('');
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [toast, setToast] = useState('');
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyStats, setHistoryStats] = useState(() => getGameHistoryStats());
 
   const menuRef = useRef(null);
   const fileRef = useRef(null);
@@ -42,6 +46,13 @@ export default function ProfileMenu() {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
+
+  // Refresh history stats when menu opens
+  useEffect(() => {
+    if (open) {
+      setHistoryStats(getGameHistoryStats(currentUser?.id));
+    }
+  }, [open, currentUser]);
 
   const showToast = (msg) => {
     setToast(msg);
@@ -301,6 +312,40 @@ export default function ProfileMenu() {
 
 
 
+            {/* Game History Option */}
+            <div>
+              <button
+                className="w-full flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-white/5 transition-colors text-left cursor-pointer group"
+                style={{ color: '#e6e1e5' }}
+                onClick={() => {
+                  setShowHistory(true);
+                  setOpen(false);
+                }}
+              >
+                <span className="text-base" style={{ color: '#ff8200' }}>📜</span>
+                <div className="flex-1 min-w-0">
+                  <span className="font-semibold group-hover:text-[#ff8200] transition-colors">Game History</span>
+                  <span className="text-[10px] block opacity-50 truncate" style={{ color: '#cbc4ce' }}>
+                    {historyStats?.totalPlayed || 0} {(historyStats?.totalPlayed === 1) ? 'game played' : 'games played'} • summaries
+                  </span>
+                </div>
+                <span 
+                  className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono border"
+                  style={{ 
+                    backgroundColor: 'rgba(255,130,0,0.12)', 
+                    color: '#ff8200', 
+                    borderColor: 'rgba(255,130,0,0.3)' 
+                  }}
+                >
+                  {historyStats?.totalPlayed || 0}
+                </span>
+                <span className="text-xs ml-1 opacity-40">▶</span>
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="my-1 mx-5" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }} />
+
             {/* Logout */}
             <button
               className="w-full flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-red-500/10 transition-colors text-left group cursor-pointer"
@@ -313,6 +358,15 @@ export default function ProfileMenu() {
           </div>
         </div>
       )}
+
+      {/* Global Game History Modal */}
+      <GameHistoryModal
+        isOpen={showHistory}
+        onClose={() => {
+          setShowHistory(false);
+          setHistoryStats(getGameHistoryStats(currentUser?.id));
+        }}
+      />
     </div>
   );
 }

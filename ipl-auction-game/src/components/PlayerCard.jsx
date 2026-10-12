@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import PlayerImage from './PlayerImage';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
@@ -11,8 +10,7 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
  *   teamName - team the player was sold to
  *   teamColor- color of the team
  */
-export default function PlayerCard({ player, compact = false, soldFor, teamName, teamColor, countdown = null, bidTimer = 10 }) {
-  const [imgError, setImgError] = useState(false);
+export default function PlayerCard({ player, compact = false, soldFor, teamName: _teamName, teamColor, countdown = null, bidTimer = 10 }) {
   const breakpoint = useBreakpoint();
 
   if (!player) return null;
@@ -25,9 +23,6 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
 
   const roleLabel = isWK ? 'WK' : isBAT ? 'BAT' : isAR ? 'AR' : 'BOWL';
   const roleColor = isWK ? '#60a5fa' : isBAT ? '#4ade80' : isAR ? '#fbbf24' : '#f87171';
-
-  const fallbackSrc = `https://api.dicebear.com/7.x/personas/svg?seed=${encodeURIComponent((player.name || 'player').toLowerCase())}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
-  const imgSrc = imgError ? fallbackSrc : (player.image || fallbackSrc);
 
   const basePriceCr = (() => {
     if (typeof player.base === 'number' && !isNaN(player.base) && player.base > 0) return player.base.toFixed(1);
@@ -115,8 +110,8 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
     <div style={{
       background: 'linear-gradient(145deg, #1b1924 0%, #121019 100%)',
       border: '1px solid rgba(255, 255, 255, 0.16)',
-      borderRadius: 12,
-      padding: '8px 12px',
+      borderRadius: 14,
+      padding: breakpoint.isMobile ? '12px 14px' : '16px 20px',
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
@@ -128,17 +123,17 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 4,
+        marginBottom: 10,
         flexWrap: 'wrap',
-        gap: 6,
+        gap: 8,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{
             background: roleColor,
             color: '#0f0e10',
-            padding: '1.5px 8px',
+            padding: '3px 12px',
             borderRadius: 99,
-            fontSize: 10,
+            fontSize: 11,
             fontWeight: 800,
             letterSpacing: 0.8,
             textTransform: 'uppercase',
@@ -148,9 +143,9 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
             <span style={{
               background: 'rgba(255,255,255,0.08)',
               color: '#e2e8f0',
-              padding: '1.5px 6px',
+              padding: '3px 10px',
               borderRadius: 99,
-              fontSize: 9,
+              fontSize: 10,
               fontWeight: 600,
               border: '1px solid rgba(255,255,255,0.16)',
             }}>{player.nationality}</span>
@@ -158,9 +153,9 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
         </div>
 
         {/* Base Price Badge */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <span style={{ fontSize: 9, color: '#94a3b8', fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase' }}>BASE PRICE:</span>
-          <span style={{ fontFamily: "'Russo One', sans-serif", fontSize: '15px', color: '#ffffff', letterSpacing: '0.5px' }}>₹{basePriceCr} Cr</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase' }}>BASE PRICE:</span>
+          <span style={{ fontFamily: "'Russo One', sans-serif", fontSize: '18px', color: '#ffffff', letterSpacing: '0.5px' }}>₹{basePriceCr} Cr</span>
         </div>
       </div>
 
@@ -168,16 +163,16 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
       <div style={{
         display: 'flex',
         flexDirection: breakpoint.isMobile ? 'column' : 'row',
-        gap: 10,
+        gap: 16,
         alignItems: 'stretch',
         width: '100%',
       }}>
-        {/* Compact Image Box */}
+        {/* Spotlight Image Box */}
         <div style={{
-          width: breakpoint.isMobile ? '100%' : '120px',
-          height: breakpoint.isMobile ? '135px' : '130px',
-          minWidth: breakpoint.isMobile ? '100%' : '120px',
-          borderRadius: 10,
+          width: breakpoint.isMobile ? '100%' : '175px',
+          height: breakpoint.isMobile ? '180px' : '190px',
+          minWidth: breakpoint.isMobile ? '100%' : '175px',
+          borderRadius: 12,
           overflow: 'hidden',
           position: 'relative',
           background: '#13111a',
@@ -206,23 +201,23 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
           justifyContent: 'space-between',
         }}>
           <div>
-            <div style={{ fontSize: 9, color: '#ff8200', fontWeight: 800, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 1 }}>
+            <div style={{ fontSize: 10, color: '#ff8200', fontWeight: 800, letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: 3 }}>
               {player.ipl || player.team || ''} · {player.team2026 || 'IPL FRANCHISE'}
             </div>
 
             <h1 style={{
               fontFamily: "'Russo One', sans-serif",
-              fontSize: breakpoint.isMobile ? '18px' : '19px',
+              fontSize: breakpoint.isMobile ? '20px' : '24px',
               letterSpacing: '0.5px',
               color: '#ffffff',
               lineHeight: 1.15,
-              marginBottom: 4,
+              marginBottom: 8,
               fontWeight: 400
             }}>{player.name}</h1>
           </div>
 
           {/* Stat Boxes: 2 columns x 2 rows */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             {(isBAT || isWK) && <>
               <StatBox label="IPL Matches" value={player.stats?.matches ?? '-'} isMobile={breakpoint.isMobile} />
               <StatBox label="IPL Runs" value={player.stats?.runs ?? '-'} isMobile={breakpoint.isMobile} />
@@ -264,7 +259,7 @@ export default function PlayerCard({ player, compact = false, soldFor, teamName,
       </div>
 
       {/* Progress Bar directly at bottom of card */}
-      <div style={{ marginTop: 5, height: 3.5, background: 'rgba(255,255,255,0.12)', borderRadius: 99, overflow: 'hidden' }}>
+      <div style={{ marginTop: 12, height: 5, background: 'rgba(255,255,255,0.12)', borderRadius: 99, overflow: 'hidden' }}>
         <div style={{ 
           height: '100%', 
           width: `${bidTimer > 0 && countdown !== null ? (countdown / bidTimer) * 100 : 100}%`, 
@@ -283,12 +278,12 @@ function StatBox({ label, value }) {
     <div style={{
       background: '#121019',
       border: '1px solid rgba(255,255,255,0.12)',
-      borderRadius: 6,
-      padding: '3px 5px',
+      borderRadius: 8,
+      padding: '8px 10px',
       textAlign: 'center',
     }}>
-      <div style={{ fontSize: 8, color: '#ff9d47', fontWeight: 700, letterSpacing: 0.6, textTransform: 'uppercase', marginBottom: 1 }}>{label}</div>
-      <div style={{ fontFamily: "'Russo One', sans-serif", fontSize: '13.5px', color: '#ffffff', lineHeight: 1, fontWeight: 400 }}>{value}</div>
+      <div style={{ fontSize: 9.5, color: '#ff9d47', fontWeight: 700, letterSpacing: 0.6, textTransform: 'uppercase', marginBottom: 2 }}>{label}</div>
+      <div style={{ fontFamily: "'Russo One', sans-serif", fontSize: '16px', color: '#ffffff', lineHeight: 1, fontWeight: 400 }}>{value}</div>
     </div>
   );
 }

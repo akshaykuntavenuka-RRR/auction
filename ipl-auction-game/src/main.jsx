@@ -27,7 +27,7 @@ import App from './App.jsx'
           cleaned = cleaned.replace(pattern, '[PROTECTED_KEY]');
         });
         return JSON.parse(cleaned);
-      } catch (e) {
+      } catch {
         return arg;
       }
     }

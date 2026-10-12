@@ -120,7 +120,7 @@ export async function fetchPlayerPhotoFromWikipedia(playerName) {
         }
       }
     }
-  } catch (_e) {
+  } catch {
     // Network error or parse error
   }
 

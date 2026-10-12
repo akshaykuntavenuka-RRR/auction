@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { syncAllIPLPlayersToSupabase } from '../lib/playerSync';
 import { supabase } from '../lib/supabase';
 import { mockPlayers } from '../data/players';
+import { useNavLoading } from '../hooks/useNavLoading';
 
 export default function AdminSync() {
-  const navigate = useNavigate();
+  const { goBack } = useNavLoading();
   const [logs, setLogs] = useState([]);
   const [syncing, setSyncing] = useState(false);
   const [done, setDone] = useState(false);
@@ -65,8 +65,6 @@ export default function AdminSync() {
     setProgress(0);
     setLogs([]);
 
-    let synced = 0;
-
     await syncAllIPLPlayersToSupabase((entry) => {
       addLog(entry);
       if (entry.type === 'success') {
@@ -76,7 +74,6 @@ export default function AdminSync() {
           const current = parseInt(match[1], 10);
           const total = parseInt(match[2], 10);
           setProgress(Math.round((current / total) * 100));
-          synced = current;
         }
       }
     });
@@ -116,7 +113,7 @@ export default function AdminSync() {
         zIndex: 50,
       }}>
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => goBack('RETURNING...', 'Exiting admin synchronization...')}
           style={{
             background: 'rgba(255,255,255,0.05)',
             border: '1px solid rgba(255,255,255,0.1)',

@@ -117,9 +117,9 @@ export default function LiveTeamsPanel() {
     <div style={{
       width: '100%',
       height: '100%',
-      background: '#161418',
-      border: '1px solid rgba(255, 255, 255, 0.12)',
-      borderRadius: 16,
+      background: 'transparent',
+      border: 'none',
+      borderRadius: 0,
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
@@ -129,20 +129,22 @@ export default function LiveTeamsPanel() {
       MozOsxFontSmoothing: 'grayscale',
       textRendering: 'optimizeLegibility',
     }}>
-      {/* Panel Header */}
+      {/* Panel Header - exactly aligns with Commentary Tabs header (44px height) */}
       <div style={{
-        padding: '16px 20px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+        height: 44,
+        padding: '0 18px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexShrink: 0,
         background: 'rgba(255, 255, 255, 0.02)',
       }}>
-        <div style={{ fontSize: '15px', color: '#ff8200', letterSpacing: '1.2px', fontFamily: "'Russo One', sans-serif" }}>
-          📊 LIVE STANDINGS
+        <div style={{ fontSize: '13px', color: '#ff8200', letterSpacing: '1.2px', fontFamily: "'Russo One', sans-serif", display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span>📊</span>
+          <span>LIVE STANDINGS</span>
         </div>
-        <div style={{ fontSize: 13, color: '#cbd5e1', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+        <div style={{ fontSize: 12, color: '#cbd5e1', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
           {totalPlayersSold} {totalPlayersSold === 1 ? 'player' : 'players'} sold
         </div>
       </div>
@@ -194,7 +196,7 @@ export default function LiveTeamsPanel() {
   );
 }
 
-function TeamRow({ team, rank, spent, budgetPct, byRole, isHuman, isAI, budgetCr, maxTeamSize }) {
+function TeamRow({ team, rank, spent, budgetPct, byRole, isHuman, isAI, budgetCr: _budgetCr, maxTeamSize }) {
   const [expanded, setExpanded] = useState(false);
   const [flash, setFlash] = useState(false);
   const prevCountRef = useRef(team.players.length);

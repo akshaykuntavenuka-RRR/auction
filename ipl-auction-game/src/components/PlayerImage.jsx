@@ -41,7 +41,6 @@ export default function PlayerImage({ playerName, role, size = 'full', style = {
     setImgLoaded(false);
     setTriedLocal(false);
     setTriedWiki(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerName]);
 
   const isThumb = size === 'thumb';
@@ -87,9 +86,13 @@ export default function PlayerImage({ playerName, role, size = 'full', style = {
           0%   { background-position: 200% 0; }
           100% { background-position: -200% 0; }
         }
+        @keyframes playerSpin {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
       `}</style>
 
-      {/* Shimmer shown behind image while it loads */}
+      {/* Shimmer and spinner shown behind image while it loads */}
       {!imgLoaded && (
         <div
           style={{
@@ -99,8 +102,22 @@ export default function PlayerImage({ playerName, role, size = 'full', style = {
             background: 'linear-gradient(90deg, #1a1820 25%, #2a2632 50%, #1a1820 75%)',
             backgroundSize: '200% 100%',
             animation: 'playerShimmer 1.5s infinite',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
-        />
+        >
+          <div
+            style={{
+              width: isThumb ? 16 : 26,
+              height: isThumb ? 16 : 26,
+              borderRadius: '50%',
+              border: '2.5px solid rgba(255, 130, 0, 0.2)',
+              borderTopColor: '#ff8200',
+              animation: 'playerSpin 0.8s linear infinite',
+            }}
+          />
+        </div>
       )}
 
       <img

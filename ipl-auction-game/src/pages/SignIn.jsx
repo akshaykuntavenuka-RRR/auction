@@ -1,16 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase, isRealSupabaseConfigured } from '../lib/supabase';
 import { useAuction } from '../context/AuctionContext';
-import { useBreakpoint } from '../hooks/useBreakpoint';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const { currentUser, signInAsGuest } = useAuction();
+  const { signInAsGuest, currentUser, authLoading } = useAuction();
   const [username, setUsername] = useState('');
-  const breakpoint = useBreakpoint();
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isGlowHover, setIsGlowHover] = useState(false);
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [googleStep, setGoogleStep] = useState('choose_account'); // 'choose_account' | 'manual_login'
   const [gmailInput, setGmailInput] = useState('');
@@ -91,6 +87,13 @@ export default function SignIn() {
     }
   }, []);
 
+  // Redirect to /play-options if already logged in (replaces history so back cannot return to login)
+  useEffect(() => {
+    if (!authLoading && currentUser) {
+      navigate('/play-options', { replace: true });
+    }
+  }, [currentUser, authLoading, navigate]);
+
   // Handle mouse spotlight movement across background (SignIn page only)
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -139,7 +142,7 @@ export default function SignIn() {
       setLoadingState(prev => ({ ...prev, progress: 100, subtitle: 'Welcome to IPL Mini Auction!' }));
       signInAsGuest(finalDisplayName, provider, email);
       setTimeout(() => {
-        navigate('/play-options');
+        navigate('/play-options', { replace: true });
       }, 350);
     }, 1350);
   };

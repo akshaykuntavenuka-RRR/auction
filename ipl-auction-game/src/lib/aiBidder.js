@@ -64,7 +64,7 @@ export function calculatePlayerRating(player) {
 
     // 1. Volume & Experience Score (0 - 35 points)
     // 5000+ runs = 35 pts, 3500+ = 28 pts, 2000+ = 20 pts, 1000+ = 12 pts, 325 runs = ~5 pts
-    let volumeScore = 0;
+    let volumeScore;
     if (runs >= 5000) volumeScore = 35;
     else if (runs >= 3500) volumeScore = 28 + ((runs - 3500) / 1500) * 7;
     else if (runs >= 2000) volumeScore = 20 + ((runs - 2000) / 1500) * 8;
@@ -101,7 +101,7 @@ export function calculatePlayerRating(player) {
 
     // 1. Volume & Experience Score (0 - 35 points)
     // 150+ wickets = 35 pts, 100+ = 27 pts, 50+ = 18 pts, 20+ = 9 pts, <10 = <4 pts
-    let volumeScore = 0;
+    let volumeScore;
     if (wickets >= 150) volumeScore = 35;
     else if (wickets >= 100) volumeScore = 27 + ((wickets - 100) / 50) * 8;
     else if (wickets >= 50) volumeScore = 18 + ((wickets - 50) / 50) * 9;
@@ -197,7 +197,7 @@ export function calculatePerceivedValue(player, rating = null) {
     ? player.base
     : (player.basePrice ? (player.basePrice > 10000 ? player.basePrice / 10000000 : player.basePrice) : 0.5);
 
-  let perceivedValue = basePriceCr;
+  let perceivedValue;
 
   if (tier === 1) {
     // Tier 1 Marquee: ₹13.0 Cr - ₹20.0 Cr
@@ -378,7 +378,7 @@ export function decideAIBid(
 
   // 6. PURSE ALLOCATION LOGIC
   const avgBudgetPerSlot = aiTeam.budget / slotsNeeded;
-  let maxSpendForThisPlayer = adjustedValue;
+  let maxSpendForThisPlayer;
 
   if (tier === 1) {
     // Current player IS a Marquee match-winner:
@@ -418,7 +418,7 @@ export function decideAIBid(
   // Small players (Tier 3 & 4) only move in disciplined 0.25 Cr steps
   // Stars can jump 0.5 or 1.0 Cr to deter competitors
   const undervalueGap = maxBidLimit - safeCurrentBid;
-  let chosenIncrement = 0.25;
+  let chosenIncrement;
 
   if (tier <= 2 && undervalueGap >= 2.5 && aiTeam.aiStrategy === 'aggressive' && Math.random() < 0.6) {
     chosenIncrement = 1.0;

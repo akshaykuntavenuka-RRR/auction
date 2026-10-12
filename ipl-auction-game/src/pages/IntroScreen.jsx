@@ -1,8 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuction } from '../context/AuctionContext';
 
 export default function IntroScreen() {
   const navigate = useNavigate();
+  const { currentUser, authLoading } = useAuction();
+
+  React.useEffect(() => {
+    if (!authLoading && currentUser) {
+      navigate('/play-options', { replace: true });
+    }
+  }, [currentUser, authLoading, navigate]);
 
   React.useEffect(() => {
     document.documentElement.style.overflow = 'hidden';

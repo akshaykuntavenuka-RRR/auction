@@ -78,11 +78,17 @@ export async function createTeam(sessionId, name, color, budget, isAi = false, a
  * @returns {Promise<object>} - The inserted sold player record.
  */
 export async function saveSoldPlayer(sessionId, teamId, player, soldFor) {
+  const pName = typeof player === 'object' && player !== null ? (player.name || 'Unknown') : (player || 'Unknown');
+  const pRole = typeof player === 'object' && player !== null ? (player.role || player.roleCode || 'BAT') : 'BAT';
+  const pTeam = typeof player === 'object' && player !== null ? (player.ipl || player.team || player.team2026 || 'IPL') : 'IPL';
+
   const insertData = {
-    session_id: sessionId,
+    session_id: sessionId && typeof sessionId === 'string' && sessionId.startsWith('local-') ? null : sessionId,
     team_id: teamId,
-    sold_for: soldFor,
-    player: typeof player === 'object' && player !== null ? (player.name || JSON.stringify(player)) : player
+    player_name: pName,
+    role: pRole,
+    ipl_team: pTeam,
+    sold_for: soldFor
   };
 
   const { data, error } = await supabase
@@ -221,7 +227,7 @@ export async function createRoom(hostId, hostName, numTeams, budgetCr) {
       return { roomCode, room: mockRoom };
     }
   } catch (err) {
-    throw new Error('Failed to create room: ' + err.message);
+    throw new Error('Failed to create room: ' + err.message, { cause: err });
   }
 }
 
@@ -229,24 +235,55 @@ export async function createRoom(hostId, hostName, numTeams, budgetCr) {
  * Joins an existing room (or sandbox fallback)
  */
 export async function joinRoom(roomCode, userId, userName, avatarUrl) {
-  const code = roomCode.trim().toUpperCase();
+  const code = (roomCode || '').trim().toUpperCase();
 
+  if (!code || code.length !== 6) {
+    throw new Error('Please enter a valid 6-character room code.');
+  }
+
+  let room = null;
+  let isFromSupabase = false;
+
+  // 1. Check if room exists in Supabase
   if (isRealSupabase()) {
-    // 1. Check room exists and is in "waiting" status
-    const { data: room, error: roomError } = await supabase
-      .from('rooms')
-      .select('*')
-      .eq('room_code', code)
-      .single();
+    try {
+      const { data: dbRoom, error: roomError } = await supabase
+        .from('rooms')
+        .select('*')
+        .eq('room_code', code)
+        .maybeSingle();
 
-    if (roomError || !room) {
-      throw new Error('Room not found!');
+      if (!roomError && dbRoom) {
+        room = dbRoom;
+        isFromSupabase = true;
+      }
+    } catch (err) {
+      console.warn('Supabase room lookup fallback check:', err);
     }
-    if (room.status !== 'waiting') {
-      throw new Error('Auction has already started!');
-    }
+  }
 
-    // 2. Get current members count
+  // Fallback check in local storage mock rooms
+  if (!room) {
+    const mockRooms = JSON.parse(localStorage.getItem('ipl_mock_rooms') || '[]');
+    const localRoom = mockRooms.find(r => r.room_code === code);
+    if (localRoom) {
+      room = localRoom;
+      isFromSupabase = false;
+    }
+  }
+
+  // If room is not found in either, the code is invalid or the room has not been created
+  if (!room) {
+    throw new Error(`Room code "${code}" is invalid! No room has been created with this code.`);
+  }
+
+  // Check if room has already started
+  if (room.status !== 'waiting') {
+    throw new Error(`Auction in room "${code}" has already started or concluded!`);
+  }
+
+  // 2. Manage room members
+  if (isFromSupabase) {
     const { data: members, error: membersError } = await supabase
       .from('room_members')
       .select('*')
@@ -254,22 +291,22 @@ export async function joinRoom(roomCode, userId, userName, avatarUrl) {
 
     if (membersError) throw membersError;
 
-    // Check if user is already in the room
-    const existing = members.find(m => m.user_id === userId);
+    const currentMembers = members || [];
+    const existing = currentMembers.find(m => m.user_id === userId);
     if (existing) {
-      return { room, members };
+      return { room, members: currentMembers };
     }
 
-    if (members.length >= room.num_teams) {
-      throw new Error('Room is full!');
+    if (currentMembers.length >= (room.num_teams || 6)) {
+      throw new Error(`Room "${code}" is full! Maximum ${room.num_teams || 6} players allowed.`);
     }
 
-    // 3. Insert user into room members
+    // Insert user into room members
     const newMember = {
       room_code: code,
       user_id: userId,
       user_name: userName,
-      avatar_url: avatarUrl,
+      avatar_url: avatarUrl || null,
       is_ready: false
     };
 
@@ -285,47 +322,36 @@ export async function joinRoom(roomCode, userId, userName, avatarUrl) {
       .select('*')
       .eq('room_code', code);
 
-    return { room, members: updatedMembers };
+    return { room, members: updatedMembers || [...currentMembers, newMember] };
   } else {
-    // Sandbox Fallback Mode
-    const rooms = JSON.parse(localStorage.getItem('ipl_mock_rooms') || '[]');
-    const room = rooms.find(r => r.room_code === code);
+    // Sandbox / LocalStorage handling
+    const allMembers = JSON.parse(localStorage.getItem('ipl_mock_room_members') || '[]');
+    const roomMembers = allMembers.filter(m => m.room_code === code);
 
-    if (!room) {
-      throw new Error('Room not found!');
-    }
-    if (room.status !== 'waiting') {
-      throw new Error('Auction has already started!');
-    }
-
-    const members = JSON.parse(localStorage.getItem('ipl_mock_room_members') || '[]')
-      .filter(m => m.room_code === code);
-
-    const existing = members.find(m => m.user_id === userId);
+    const existing = roomMembers.find(m => m.user_id === userId);
     if (existing) {
-      return { room, members };
+      return { room, members: roomMembers };
     }
 
-    if (members.length >= room.num_teams) {
-      throw new Error('Room is full!');
+    if (roomMembers.length >= (room.num_teams || 6)) {
+      throw new Error(`Room "${code}" is full! Maximum ${room.num_teams || 6} players allowed.`);
     }
 
     const newMember = {
       room_code: code,
       user_id: userId,
       user_name: userName,
-      avatar_url: avatarUrl,
+      avatar_url: avatarUrl || null,
       is_ready: false,
       team_name: null,
       team_color: null
     };
 
-    const allMembers = JSON.parse(localStorage.getItem('ipl_mock_room_members') || '[]');
     allMembers.push(newMember);
     localStorage.setItem('ipl_mock_room_members', JSON.stringify(allMembers));
+    roomMembers.push(newMember);
 
-    members.push(newMember);
-    return { room, members };
+    return { room, members: roomMembers };
   }
 }
 

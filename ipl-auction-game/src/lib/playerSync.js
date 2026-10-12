@@ -99,7 +99,7 @@ export async function loadPlayersForAuction(forceRefresh = false) {
           return parsed.players;
         }
       }
-    } catch (e) {
+    } catch {
       // Ignore sessionStorage parsing error
     }
   }
@@ -183,7 +183,9 @@ export async function loadPlayersForAuction(forceRefresh = false) {
     memoryCacheTimestamp = now;
     try {
       sessionStorage.setItem(PLAYERS_CACHE_KEY, JSON.stringify({ players: formattedPlayers, timestamp: now }));
-    } catch (e) {}
+    } catch {
+      // Storage quota exceeded or disabled
+    }
 
     return formattedPlayers;
   } catch (err) {

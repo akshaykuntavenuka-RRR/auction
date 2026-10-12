@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuction } from '../context/AuctionContext';
 import { createSession, createTeam } from '../lib/db';
@@ -6,7 +6,9 @@ import { isRealSupabaseConfigured } from '../lib/supabase';
 import { assignAIStrategies } from '../lib/aiBidder';
 
 import ProfileMenu from '../components/ProfileMenu';
+import LoadingScreen from '../components/LoadingScreen';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useNavLoading } from '../hooks/useNavLoading';
 
 const defaultAllTeams = [
   { name: 'Mumbai Indians', color: '#004BA0', logo: '/logos/mi.svg' },
@@ -24,6 +26,7 @@ const defaultAllTeams = [
 export default function Setup() {
   const navigate = useNavigate();
   const breakpoint = useBreakpoint();
+  const { goBack, goHome } = useNavLoading();
   const {
     currentUser,
     authLoading,
@@ -35,14 +38,11 @@ export default function Setup() {
     setTeams,
     resetAuction,
     gameMode,
-    setGameMode,
     roomId,
-    setRoomId,
     lobbyPlayers,
     setLobbyPlayers,
     isSoloMode,
     setIsSoloMode,
-    humanTeamId,
     setHumanTeamId,
     aiDifficulty,
     setAiDifficulty,
@@ -139,11 +139,8 @@ export default function Setup() {
       const baseTeam = defaultAllTeams[idx];
       
       if (isSelected) {
-        let newName = team.name;
-        const defaultName = baseTeam.name;
-        
         // Keep the full original franchise name, don't prepend personal name
-        newName = baseTeam.name;
+        const newName = baseTeam.name;
         
         return {
           ...team,
@@ -279,8 +276,15 @@ export default function Setup() {
     }
   };
 
+  if (authLoading) {
+    return <LoadingScreen title="PREPARING SETUP..." subtitle="Loading franchise rosters and preferences..." />;
+  }
+
   return (
     <div className="bg-[#121118] text-[#f1f5f9] h-screen w-screen overflow-hidden flex flex-col relative select-none">
+      {isStarting && (
+        <LoadingScreen title="INITIALIZING AUCTION..." subtitle="Allocating team purses, setting up draft sequence & opening room..." />
+      )}
       <style>{`
         .glass-panel {
           background: #191726;
@@ -438,7 +442,7 @@ export default function Setup() {
         <div className="flex items-center gap-3">
           {/* Back button */}
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => goBack('SAVING SETUP...', 'Preserving team roster settings and returning...')}
             title="Go Back"
             className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white transition-all cursor-pointer"
           >
@@ -448,7 +452,7 @@ export default function Setup() {
           </button>
           {/* Home button */}
           <button
-            onClick={() => navigate('/play-options')}
+            onClick={() => goHome('/play-options', 'RETURNING TO MENU...', 'Saving draft preferences & returning to main menu...')}
             title="Go to Home"
             className="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 hover:bg-white/10 text-slate-300 hover:text-white transition-all cursor-pointer"
           >
@@ -718,12 +722,12 @@ export default function Setup() {
             </div>
             <div className="flex flex-wrap gap-2.5">
               {[
-                { key: 'batters',       label: 'Batters',        icon: '🏏', desc: 'BAT → WK → AR → BOWL' },
-                { key: 'wicketkeepers', label: 'WKs',            icon: '🧤', desc: 'WK → BAT → AR → BOWL' },
-                { key: 'bowlers',       label: 'Bowlers',        icon: '🎳', desc: 'BOWL → AR → BAT → WK' },
-                { key: 'allrounders',   label: 'All-Rounders',   icon: '⚡', desc: 'AR → BAT → WK → BOWL' },
-                { key: 'random',        label: 'Random',         icon: '🎲', desc: 'Fully shuffled' },
-              ].map(({ key, label, icon, desc }) => (
+                { key: 'batters',       label: 'Batters',        icon: '🏏' },
+                { key: 'wicketkeepers', label: 'WKs',            icon: '🧤' },
+                { key: 'bowlers',       label: 'Bowlers',        icon: '🎳' },
+                { key: 'allrounders',   label: 'All-Rounders',   icon: '⚡' },
+                { key: 'random',        label: 'Random',         icon: '🎲' },
+              ].map(({ key, label, icon }) => (
                 <button
                   key={key}
                   type="button"
