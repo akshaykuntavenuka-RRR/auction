@@ -12,7 +12,7 @@ export default function JoinRoom() {
   const { goBack, goHome } = useNavLoading();
   const { roomCode: paramCode } = useParams();
   const breakpoint = useBreakpoint();
-  const { currentUser, signInAsGuest, setRoomCode, setIsHost, setRoomMembers } = useAuction();
+  const { currentUser, signInAsGuest, setRoomCode, setIsHost, setRoomMembers, setIsSoloMode } = useAuction();
 
   // Input states
   const [roomInput, setRoomInput] = useState('');
@@ -87,6 +87,8 @@ export default function JoinRoom() {
       setRoomCode(targetCode);
       setIsHost(userId === room.host_id);
       setRoomMembers(members);
+      setIsSoloMode(false);
+      localStorage.setItem('ipl_is_solo_mode', 'false');
 
       // Smooth loading transition into lobby screen
       setTimeout(() => {

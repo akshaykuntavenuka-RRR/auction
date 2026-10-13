@@ -39,6 +39,7 @@ export default function Auction() {
     markPlayerSold,
     markPlayerUnsold,
     roomCode,
+    roomMembers,
     isHost: isHostFromCtx,
     isSoloMode,
     humanTeamId,
@@ -49,6 +50,8 @@ export default function Auction() {
   } = useAuction();
 
   const isHost = !roomCode || isHostFromCtx;
+  const isMultiplayer = Boolean(roomCode);
+  const isSolo = isSoloMode && !isMultiplayer;
 
   // Get active player
   const player = players[currentPlayerIndex];
@@ -71,6 +74,8 @@ export default function Auction() {
 
   // Skip, End Auction, and Round 2 control states
   const [showEndConfirm, setShowEndConfirm] = useState(false);
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [pendingLeaveAction, setPendingLeaveAction] = useState('back');
   const [showRound1CompleteModal, setShowRound1CompleteModal] = useState(false);
   const [toast, setToast] = useState('');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -135,7 +140,8 @@ export default function Auction() {
     }
   }, [chatMessages]);
 
-  const humanTeam = teams.find(t => t.isUser || t.id === humanTeamId);
+  const myMember = roomMembers?.find(m => m.user_id === currentUser?.id);
+  const humanTeam = teams.find(t => t.isUser || t.id === humanTeamId || (myMember && t.name === myMember.team_name));
   const humanId = humanTeam?.id;
 
   const getTeamRosterSize = (teamId) => {
@@ -423,6 +429,21 @@ export default function Auction() {
     }
   }
 
+  function handleConfirmLeave() {
+    setShowLeaveConfirm(false);
+    if (pendingLeaveAction === 'home') {
+      goHome('/play-options', 'RETURNING TO HOME...', 'Saving auction room data and returning to main menu...');
+      return;
+    }
+
+    const activeRoomCode = roomCode || localStorage.getItem('ipl_room_code') || sessionStorage.getItem('ipl_room_code');
+    if (activeRoomCode) {
+      goHome(`/lobby/${activeRoomCode}`, 'RETURNING TO LOBBY...', 'Saving auction progress & returning to room lobby...');
+    } else {
+      goHome('/setup', 'RETURNING TO SETUP...', 'Saving auction progress & returning to setup...');
+    }
+  }
+
   async function handleEndAuction() {
     if (!isHost) return;
     setShowEndConfirm(false);
@@ -501,6 +522,18 @@ export default function Auction() {
     };
   }, []);
 
+  // Intercept back navigation / browser popstate
+  useEffect(() => {
+    window.history.pushState({ inAuction: true }, '');
+    const handlePopState = () => {
+      window.history.pushState({ inAuction: true }, '');
+      setPendingLeaveAction('back');
+      setShowLeaveConfirm(true);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // Supabase Realtime Channel Subscription for live budget sync (Hook 4)
   useEffect(() => {
     if (!sessionId || sessionId.startsWith('local') || sessionId.startsWith('fallback')) return;
@@ -536,7 +569,10 @@ export default function Auction() {
 
       channel
         .on('broadcast', { event: 'auction_update' }, ({ payload }) => {
-          if (!isHost) handleReceivedState(payload);
+          if (payload.senderUserId && currentUser?.id && payload.senderUserId === currentUser.id) {
+            return;
+          }
+          handleReceivedState(payload);
         })
         .on('broadcast', { event: 'chat_message' }, ({ payload }) => {
           addChatMessage(payload);
@@ -568,41 +604,38 @@ export default function Auction() {
         }
       }, 1000);
 
-      if (!isHost) {
-        let lastTimestamp = 0;
-        const stateInterval = setInterval(() => {
-          const raw = localStorage.getItem(`ipl_mock_auction_${roomCode}`);
-          if (raw) {
-            const state = JSON.parse(raw);
-            if (state.timestamp > lastTimestamp) {
-              lastTimestamp = state.timestamp;
+      let lastTimestamp = 0;
+      const stateInterval = setInterval(() => {
+        const raw = localStorage.getItem(`ipl_mock_auction_${roomCode}`);
+        if (raw) {
+          const state = JSON.parse(raw);
+          if (state.timestamp > lastTimestamp) {
+            lastTimestamp = state.timestamp;
+            if (!state.senderUserId || state.senderUserId !== currentUser?.id) {
               handleReceivedState(state);
+            }
 
-              // Offline mock sync for skipped player
-              if (state.current_player_index !== undefined && state.current_player_index !== null && state.current_player_index !== currentPlayerIndex) {
-                setCurrentPlayerIndex(state.current_player_index);
-                const nextPl = players[state.current_player_index];
-                const nextBid = getPlayerBaseCr(nextPl);
-                setCurrentBid(nextBid);
-                setActiveBidder(null);
-              }
-              // Offline mock sync for ended auction
-              if (state.status === 'completed') {
-                showToast('🏆 Host ended the auction!');
-                setTimeout(() => navigate('/results'), 1000);
-              }
+            // Offline mock sync for skipped player
+            if (state.current_player_index !== undefined && state.current_player_index !== null && state.current_player_index !== currentPlayerIndex) {
+              setCurrentPlayerIndex(state.current_player_index);
+              const nextPl = players[state.current_player_index];
+              const nextBid = getPlayerBaseCr(nextPl);
+              setCurrentBid(nextBid);
+              setActiveBidder(null);
+            }
+            // Offline mock sync for ended auction
+            if (state.status === 'completed') {
+              showToast('🏆 Host ended the auction!');
+              setTimeout(() => navigate('/results'), 1000);
             }
           }
-        }, 1000);
-        return () => {
-          clearInterval(chatInterval);
-          clearInterval(stateInterval);
-        };
-      } else {
-        return () => {
-          clearInterval(chatInterval);
-        };
-      }
+        }
+      }, 1000);
+
+      return () => {
+        clearInterval(chatInterval);
+        clearInterval(stateInterval);
+      };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomCode, isHost, teams, players, currentPlayerIndex, humanTeam, currentUser]);
@@ -786,18 +819,33 @@ export default function Auction() {
   }
 
   function syncAuctionState(action, newBid, bidderId, extraData = {}) {
-    if (!roomCode || !isHost) return;
+    if (!roomCode) return;
+
+    // Both host and participants can send 'bid' and 'skip'
+    // Host sends administrative actions: sold, unsold, pause, resume, start_round_2, init_settings
+    const isPlayerAction = action === 'bid' || action === 'skip';
+    if (!isHost && !isPlayerAction) return;
+
+    const payload = {
+      action,
+      currentBid: newBid,
+      activeBidderId: bidderId,
+      currentPlayerIndex,
+      maxTeamSize,
+      senderUserId: currentUser?.id,
+      ...extraData
+    };
 
     if (isRealSupabase()) {
       if (broadcastChannelRef.current) {
         broadcastChannelRef.current.send({
           type: 'broadcast',
           event: 'auction_update',
-          payload: { action, currentBid: newBid, activeBidderId: bidderId, currentPlayerIndex, maxTeamSize, ...extraData }
+          payload
         });
       }
     } else {
-      const state = { action, currentBid: newBid, activeBidderId: bidderId, currentPlayerIndex, maxTeamSize, ...extraData, timestamp: Date.now() };
+      const state = { ...payload, timestamp: Date.now() };
       localStorage.setItem(`ipl_mock_auction_${roomCode}`, JSON.stringify(state));
     }
   }
@@ -808,13 +856,33 @@ export default function Auction() {
     }
     if (payload.action === 'bid') {
       setIsPaused(false);
-      setCurrentBid(payload.currentBid);
+      const safeBid = Number(payload.currentBid);
+      currentBidRef.current = safeBid;
+      setCurrentBid(safeBid);
+
       const bidder = payload.activeBidderId
-        ? teams.find(t => t.id === payload.activeBidderId)
+        ? (teamsRef.current.find(t => t.id === payload.activeBidderId || t.name === payload.bidderName) || {
+            id: payload.activeBidderId,
+            name: payload.bidderName || 'Unknown Team'
+          })
         : null;
+      activeBidderRef.current = bidder;
       setActiveBidder(bidder);
 
-      // Reset client's local countdown timer when a bid sync is received
+      if (bidder) {
+        addCommentary(`💰 ${bidder.name} bid ₹${safeBid} Cr`);
+      }
+
+      // Visual flash
+      const bidPanel = document.querySelector('.bid-glow-panel');
+      if (bidPanel) {
+        bidPanel.style.transform = 'scale(1.03)';
+        setTimeout(() => {
+          bidPanel.style.transform = 'scale(1)';
+        }, 200);
+      }
+
+      // Reset local countdown timer
       clearAllTimers();
       setCountdown(bidTimer);
       let timeLeft = bidTimer;
@@ -824,24 +892,55 @@ export default function Auction() {
         if (timeLeft <= 0) {
           clearInterval(countdownIntervalRef.current);
           setCountdown(null);
-          handleAuctionTimeout();
+          if (!roomCode || isHost) {
+            handleAuctionTimeout();
+          }
         }
       }, 1000);
+    } else if (payload.action === 'skip') {
+      const skippedId = payload.activeBidderId;
+      const teamName = payload.teamName || teamsRef.current.find(t => t.id === skippedId)?.name || 'A team';
+      addCommentary(`⏭ ${teamName} passed`);
+      setPassedTeamIds(prev => {
+        const next = payload.passedTeamIds || (prev.includes(skippedId) ? prev : [...prev, skippedId]);
+        passedTeamIdsRef.current = next;
+        if (isHost) {
+          if (!activeBidderRef.current && next.length >= teamsRef.current.length) {
+            clearAllTimers();
+            handleUnsoldAuto();
+          }
+        }
+        return next;
+      });
     } else if (payload.action === 'sold') {
       setIsPaused(false);
-      const activePlayer = players[payload.currentPlayerIndex];
-      if (activePlayer && payload.activeBidderId) {
-        markPlayerSold(activePlayer, payload.activeBidderId, payload.currentBid);
+      clearAllTimers();
+      const targetPlayerIndex = payload.currentPlayerIndex !== undefined ? payload.currentPlayerIndex : currentPlayerIndex;
+      const activePlayer = players[targetPlayerIndex] || player;
+      const bidder = teamsRef.current.find(t => t.id === payload.activeBidderId || t.name === payload.bidderName) || {
+        id: payload.activeBidderId,
+        name: payload.bidderName || 'Winning Team'
+      };
+      if (activePlayer && bidder) {
+        setWinningBidder(bidder);
+        setWinningPrice(payload.currentBid);
+        setSoldStatus('sold');
+        addCommentary(`🔨 SOLD! ${activePlayer.name} goes to ${bidder.name} for ₹${payload.currentBid} Cr`);
       }
     } else if (payload.action === 'unsold') {
       setIsPaused(false);
-      const activePlayer = players[payload.currentPlayerIndex];
-      if (activePlayer) {
-        markPlayerUnsold(activePlayer);
-      }
+      clearAllTimers();
+      const targetPlayerIndex = payload.currentPlayerIndex !== undefined ? payload.currentPlayerIndex : currentPlayerIndex;
+      const activePlayer = players[targetPlayerIndex] || player;
+      setWinningBidder(null);
+      setWinningPrice(0);
+      setSoldStatus('unsold');
+      addCommentary(`❌ UNSOLD! ${activePlayer?.name || 'Player'} went unsold`);
     } else if (payload.action === 'pause') {
       setIsPaused(true);
       if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+      if (aiThinkingTimerRef.current) clearTimeout(aiThinkingTimerRef.current);
+      setAiThinking(false);
     } else if (payload.action === 'resume') {
       setIsPaused(false);
       if (payload.countdown !== null && payload.countdown > 0) {
@@ -853,7 +952,9 @@ export default function Auction() {
           if (timeLeft <= 0) {
             clearInterval(countdownIntervalRef.current);
             setCountdown(null);
-            handleAuctionTimeout();
+            if (!roomCode || isHost) {
+              handleAuctionTimeout();
+            }
           }
         }, 1000);
       }
@@ -905,7 +1006,7 @@ export default function Auction() {
       }
     }, 1000);
 
-    if (isSoloMode || isHost) {
+    if (isSolo || teamsRef.current.some(t => t.isAi)) {
       scheduleAIThinking(safeBase, null, initialPassed);
       if (players[currentPlayerIndex]) {
         triggerAICommentaryOnPlayer(players[currentPlayerIndex]);
@@ -1003,7 +1104,10 @@ export default function Auction() {
     // Clear active ticking and thinking
     clearAllTimers();
 
-    syncAuctionState('bid', safeBid, bidderTeam.id);
+    syncAuctionState('bid', safeBid, bidderTeam.id, {
+      bidderName: bidderTeam.name,
+      passedTeamIds: passedTeamIdsRef.current
+    });
 
     // Trigger visual sound / flash effect
     const bidPanel = document.querySelector('.bid-glow-panel');
@@ -1023,12 +1127,14 @@ export default function Auction() {
       if (timeLeft <= 0) {
         clearInterval(countdownIntervalRef.current);
         setCountdown(null);
-        handleAuctionTimeout();
+        if (!roomCode || isHost) {
+          handleAuctionTimeout();
+        }
       }
     }, 1000);
 
     // Continue the AI bidding engine
-    if (isSoloMode || isHost) {
+    if (isSolo || teamsRef.current.some(t => t.isAi)) {
       scheduleAIThinking(newBid, bidderTeam, passedTeamIdsRef.current);
 
       // AI chat commentary chance on bid placements
@@ -1083,7 +1189,7 @@ export default function Auction() {
       }, 500);
     }
 
-    syncAuctionState('sold', bidVal, bidderObj.id);
+    syncAuctionState('sold', bidVal, bidderObj.id, { bidderName: bidderObj.name });
 
     // Trigger Congratulations Modal State
     setWinningBidder(bidderObj);
@@ -1091,7 +1197,7 @@ export default function Auction() {
     setSoldStatus('sold');
 
     // Trigger AI reaction comment on sold
-    if (isSoloMode) {
+    if (isSolo) {
       const isHuman = bidderObj.id === humanId;
       let comment;
       if (isHuman) {
@@ -1145,7 +1251,7 @@ export default function Auction() {
     setSoldStatus('unsold');
 
     // Trigger AI reaction comment on unsold
-    if (isSoloMode) {
+    if (isSolo) {
       const comments = [
         `Surprised nobody wanted ${player.name}.`,
         `His base price was a bit high.`,
@@ -1157,8 +1263,6 @@ export default function Auction() {
       triggerAIChat(comment, 1000);
     }
   }
-
-
 
   // Executed to proceed to the next player card
   async function handleProceedNext() {
@@ -1175,14 +1279,33 @@ export default function Auction() {
     } else {
       await markPlayerUnsold(player);
     }
+
+    if (isHost && roomCode && isRealSupabase()) {
+      try {
+        await supabase
+          .from('rooms')
+          .update({ current_player_index: currentPlayerIndex + 1 })
+          .eq('room_code', roomCode);
+      } catch (err) {
+        console.warn('Failed to sync current_player_index to rooms:', err);
+      }
+    }
   }
-
-
 
   function handleHumanIncrementBid(amountCr) {
     if (isPaused) return;
-    if (!humanId) return;
-    if (passedTeamIdsRef.current.includes(humanId)) return;
+    if (!humanTeam || !humanId) {
+      alert("No team assigned to place bids!");
+      return;
+    }
+    if (activeBidderRef.current?.id === humanId || (humanTeam && activeBidderRef.current?.name === humanTeam.name)) {
+      // You are already the highest bidder! Cannot bid against yourself.
+      return;
+    }
+    if (passedTeamIdsRef.current.includes(humanId)) {
+      alert("You have already skipped this player!");
+      return;
+    }
     if (isTeamFull(humanId)) {
       alert("Your team roster is FULL! Cannot place more bids.");
       return;
@@ -1196,7 +1319,7 @@ export default function Auction() {
       return;
     }
 
-    addCommentary(`💰 ${humanTeam?.name || 'CSK'} (You) bid ₹${newBid} Cr`);
+    addCommentary(`💰 ${humanTeam?.name || 'Your Team'} (You) bid ₹${newBid} Cr`);
     placeBid(newBid, humanTeam);
   }
 
@@ -1208,40 +1331,40 @@ export default function Auction() {
       const newPassed = [...passedTeamIdsRef.current, humanId];
       setPassedTeamIds(newPassed);
       passedTeamIdsRef.current = newPassed;
-      addCommentary(`⏭ ${humanTeam?.name || 'CSK'} (You) skipped`);
+      addCommentary(`⏭ ${humanTeam?.name || 'Your Team'} (You) skipped`);
+
+      if (roomCode) {
+        syncAuctionState('skip', currentBidRef.current, humanId, {
+          teamName: humanTeam?.name,
+          passedTeamIds: newPassed
+        });
+      }
 
       const currentTeams = teamsRef.current;
       if (!activeBidderRef.current && newPassed.length >= currentTeams.length) {
         addCommentary(`⏭ All teams skipped ${player?.name || 'player'}!`);
         clearAllTimers();
-        handleUnsoldAuto();
+        if (!roomCode || isHost) {
+          handleUnsoldAuto();
+        }
         return;
       }
 
       // Schedule AI thinking since human has skipped
-      if (isSoloMode || isHost) {
+      if (isSolo || teamsRef.current.some(t => t.isAi)) {
         scheduleAIThinking(currentBidRef.current, activeBidderRef.current, newPassed);
       }
     } else if (!activeBidder && (passedTeamIds.length >= teams.length || isHost)) {
       clearAllTimers();
-      handleUnsoldAuto();
+      if (!roomCode || isHost) {
+        handleUnsoldAuto();
+      }
     }
   }
 
   // Incremental bid helper
   function handleRaiseBid(amountCr) {
-    if (isPaused) return;
-    if (!humanTeam) {
-      alert("No human team found!");
-      return;
-    }
-    if (isTeamFull(humanId)) {
-      alert("Your team roster is FULL! Cannot place more bids.");
-      return;
-    }
-    const safeCurrent = (typeof currentBid === 'number' && !isNaN(currentBid) && currentBid > 0) ? currentBid : basePriceCr;
-    const newBid = Number((safeCurrent + amountCr).toFixed(2));
-    placeBid(newBid, humanTeam);
+    handleHumanIncrementBid(amountCr);
   }
 
   function handleSelectBidder(t) {
@@ -1271,7 +1394,7 @@ export default function Auction() {
           }
         }, 1000);
 
-        if (isSoloMode || isHost) {
+        if (isSolo || teamsRef.current.some(t => t.isAi)) {
           scheduleAIThinking(currentBidRef.current, activeBidderRef.current, passedTeamIdsRef.current);
         }
       }
@@ -1364,7 +1487,10 @@ export default function Auction() {
       <header className="h-11 sm:h-12 shrink-0 bg-[#161421] border-b border-[#2d293d] flex justify-between items-center px-3 sm:px-5 z-30">
         <div className="flex items-center gap-2 sm:gap-2.5">
           <button
-            onClick={() => goBack('SAVING AUCTION...', 'Saving live auction bids & returning...')}
+            onClick={() => {
+              setPendingLeaveAction('back');
+              setShowLeaveConfirm(true);
+            }}
             title="Go Back"
             className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
@@ -1374,7 +1500,10 @@ export default function Auction() {
             </svg>
           </button>
           <button
-            onClick={() => goHome('/play-options', 'RETURNING TO HOME...', 'Saving auction room data and returning to main menu...')}
+            onClick={() => {
+              setPendingLeaveAction('home');
+              setShowLeaveConfirm(true);
+            }}
             title="Go to Home"
             className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all duration-200 group cursor-pointer"
             style={{ color: '#cbc4ce' }}
@@ -1578,7 +1707,7 @@ export default function Auction() {
                 </div>
               )}
 
-              {isSoloMode && countdown !== null && (
+              {countdown !== null && (
                 <div className="mt-2 text-[#ef4444] text-[10px] font-bold uppercase tracking-wider animate-bounce">
                   ⏳ Actions: {countdown}s / {bidTimer}s
                 </div>
@@ -1587,61 +1716,56 @@ export default function Auction() {
           </div>
 
           {/* Bidding Controls Panel */}
-          {isSoloMode ? (
-            <div className="glass-card rounded-2xl p-4 border border-white/10 flex flex-col gap-3 w-full justify-center" style={{ background: 'rgba(30, 28, 32, 0.65)' }}>
-              <button
-                onClick={() => handleHumanIncrementBid(0.25)}
-                disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.25 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                className="bg-[#ff8200] text-white hover:bg-[#ff8200]/90 disabled:opacity-40 disabled:cursor-not-allowed w-full h-12 rounded-xl font-bold flex items-center justify-center border border-[#ff8200]/30 shadow-md transition-all active:scale-95 duration-150"
-                style={{ color: '#ffffff', backgroundColor: '#ff8200' }}
-              >
-                <span className="text-2xl font-black" style={{ fontFamily: "'Russo One', sans-serif" }}>+25 LAKH</span>
-              </button>
-              <button
-                onClick={() => handleHumanIncrementBid(0.50)}
-                disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.50 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                className="bg-[#ff8200] text-white hover:bg-[#ff8200]/90 disabled:opacity-40 disabled:cursor-not-allowed w-full h-12 rounded-xl font-bold flex items-center justify-center border border-[#ff8200]/30 shadow-md transition-all active:scale-95 duration-150"
-                style={{ color: '#ffffff', backgroundColor: '#ff8200' }}
-              >
-                <span className="text-2xl font-black" style={{ fontFamily: "'Russo One', sans-serif" }}>+50 LAKH</span>
-              </button>
-              <button
-                onClick={() => handleHumanIncrementBid(1.00)}
-                disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 1.00 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                className="bg-[#ff8200] text-white hover:bg-[#ff8200]/90 disabled:opacity-40 disabled:cursor-not-allowed w-full h-12 rounded-xl font-bold flex items-center justify-center border border-[#ff8200]/30 shadow-md transition-all active:scale-95 duration-150"
-                style={{ color: '#ffffff', backgroundColor: '#ff8200' }}
-              >
-                <span className="text-2xl font-black" style={{ fontFamily: "'Russo One', sans-serif" }}>+1 CRORE</span>
-              </button>
-              <button
-                onClick={handleHumanSkip}
-                disabled={isPaused || (passedTeamIds.includes(humanId) && passedTeamIds.length < teams.length && activeBidder !== null)}
-                className={`w-full h-12 bg-white/10 hover:bg-white/20 border border-white/25 text-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold text-xs tracking-wider flex items-center justify-center gap-2 shadow-md transition-all active:scale-95 duration-150 cursor-pointer ${
-                  passedTeamIds.includes(humanId) ? 'border-[#ff8200]/50 text-[#ff8200]' : ''
-                }`}
-              >
-                <span className="text-sm leading-none">⏭</span>
-                <span>{passedTeamIds.includes(humanId) ? (passedTeamIds.length >= teams.length ? 'ALL SKIPPED (NEXT)' : 'SKIPPED') : 'SKIP'}</span>
-              </button>
+          {!humanTeam ? (
+            <div className="glass-card rounded-2xl p-4 border border-white/10 text-center font-bold text-xs uppercase tracking-widest text-slate-300 w-full py-4 flex items-center justify-center gap-2" style={{ background: 'rgba(30, 28, 32, 0.65)' }}>
+              <span>👁️</span>
+              <span>Spectating Live Draft...</span>
             </div>
           ) : (
-            /* Host Manual Controls for mobile */
-            isHost && (
-              <div className="glass-card rounded-2xl p-4 border border-white/10 flex flex-col gap-3 w-full justify-center" style={{ background: 'rgba(30, 28, 32, 0.65)' }}>
-                <label className="font-bold text-[10px] tracking-widest text-[#d1bfeb] opacity-80 uppercase text-center">Raise Current Bid (Admin)</label>
-                <div className="grid grid-cols-3 gap-2">
-                  <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.25)} className="h-12 bg-[#ff8200] hover:bg-[#ff8200]/90 text-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold flex items-center justify-center shadow-md">
-                    <span className="text-xl font-black" style={{ fontFamily: "'Russo One', sans-serif" }}>+25L</span>
-                  </button>
-                  <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.50)} className="h-12 bg-[#ff8200] hover:bg-[#ff8200]/90 text-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold flex items-center justify-center shadow-md">
-                    <span className="text-xl font-black" style={{ fontFamily: "'Russo One', sans-serif" }}>+50L</span>
-                  </button>
-                  <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(1.00)} className="h-12 bg-[#ff8200] hover:bg-[#ff8200]/90 text-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold flex items-center justify-center shadow-md">
-                    <span className="text-xl font-black" style={{ fontFamily: "'Russo One', sans-serif" }}>+1 CR</span>
-                  </button>
+            <div className="glass-card rounded-2xl p-3 sm:p-4 border border-white/10 flex flex-col gap-2.5 w-full justify-center" style={{ background: 'rgba(30, 28, 32, 0.65)' }}>
+              {(activeBidder?.id === humanId || (humanTeam && activeBidder?.name === humanTeam.name)) && (
+                <div className="w-full text-center py-1 px-2 rounded-lg bg-[#ff8200]/15 border border-[#ff8200]/40 text-[#ff8200] font-bold text-xs tracking-wider animate-pulse flex items-center justify-center gap-2">
+                  <span>⭐</span>
+                  <span>YOU HOLD HIGHEST BID (₹{currentBid} Cr)</span>
                 </div>
+              )}
+              <div className="grid grid-cols-2 gap-2 w-full">
+                <button
+                  onClick={() => handleHumanIncrementBid(0.25)}
+                  disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || (humanTeam && activeBidder?.name === humanTeam.name) || currentBid + 0.25 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
+                  className="bg-[#ff8200] text-white hover:bg-[#ff8200]/90 disabled:opacity-40 disabled:cursor-not-allowed w-full h-12 rounded-xl font-bold flex items-center justify-center border border-[#ff8200]/30 shadow-md transition-all active:scale-95 duration-150 cursor-pointer"
+                  style={{ color: '#ffffff', backgroundColor: '#ff8200' }}
+                >
+                  <span className="text-xl sm:text-2xl font-black" style={{ fontFamily: "'Russo One', sans-serif" }}>+25L</span>
+                </button>
+                <button
+                  onClick={() => handleHumanIncrementBid(0.50)}
+                  disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || (humanTeam && activeBidder?.name === humanTeam.name) || currentBid + 0.50 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
+                  className="bg-[#ff8200] text-white hover:bg-[#ff8200]/90 disabled:opacity-40 disabled:cursor-not-allowed w-full h-12 rounded-xl font-bold flex items-center justify-center border border-[#ff8200]/30 shadow-md transition-all active:scale-95 duration-150 cursor-pointer"
+                  style={{ color: '#ffffff', backgroundColor: '#ff8200' }}
+                >
+                  <span className="text-xl sm:text-2xl font-black" style={{ fontFamily: "'Russo One', sans-serif" }}>+50L</span>
+                </button>
+                <button
+                  onClick={() => handleHumanIncrementBid(1.00)}
+                  disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || (humanTeam && activeBidder?.name === humanTeam.name) || currentBid + 1.00 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
+                  className="bg-[#ff8200] text-white hover:bg-[#ff8200]/90 disabled:opacity-40 disabled:cursor-not-allowed w-full h-12 rounded-xl font-bold flex items-center justify-center border border-[#ff8200]/30 shadow-md transition-all active:scale-95 duration-150 cursor-pointer"
+                  style={{ color: '#ffffff', backgroundColor: '#ff8200' }}
+                >
+                  <span className="text-xl sm:text-2xl font-black" style={{ fontFamily: "'Russo One', sans-serif" }}>+1 CR</span>
+                </button>
+                <button
+                  onClick={handleHumanSkip}
+                  disabled={isPaused || (passedTeamIds.includes(humanId) && passedTeamIds.length < teams.length && activeBidder !== null)}
+                  className={`w-full h-12 bg-white/10 hover:bg-white/20 border border-white/25 text-white disabled:opacity-40 disabled:cursor-not-allowed rounded-xl font-bold text-xs tracking-wider flex items-center justify-center gap-2 shadow-md transition-all active:scale-95 duration-150 cursor-pointer ${
+                    passedTeamIds.includes(humanId) ? 'border-[#ff8200]/50 text-[#ff8200]' : ''
+                  }`}
+                >
+                  <span className="text-sm leading-none">⏭</span>
+                  <span>{passedTeamIds.includes(humanId) ? (passedTeamIds.length >= teams.length ? 'ALL SKIPPED (NEXT)' : 'SKIPPED') : 'SKIP'}</span>
+                </button>
               </div>
-            )
+            </div>
           )}
 
           {/* Team cards claim/bid grid (scrolling cards 2x2 grid for mobile) */}
@@ -1913,7 +2037,7 @@ export default function Auction() {
                     </div>
                   )}
 
-                  {isSoloMode && countdown !== null && (
+                  {countdown !== null && (
                     <div className="text-red-400 text-xs font-bold uppercase tracking-wider">
                       ⏳ Timer: {countdown}s / {bidTimer}s
                     </div>
@@ -1922,49 +2046,77 @@ export default function Auction() {
               </div>
 
               {/* Controls Bar: +25L, +50L, +1 CR, and SKIP side-by-side (Taller, 100% visible) */}
-              <div className="rounded-xl p-2 sm:p-2.5 border border-white/10 flex items-center gap-2.5 w-full shrink-0" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
-                {isSoloMode ? (
-                  <>
-                    <button
-                      onClick={() => handleHumanIncrementBid(0.25)}
-                      disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.25 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs sm:text-sm tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
-                    >
-                      +25L
-                    </button>
-                    <button
-                      onClick={() => handleHumanIncrementBid(0.50)}
-                      disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 0.50 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs sm:text-sm tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
-                    >
-                      +50L
-                    </button>
-                    <button
-                      onClick={() => handleHumanIncrementBid(1.00)}
-                      disabled={isPaused || passedTeamIds.includes(humanId) || activeBidder?.id === humanId || currentBid + 1.00 > (humanTeam?.budget || 0) || isTeamFull(humanId)}
-                      className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs sm:text-sm tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
-                    >
-                      +1 CR
-                    </button>
-                    <button
-                      onClick={handleHumanSkip}
-                      disabled={isPaused || (passedTeamIds.includes(humanId) && passedTeamIds.length < teams.length && activeBidder !== null)}
-                      className={`flex-1 h-11 sm:h-12 bg-white/10 hover:bg-white/20 border border-white/20 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold uppercase text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer ${passedTeamIds.includes(humanId) ? 'border-[#ff8200] text-[#ff8200]' : ''}`}
-                    >
-                      <span>⏭</span>
-                      <span>{passedTeamIds.includes(humanId) ? 'SKIPPED' : 'SKIP'}</span>
-                    </button>
-                  </>
-                ) : roomCode && !isHost ? (
-                  <div className="text-center font-bold text-xs sm:text-sm uppercase tracking-widest text-slate-300 w-full py-2">
-                    📣 Host is conducting the live draft...
+              <div className="rounded-xl p-2 sm:p-2.5 border border-white/10 flex flex-col gap-2 w-full shrink-0" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                {!humanTeam ? (
+                  <div className="text-center font-bold text-xs sm:text-sm uppercase tracking-widest text-slate-300 w-full py-2 flex items-center justify-center gap-2">
+                    <span>👁️</span>
+                    <span>Spectating Live Draft...</span>
                   </div>
                 ) : (
                   <>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.25)} className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs sm:text-sm tracking-wider shadow-md">+25L</button>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(0.50)} className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs sm:text-sm tracking-wider shadow-md">+50L</button>
-                    <button disabled={isPaused || isTeamFull(humanId)} onClick={() => handleRaiseBid(1.00)} className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] text-white rounded-lg font-bold text-xs sm:text-sm tracking-wider shadow-md">+1 CR</button>
-                    <button onClick={handleHumanSkip} disabled={isPaused} className="flex-1 h-11 sm:h-12 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-lg font-bold uppercase text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1.5">⏭ SKIP</button>
+                    {(activeBidder?.id === humanId || (humanTeam && activeBidder?.name === humanTeam.name)) && (
+                      <div className="w-full text-center py-1 px-2 rounded-lg bg-[#ff8200]/15 border border-[#ff8200]/40 text-[#ff8200] font-bold text-xs tracking-wider animate-pulse flex items-center justify-center gap-2">
+                        <span>⭐</span>
+                        <span>YOU HOLD HIGHEST BID (₹{currentBid} Cr) — WAITING FOR OTHERS</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 sm:gap-2.5 w-full">
+                      <button
+                        onClick={() => handleHumanIncrementBid(0.25)}
+                        disabled={
+                          isPaused ||
+                          passedTeamIds.includes(humanId) ||
+                          activeBidder?.id === humanId ||
+                          (humanTeam && activeBidder?.name === humanTeam.name) ||
+                          currentBid + 0.25 > (humanTeam?.budget || 0) ||
+                          isTeamFull(humanId)
+                        }
+                        className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs sm:text-sm tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
+                      >
+                        +25L
+                      </button>
+                      <button
+                        onClick={() => handleHumanIncrementBid(0.50)}
+                        disabled={
+                          isPaused ||
+                          passedTeamIds.includes(humanId) ||
+                          activeBidder?.id === humanId ||
+                          (humanTeam && activeBidder?.name === humanTeam.name) ||
+                          currentBid + 0.50 > (humanTeam?.budget || 0) ||
+                          isTeamFull(humanId)
+                        }
+                        className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs sm:text-sm tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
+                      >
+                        +50L
+                      </button>
+                      <button
+                        onClick={() => handleHumanIncrementBid(1.00)}
+                        disabled={
+                          isPaused ||
+                          passedTeamIds.includes(humanId) ||
+                          activeBidder?.id === humanId ||
+                          (humanTeam && activeBidder?.name === humanTeam.name) ||
+                          currentBid + 1.00 > (humanTeam?.budget || 0) ||
+                          isTeamFull(humanId)
+                        }
+                        className="flex-1 h-11 sm:h-12 bg-gradient-to-r from-[#ff8200] to-[#e05a00] hover:brightness-110 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold text-xs sm:text-sm tracking-wider transition-all active:scale-95 flex items-center justify-center shadow-md cursor-pointer border border-[#ff8200]/40"
+                      >
+                        +1 CR
+                      </button>
+                      <button
+                        onClick={handleHumanSkip}
+                        disabled={
+                          isPaused ||
+                          (passedTeamIds.includes(humanId) && passedTeamIds.length < teams.length && activeBidder !== null)
+                        }
+                        className={`flex-1 h-11 sm:h-12 bg-white/10 hover:bg-white/20 border border-white/20 text-white disabled:opacity-35 disabled:cursor-not-allowed rounded-lg font-bold uppercase text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
+                          passedTeamIds.includes(humanId) ? 'border-[#ff8200] text-[#ff8200]' : ''
+                        }`}
+                      >
+                        <span>⏭</span>
+                        <span>{passedTeamIds.includes(humanId) ? 'SKIPPED' : 'SKIP'}</span>
+                      </button>
+                    </div>
                   </>
                 )}
               </div>
@@ -2402,91 +2554,133 @@ export default function Auction() {
         </div>
       )}
 
-      {/* End Auction Confirmation Modal */}
-      {showEndConfirm && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.75)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 999,
-        }}>
-          <div style={{
-            background: '#1a0050',
-            border: '1px solid rgba(255,71,87,0.4)',
-            borderRadius: 16,
-            padding: breakpoint.isMobile ? '20px 24px' : '28px 32px',
-            maxWidth: 380,
-            width: '90%',
-            textAlign: 'center',
-          }}>
-            <div style={{ fontSize: 36, marginBottom: 12 }}>🔴</div>
-            <div style={{
-              fontSize: 20,
-              fontWeight: 700,
-              color: '#fff',
-              marginBottom: 8,
-            }}>
-              End Auction?
+      {/* Leave / Go Back Confirmation Modal */}
+      {showLeaveConfirm && (
+        <div
+          className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-[999]"
+          style={{ animation: 'fadeIn 0.2s ease-out' }}
+        >
+          <div
+            className="bg-[#18161b] border border-amber-500/40 shadow-[0_0_50px_rgba(245,158,11,0.25)] rounded-2xl sm:rounded-3xl max-w-md w-[92%] sm:w-full p-6 sm:p-8 text-center relative overflow-hidden flex flex-col items-center"
+            style={{ animation: 'scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+          >
+            <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-amber-500/15 border-2 border-amber-500/60 flex items-center justify-center mx-auto mb-4 shadow-[0_0_25px_rgba(245,158,11,0.35)] animate-pulse">
+              <span className="text-3xl sm:text-4xl text-amber-400">⚠️</span>
             </div>
-            <div style={{
-              fontSize: 13,
-              color: '#9980c8',
-              marginBottom: 8,
-              lineHeight: 1.6,
-            }}>
-              {players.length - currentPlayerIndex - 1} players still remaining.
-              All unsold players will be marked unsold.
-            </div>
-            <div style={{
-              fontSize: 12,
-              color: '#9980c8',
-              marginBottom: 24,
-              padding: '8px 12px',
-              background: 'rgba(255,255,255,0.04)',
-              borderRadius: 8,
-            }}>
-              📊 {soldPlayers.length} players sold across{' '}
-              {new Set(soldPlayers.map(p => p.teamId || p.team_id || p.team)).size} teams
-            </div>
-            <div style={{ display: 'flex', flexDirection: breakpoint.isMobile ? 'column' : 'row', gap: 10 }}>
-              {/* Cancel */}
+            <h2
+              className="text-xl sm:text-2xl font-black text-white tracking-wide uppercase mb-2"
+              style={{ fontFamily: "'Russo One', sans-serif" }}
+            >
+              Are you sure to go back?
+            </h2>
+            <p className="text-[#cbc4ce] text-xs sm:text-sm font-medium mb-6 leading-relaxed">
+              Your live auction draft is currently in progress. If you continue, you will leave this auction session and return to the lobby.
+            </p>
+            <div className="flex flex-row gap-3 w-full">
               <button
-                onClick={() => setShowEndConfirm(false)}
-                style={{
-                  flex: 1,
-                  padding: '10px',
-                  borderRadius: 10,
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  background: 'transparent',
-                  color: '#ccc',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  minHeight: 40,
-                }}
+                type="button"
+                onClick={() => setShowLeaveConfirm(false)}
+                className="flex-1 py-3 px-4 rounded-xl border border-white/20 hover:border-white/40 hover:bg-white/10 text-slate-300 hover:text-white font-bold text-xs sm:text-sm tracking-wider uppercase transition-all active:scale-95 cursor-pointer"
               >
                 Cancel
               </button>
-              {/* Confirm End */}
               <button
-                onClick={handleEndAuction}
-                style={{
-                  flex: 1,
-                  padding: '10px',
-                  borderRadius: 10,
-                  border: 'none',
-                  background: 'linear-gradient(90deg, #FF4757, #FF3CAC)',
-                  color: '#fff',
-                  fontSize: 14,
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  minHeight: 40,
-                }}
+                type="button"
+                onClick={handleConfirmLeave}
+                className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-[#ff8200] hover:brightness-110 text-white font-black text-xs sm:text-sm tracking-wider uppercase transition-all active:scale-95 cursor-pointer shadow-lg shadow-amber-500/20"
+                style={{ fontFamily: "'Russo One', sans-serif" }}
               >
-                Yes, End It 🔨
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* End Auction Confirmation Modal */}
+      {showEndConfirm && (
+        <div
+          className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-[999]"
+          style={{ animation: 'fadeIn 0.2s ease-out' }}
+        >
+          <div
+            className="bg-[#18161b] border border-[#ff8200]/50 shadow-[0_0_50px_rgba(255,130,0,0.25)] rounded-2xl md:rounded-3xl max-w-md w-full p-6 sm:p-8 text-center relative overflow-hidden flex flex-col items-center"
+            style={{ animation: 'scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+          >
+            {/* Ambient background glow */}
+            <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-[#ff8200]/20 rounded-full blur-3xl pointer-events-none" />
+
+            {/* Glowing Icon */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#ff8200]/15 border-2 border-[#ff8200]/60 flex items-center justify-center mx-auto mb-4 shadow-[0_0_25px_rgba(255,130,0,0.35)] animate-pulse">
+              <span className="text-3xl sm:text-4xl text-[#ff8200]">🔨</span>
+            </div>
+
+            {/* Title & Tagline */}
+            <h2
+              className="text-2xl sm:text-3xl font-black text-white tracking-widest uppercase mb-1"
+              style={{ fontFamily: "'Russo One', sans-serif" }}
+            >
+              END AUCTION?
+            </h2>
+            <p className="text-[#cbc4ce] text-xs sm:text-sm font-medium mb-5">
+              {players.length - currentPlayerIndex - 1} players still remaining. All unsold players will be marked unsold.
+            </p>
+
+            {/* Current Player Status Card */}
+            {player && (
+              <div className="w-full bg-white/5 border border-white/10 rounded-xl p-3.5 mb-3 flex items-center gap-3.5 text-left">
+                <div className="w-14 h-14 rounded-full overflow-hidden border border-[#ff8200]/50 bg-[#0f0e10] flex-shrink-0">
+                  <img
+                    src={`/players/${player.name.toLowerCase().replace(/\./g, '').trim().replace(/\s+/g, '-')}.png`}
+                    alt={player.name}
+                    onError={(e) => {
+                      e.target.src = `https://api.dicebear.com/7.x/personas/svg?seed=${encodeURIComponent(player.name.toLowerCase())}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
+                    }}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-grow min-w-0">
+                  <div className="text-[10px] text-[#ff8200] font-bold uppercase tracking-wider">ON THE BLOCK</div>
+                  <h4 className="text-white font-bold text-sm truncate">{player.name}</h4>
+                  <div className="text-xs text-[#cbc4ce]/80 flex items-center gap-2 mt-0.5">
+                    <span>Bid: <strong className="text-[#00C853] font-extrabold">₹{currentBid} Cr</strong></span>
+                    {activeBidder && (
+                      <span className="text-[11px] text-[#d1bfeb] truncate">• {activeBidder.name}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Sold Stats Badge */}
+            <div className="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2.5 px-3.5 mb-6 text-xs text-[#cbc4ce] flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <span>📊</span>
+                <span><strong className="text-white font-bold">{soldPlayers.length}</strong> players sold</span>
+              </span>
+              <span className="text-white/60">
+                Across <strong className="text-white font-bold">{new Set(soldPlayers.map(p => p.teamId || p.team_id || p.team)).size}</strong> teams
+              </span>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-row gap-3 w-full">
+              <button
+                type="button"
+                onClick={() => setShowEndConfirm(false)}
+                className="flex-1 py-3.5 px-4 rounded-xl border border-white/20 hover:border-white/40 hover:bg-white/10 text-slate-300 hover:text-white font-bold text-xs sm:text-sm tracking-wider uppercase transition-all active:scale-95 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleEndAuction}
+                className="flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#ff8200] to-[#ffa500] hover:brightness-110 text-[#141315] font-black text-xs sm:text-sm tracking-wider uppercase transition-all active:scale-95 cursor-pointer shadow-[0_4px_25px_rgba(255,130,0,0.4)] flex items-center justify-center gap-2"
+                style={{ fontFamily: "'Russo One', sans-serif" }}
+              >
+                <span>🔨</span>
+                <span>YES, END IT</span>
               </button>
             </div>
           </div>

@@ -9,6 +9,8 @@ import LoadingScreen from '../components/LoadingScreen';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { useNavLoading } from '../hooks/useNavLoading';
 
+const isRealSupabase = () => isRealSupabaseConfigured();
+
 const defaultLobbyTeams = [
   { name: 'Mumbai Indians', color: '#004BA0', logo: '/logos/mi.svg' },
   { name: 'Chennai Super Kings', color: '#FDB913', logo: '/logos/csk.svg' },
@@ -37,7 +39,8 @@ export default function Lobby() {
     roomMembers,
     setRoomMembers,
     isHost,
-    setIsHost
+    setIsHost,
+    setIsSoloMode
   } = useAuction();
 
   const [loading, setLoading] = useState(true);
@@ -169,6 +172,8 @@ export default function Lobby() {
                 isUser: membersRef.current.find(m => m.user_id === userId)?.team_name === t.name
               }));
 
+              setIsSoloMode(false);
+              localStorage.setItem('ipl_is_solo_mode', 'false');
               setSessionId(payload.new.session_id);
               setTeams(formattedTeams);
               navigate('/auction');
@@ -206,6 +211,8 @@ export default function Lobby() {
                 isUser: membersRef.current.find(m => m.user_id === userId)?.team_name === t.name
               }));
 
+              setIsSoloMode(false);
+              localStorage.setItem('ipl_is_solo_mode', 'false');
               setSessionId(dbRoom.session_id);
               setTeams(formattedTeams);
               clearInterval(pollInterval);
@@ -242,6 +249,8 @@ export default function Lobby() {
             isUser: m.user_id === userId
           }));
 
+          setIsSoloMode(false);
+          localStorage.setItem('ipl_is_solo_mode', 'false');
           setSessionId(room.session_id);
           setTeams(formattedTeams);
           clearInterval(interval);
@@ -287,15 +296,41 @@ export default function Lobby() {
 
     try {
       const sId = await startRoomAuction(activeCode, userId);
-      
-      // Load local formatted teams directly for host
-      const activeFranchises = roomMembers.map((m, idx) => ({
-        id: sId.startsWith('local') ? `local-team-${idx + 1}` : `db-team-${idx + 1}`,
-        name: m.team_name,
-        color: m.team_color,
-        budget: 100, // or pull from rooms
-        isUser: m.user_id === userId
-      }));
+      setIsSoloMode(false);
+      localStorage.setItem('ipl_is_solo_mode', 'false');
+
+      // Attempt to load teams from Supabase so host has exact same UUIDs as other participants
+      let activeFranchises = null;
+      if (isRealSupabase() && !sId.startsWith('local')) {
+        try {
+          const { data: dbTeams } = await supabase
+            .from('teams')
+            .select('*')
+            .eq('session_id', sId);
+          if (dbTeams && dbTeams.length > 0) {
+            activeFranchises = dbTeams.map(t => ({
+              id: t.id,
+              name: t.name,
+              color: t.color,
+              budget: t.budget,
+              isUser: roomMembers.find(m => m.user_id === userId)?.team_name === t.name
+            }));
+          }
+        } catch (fetchErr) {
+          console.warn('Could not fetch teams from Supabase, using local fallback:', fetchErr);
+        }
+      }
+
+      if (!activeFranchises) {
+        // Fallback formatted teams
+        activeFranchises = roomMembers.map((m, idx) => ({
+          id: sId.startsWith('local') ? `local-team-${idx + 1}` : `db-team-${idx + 1}`,
+          name: m.team_name,
+          color: m.team_color,
+          budget: 100,
+          isUser: m.user_id === userId
+        }));
+      }
 
       setSessionId(sId);
       setTeams(activeFranchises);

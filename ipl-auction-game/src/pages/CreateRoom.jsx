@@ -25,7 +25,8 @@ export default function CreateRoom() {
     maxTeamSize,
     setMaxTeamSize,
     playerOrder,
-    setPlayerOrder
+    setPlayerOrder,
+    setIsSoloMode
   } = useAuction();
   const breakpoint = useBreakpoint();
   const isInitializedRef = useRef(false);
@@ -69,6 +70,8 @@ export default function CreateRoom() {
       // 2. Set context states
       setRoomCode(code);
       setIsHost(true);
+      setIsSoloMode(false);
+      localStorage.setItem('ipl_is_solo_mode', 'false');
       
       // Update local context members list with the host
       const hostMember = {
