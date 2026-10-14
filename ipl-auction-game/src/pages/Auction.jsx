@@ -1993,8 +1993,167 @@ export default function Auction() {
         <main className="flex-1 min-h-0 w-full overflow-hidden flex flex-col p-2 sm:p-2.5">
           <div className="w-full h-full flex flex-col lg:flex-row gap-2.5 lg:gap-3 items-stretch overflow-hidden">
 
-            {/* COLUMN 1: Player Card & Bidding Controls (Top-aligned, zero empty gap) */}
-            <div className="w-full lg:w-[48%] xl:w-[46%] shrink-0 flex flex-col gap-2 justify-start">
+            {/* COLUMN 1: Live Tabbed Card (Commentary & Team Chat) — left column */}
+            <div className="order-2 lg:order-1 flex-1 h-full min-w-0 rounded-xl border border-white/15 flex flex-col overflow-hidden shadow-2xl" style={{
+              background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)',
+            }}>
+              {/* Tabs Header */}
+              <div className="flex border-b border-white/10 shrink-0 h-11">
+                <button
+                  onClick={() => setActiveTab('commentary')}
+                  className={`flex-grow py-2 text-xs font-bold tracking-wider uppercase transition-all duration-200 border-b-2 flex items-center justify-center gap-1.5 cursor-pointer ${activeTab === 'commentary'
+                    ? 'border-[#ff8200] text-[#ff8200] bg-white/5'
+                    : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                >
+                  <span>🎙️</span>
+                  <span>COMMENTARY</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('chat')}
+                  className={`flex-grow py-2 text-xs font-bold tracking-wider uppercase transition-all duration-200 border-b-2 flex items-center justify-center gap-1.5 relative cursor-pointer ${activeTab === 'chat'
+                    ? 'border-[#ff8200] text-[#ff8200] bg-white/5'
+                    : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                >
+                  <span>💬</span>
+                  <span>TEAM CHAT</span>
+                  {unreadChats > 0 && activeTab !== 'chat' && (
+                    <span className="absolute top-1.5 right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-bold animate-pulse">
+                      {unreadChats}
+                    </span>
+                  )}
+                </button>
+              </div>
+
+              {/* Tab content */}
+              {activeTab === 'commentary' ? (
+                <div className="flex-grow min-h-0 p-3 sm:p-4 overflow-y-auto text-xs flex flex-col gap-2 scrollbar-hide">
+                  {commentary.length > 0 ? (
+                    commentary.map((log, i) => (
+                      <div key={i} className={`py-1.5 border-b border-white/5 last:border-0 leading-relaxed font-semibold transition-all ${i === 0 ? 'text-[#ff8200] text-sm' : 'text-slate-300'}`}>
+                        {log}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-slate-500 text-center py-8 text-xs">No commentary yet</div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex-grow min-h-0 flex flex-col overflow-hidden p-3">
+                  {/* Messages view */}
+                  <div className="flex-grow min-h-0 overflow-y-auto flex flex-col gap-2 mb-2 p-1 scrollbar-hide">
+                    {chatMessages.map((msg) => {
+                      if (msg.isSystem) {
+                        return (
+                          <div key={msg.id} className="text-center text-xs text-[#ff8200] py-1 px-2.5 bg-[#ff8200]/10 rounded-lg border border-[#ff8200]/20 font-semibold tracking-wide">
+                            {msg.text}
+                          </div>
+                        );
+                      }
+                      const senderColor = msg.isUser
+                        ? '#ff8200'
+                        : msg.sender?.includes('Kolkata') ? '#c084fc'
+                        : msg.sender?.includes('Mumbai') ? '#38bdf8'
+                        : msg.sender?.includes('Delhi') ? '#60a5fa'
+                        : msg.sender?.includes('Gujarat') ? '#2dd4bf'
+                        : msg.sender?.includes('Chennai') ? '#facc15'
+                        : msg.sender?.includes('Bengaluru') || msg.sender?.includes('Punjab') ? '#f87171'
+                        : msg.sender?.includes('Sunrisers') ? '#fb923c'
+                        : msg.sender?.includes('Lucknow') ? '#38bdf8'
+                        : msg.sender?.includes('Rajasthan') ? '#f472b6'
+                        : (msg.color || '#38bdf8');
+
+                      return (
+                        <div
+                          key={msg.id}
+                          className={`flex flex-col max-w-[88%] rounded-xl px-3 py-2 text-xs leading-relaxed transition-all ${msg.isUser
+                            ? 'self-end bg-[#ff8200]/20 border border-[#ff8200]/30 text-white'
+                            : 'self-start bg-white/[0.08] border border-white/15 text-white/95'
+                            }`}
+                        >
+                          <div className="flex items-center gap-1.5 mb-1 font-bold text-[11px] tracking-wide">
+                            {msg.logo && <img src={msg.logo} alt="" className="w-3.5 h-3.5 object-contain" />}
+                            <span style={{ color: senderColor }}>{msg.sender}</span>
+                            <span className="text-[10px] text-slate-400 font-normal ml-auto">{msg.timestamp}</span>
+                          </div>
+                          <div className="font-medium text-white break-words leading-relaxed">{msg.text}</div>
+                        </div>
+                      );
+                    })}
+                    <div ref={chatEndRef} />
+                  </div>
+
+                  {/* Emoji Picker Popover */}
+                  {showEmojiPicker && (
+                    <div className="bg-[#1e1c20] border border-white/20 rounded-xl p-2.5 shadow-2xl mb-2 shrink-0">
+                      <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-white/10 text-xs font-bold text-[#ff8200] tracking-wider uppercase">
+                        <span>🏏 EMOJI REACTIONS</span>
+                        <button
+                          type="button"
+                          onClick={() => setShowEmojiPicker(false)}
+                          className="text-white/50 hover:text-white text-xs px-1 hover:bg-white/10 rounded cursor-pointer"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-8 gap-1 max-h-[110px] overflow-y-auto">
+                        {EMOJI_LIST.map((emoji, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => {
+                              sendChatMessage(emoji);
+                              setShowEmojiPicker(false);
+                            }}
+                            className="text-lg p-1 rounded hover:bg-white/15 transition-all flex items-center justify-center cursor-pointer active:scale-95"
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Input Bar */}
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      sendChatMessage(chatInput);
+                      setShowEmojiPicker(false);
+                    }}
+                    className="flex gap-2 items-center w-full relative shrink-0"
+                  >
+                    <div className="relative flex-grow flex items-center">
+                      <input
+                        type="text"
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        placeholder="Say something with emojis..."
+                        className="w-full bg-[#110f18] border border-white/15 rounded-xl pl-3.5 pr-10 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#ff8200]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowEmojiPicker(prev => !prev)}
+                        title="Add Emoji"
+                        className="absolute right-3 text-base cursor-pointer p-0.5 rounded opacity-70 hover:opacity-100"
+                      >
+                        😊
+                      </button>
+                    </div>
+                    <button
+                      type="submit"
+                      className="bg-[#ff8200] hover:bg-[#ff8200]/90 text-[#141315] font-bold px-3.5 py-2 rounded-xl text-xs tracking-wider transition-all active:scale-95 shrink-0 cursor-pointer"
+                    >
+                      SEND
+                    </button>
+                  </form>
+                </div>
+              )}
+            </div>
+
+            {/* COLUMN 2 (CENTER / MIDDLE): Player Card & Bidding Controls (Image 2) */}
+            <div className="order-1 lg:order-2 w-full lg:w-[48%] xl:w-[46%] shrink-0 flex flex-col gap-2 justify-start overflow-y-auto scrollbar-hide">
 
               {/* Player Card (Spotlight) */}
               <div className="w-full">
@@ -2122,174 +2281,11 @@ export default function Auction() {
               </div>
             </div>
 
-            {/* RIGHT SIDE: 2 Columns side-by-side (Commentary & Live Standings), fitting height 100% */}
-            <div className="flex-1 h-full min-w-0 flex flex-row gap-3 items-stretch overflow-hidden">
-
-              {/* COLUMN 2: Live Tabbed Card (Commentary & Chat) */}
-              <div className="flex-1 w-1/2 h-full min-w-0 rounded-xl border border-white/15 flex flex-col overflow-hidden shadow-2xl" style={{
-                background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)',
-              }}>
-                {/* Tabs Header */}
-                <div className="flex border-b border-white/10 shrink-0 h-11">
-                  <button
-                    onClick={() => setActiveTab('commentary')}
-                    className={`flex-grow py-2 text-xs font-bold tracking-wider uppercase transition-all duration-200 border-b-2 flex items-center justify-center gap-1.5 cursor-pointer ${activeTab === 'commentary'
-                      ? 'border-[#ff8200] text-[#ff8200] bg-white/5'
-                      : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
-                      }`}
-                  >
-                    <span>🎙️</span>
-                    <span>COMMENTARY</span>
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('chat')}
-                    className={`flex-grow py-2 text-xs font-bold tracking-wider uppercase transition-all duration-200 border-b-2 flex items-center justify-center gap-1.5 relative cursor-pointer ${activeTab === 'chat'
-                      ? 'border-[#ff8200] text-[#ff8200] bg-white/5'
-                      : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
-                      }`}
-                  >
-                    <span>💬</span>
-                    <span>TEAM CHAT</span>
-                    {unreadChats > 0 && activeTab !== 'chat' && (
-                      <span className="absolute top-1.5 right-3 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-bold animate-pulse">
-                        {unreadChats}
-                      </span>
-                    )}
-                  </button>
-                </div>
-
-                {/* Tab content */}
-                {activeTab === 'commentary' ? (
-                  <div className="flex-grow min-h-0 p-3 sm:p-4 overflow-y-auto text-xs flex flex-col gap-2 scrollbar-hide">
-                    {commentary.length > 0 ? (
-                      commentary.map((log, i) => (
-                        <div key={i} className={`py-1.5 border-b border-white/5 last:border-0 leading-relaxed font-semibold transition-all ${i === 0 ? 'text-[#ff8200] text-sm' : 'text-slate-300'}`}>
-                          {log}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="text-slate-500 text-center py-8 text-xs">No commentary yet</div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="flex-grow min-h-0 flex flex-col overflow-hidden p-3">
-                    {/* Messages view */}
-                    <div className="flex-grow min-h-0 overflow-y-auto flex flex-col gap-2 mb-2 p-1 scrollbar-hide">
-                      {chatMessages.map((msg) => {
-                        if (msg.isSystem) {
-                          return (
-                            <div key={msg.id} className="text-center text-xs text-[#ff8200] py-1 px-2.5 bg-[#ff8200]/10 rounded-lg border border-[#ff8200]/20 font-semibold tracking-wide">
-                              {msg.text}
-                            </div>
-                          );
-                        }
-                        const senderColor = msg.isUser
-                          ? '#ff8200'
-                          : msg.sender?.includes('Kolkata') ? '#c084fc'
-                          : msg.sender?.includes('Mumbai') ? '#38bdf8'
-                          : msg.sender?.includes('Delhi') ? '#60a5fa'
-                          : msg.sender?.includes('Gujarat') ? '#2dd4bf'
-                          : msg.sender?.includes('Chennai') ? '#facc15'
-                          : msg.sender?.includes('Bengaluru') || msg.sender?.includes('Punjab') ? '#f87171'
-                          : msg.sender?.includes('Sunrisers') ? '#fb923c'
-                          : msg.sender?.includes('Lucknow') ? '#38bdf8'
-                          : msg.sender?.includes('Rajasthan') ? '#f472b6'
-                          : (msg.color || '#38bdf8');
-
-                        return (
-                          <div
-                            key={msg.id}
-                            className={`flex flex-col max-w-[88%] rounded-xl px-3 py-2 text-xs leading-relaxed transition-all ${msg.isUser
-                              ? 'self-end bg-[#ff8200]/20 border border-[#ff8200]/30 text-white'
-                              : 'self-start bg-white/[0.08] border border-white/15 text-white/95'
-                              }`}
-                          >
-                            <div className="flex items-center gap-1.5 mb-1 font-bold text-[11px] tracking-wide">
-                              {msg.logo && <img src={msg.logo} alt="" className="w-3.5 h-3.5 object-contain" />}
-                              <span style={{ color: senderColor }}>{msg.sender}</span>
-                              <span className="text-[10px] text-slate-400 font-normal ml-auto">{msg.timestamp}</span>
-                            </div>
-                            <div className="font-medium text-white break-words leading-relaxed">{msg.text}</div>
-                          </div>
-                        );
-                      })}
-                      <div ref={chatEndRef} />
-                    </div>
-
-                    {/* Emoji Picker Popover */}
-                    {showEmojiPicker && (
-                      <div className="bg-[#1e1c20] border border-white/20 rounded-xl p-2.5 shadow-2xl mb-2 shrink-0">
-                        <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-white/10 text-xs font-bold text-[#ff8200] tracking-wider uppercase">
-                          <span>🏏 EMOJI REACTIONS</span>
-                          <button
-                            type="button"
-                            onClick={() => setShowEmojiPicker(false)}
-                            className="text-white/50 hover:text-white text-xs px-1 hover:bg-white/10 rounded cursor-pointer"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-8 gap-1 max-h-[110px] overflow-y-auto">
-                          {EMOJI_LIST.map((emoji, idx) => (
-                            <button
-                              key={idx}
-                              type="button"
-                              onClick={() => {
-                                sendChatMessage(emoji);
-                                setShowEmojiPicker(false);
-                              }}
-                              className="text-lg p-1 rounded hover:bg-white/15 transition-all flex items-center justify-center cursor-pointer active:scale-95"
-                            >
-                              {emoji}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Input Bar */}
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        sendChatMessage(chatInput);
-                        setShowEmojiPicker(false);
-                      }}
-                      className="flex gap-2 items-center w-full relative shrink-0"
-                    >
-                      <div className="relative flex-grow flex items-center">
-                        <input
-                          type="text"
-                          value={chatInput}
-                          onChange={(e) => setChatInput(e.target.value)}
-                          placeholder="Say something with emojis..."
-                          className="w-full bg-[#110f18] border border-white/15 rounded-xl pl-3.5 pr-10 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#ff8200]"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowEmojiPicker(prev => !prev)}
-                          title="Add Emoji"
-                          className="absolute right-3 text-base cursor-pointer p-0.5 rounded opacity-70 hover:opacity-100"
-                        >
-                          😊
-                        </button>
-                      </div>
-                      <button
-                        type="submit"
-                        className="bg-[#ff8200] hover:bg-[#ff8200]/90 text-[#141315] font-bold px-3.5 py-2 rounded-xl text-xs tracking-wider transition-all active:scale-95 shrink-0 cursor-pointer"
-                      >
-                        SEND
-                      </button>
-                    </form>
-                  </div>
-                )}
-              </div>
-
-              {/* COLUMN 3: Live Standings Panel (Exact same width & height as Column 2) */}
-              <div className="flex-1 w-1/2 h-full min-w-0 rounded-xl border border-white/15 flex flex-col overflow-hidden shadow-2xl" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)' }}>
-                <LiveTeamsPanel />
-              </div>
-
+            {/* COLUMN 3: Live Standings Panel — right column */}
+            <div className="order-3 lg:order-3 flex-1 h-full min-w-0 rounded-xl border border-white/15 flex flex-col overflow-hidden shadow-2xl" style={{ background: 'linear-gradient(145deg, #1d1a29 0%, #13111c 100%)' }}>
+              <LiveTeamsPanel />
             </div>
+
           </div>
         </main>
       )}
